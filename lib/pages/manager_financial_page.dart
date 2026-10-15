@@ -327,7 +327,9 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                 child: Container(
                   width: 900,
-                  maxHeight: MediaQuery.of(context).size.height * 0.88,
+                  constraints: BoxConstraints(
+                    maxHeight: MediaQuery.of(context).size.height * 0.88,
+                  ),
                   padding: const EdgeInsets.all(20),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
