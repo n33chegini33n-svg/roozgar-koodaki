@@ -147,15 +147,24 @@ class ExportHelper {
         ),
       );
 
-      await Printing.layoutPdf(
-        onLayout: (PdfPageFormat format) async => pdf.save(),
-        name: '$fileName.pdf',
-      );
+      final pdfBytes = await pdf.save();
+
+      if (printOnly) {
+        await Printing.layoutPdf(
+          onLayout: (PdfPageFormat format) async => pdfBytes,
+          name: '$fileName.pdf',
+        );
+      } else {
+        await Printing.sharePdf(
+          bytes: pdfBytes,
+          filename: '$fileName.pdf',
+        );
+      }
 
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(printOnly ? '✅ آمادهٔ چاپ شد' : '✅ گزارش PDF ($fileName.pdf) با موفقیت آماده شد!'),
+            content: Text(printOnly ? '✅ آمادهٔ چاپ شد' : '✅ فایل PDF ($fileName.pdf) با موفقیت ذخیره/دانلود شد!'),
             backgroundColor: Colors.green,
           ),
         );
