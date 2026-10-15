@@ -8,6 +8,49 @@ import '../utils/jalali.dart';
 import '../models/school_classes.dart';
 import '../services/backend.dart';
 
+/// مدل مرحله پرداخت نقدی (حداکثر ۳ مرحله)
+class CashStage {
+  final String title; // مرحله اول، مرحله دوم، مرحله سوم
+  final int amount;
+  final String dueDate;
+  final bool isSettled;
+
+  CashStage({
+    required this.title,
+    required this.amount,
+    required this.dueDate,
+    this.isSettled = false,
+  });
+
+  Map<String, dynamic> toJson() => {
+        'title': title,
+        'amount': amount,
+        'dueDate': dueDate,
+        'isSettled': isSettled,
+      };
+
+  factory CashStage.fromJson(Map<String, dynamic> json) => CashStage(
+        title: json['title'] ?? 'مرحله پرداخت',
+        amount: json['amount'] ?? 0,
+        dueDate: json['dueDate'] ?? JalaliDate.now().formatted,
+        isSettled: json['isSettled'] ?? false,
+      );
+
+  CashStage copyWith({
+    String? title,
+    int? amount,
+    String? dueDate,
+    bool? isSettled,
+  }) {
+    return CashStage(
+      title: title ?? this.title,
+      amount: amount ?? this.amount,
+      dueDate: dueDate ?? this.dueDate,
+      isSettled: isSettled ?? this.isSettled,
+    );
+  }
+}
+
 class TuitionRecord {
   final String id;
   final String studentName;
@@ -20,6 +63,14 @@ class TuitionRecord {
   final String feeTitle;
   final String description;
 
+  // ویژگی‌های جدید جهت صورت‌حساب اختصاصی
+  final bool isIncluded; // تیک شمول هزینه
+  final bool isCash; // پرداخت نقدی
+  final bool isInstallment; // پرداخت اقساطی
+  final List<CashStage> cashStages; // مراحل پرداخت نقدی (حداکثر ۳ مرحله)
+  final int installmentCount; // تعداد اقساط (۱ تا ۱۰ قسط)
+  final String documentNote; // مستندات و چک/فیش
+
   TuitionRecord({
     required this.id,
     required this.studentName,
@@ -31,7 +82,13 @@ class TuitionRecord {
     this.feeType = 'شهریه',
     this.feeTitle = 'شهریه',
     this.description = '',
-  });
+    this.isIncluded = true,
+    this.isCash = true,
+    this.isInstallment = false,
+    List<CashStage>? cashStages,
+    this.installmentCount = 1,
+    this.documentNote = '',
+  }) : cashStages = cashStages ?? [];
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -44,20 +101,38 @@ class TuitionRecord {
         'feeType': feeType,
         'feeTitle': feeTitle,
         'description': description,
+        'isIncluded': isIncluded,
+        'isCash': isCash,
+        'isInstallment': isInstallment,
+        'cashStages': cashStages.map((e) => e.toJson()).toList(),
+        'installmentCount': installmentCount,
+        'documentNote': documentNote,
       };
 
-  factory TuitionRecord.fromJson(Map<String, dynamic> json) => TuitionRecord(
-        id: json['id'] ?? '',
-        studentName: json['studentName'] ?? '',
-        className: normalizeClassName(((json['className']) ?? '').toString()),
-        amount: json['amount'] ?? 0,
-        status: json['status'] ?? 'پرداخت‌شده 🟢',
-        date: json['date'] ?? JalaliDate.now().formatted,
-        receiptNo: json['receiptNo'] ?? 'REC-001',
-        feeType: json['feeType'] ?? 'شهریه',
-        feeTitle: json['feeTitle'] ?? 'شهریه',
-        description: json['description'] ?? '',
-      );
+  factory TuitionRecord.fromJson(Map<String, dynamic> json) {
+    List<CashStage> stages = [];
+    if (json['cashStages'] != null && json['cashStages'] is List) {
+      stages = (json['cashStages'] as List).map((e) => CashStage.fromJson(Map<String, dynamic>.from(e))).toList();
+    }
+    return TuitionRecord(
+      id: json['id'] ?? '',
+      studentName: json['studentName'] ?? '',
+      className: normalizeClassName(((json['className']) ?? '').toString()),
+      amount: json['amount'] ?? 0,
+      status: json['status'] ?? 'پرداخت‌شده 🟢',
+      date: json['date'] ?? JalaliDate.now().formatted,
+      receiptNo: json['receiptNo'] ?? 'REC-001',
+      feeType: json['feeType'] ?? 'شهریه',
+      feeTitle: json['feeTitle'] ?? 'شهریه',
+      description: json['description'] ?? '',
+      isIncluded: json['isIncluded'] ?? true,
+      isCash: json['isCash'] ?? true,
+      isInstallment: json['isInstallment'] ?? false,
+      cashStages: stages,
+      installmentCount: json['installmentCount'] ?? 1,
+      documentNote: json['documentNote'] ?? '',
+    );
+  }
 
   TuitionRecord copyWith({
     String? id,
@@ -70,6 +145,12 @@ class TuitionRecord {
     String? feeType,
     String? feeTitle,
     String? description,
+    bool? isIncluded,
+    bool? isCash,
+    bool? isInstallment,
+    List<CashStage>? cashStages,
+    int? installmentCount,
+    String? documentNote,
   }) {
     return TuitionRecord(
       id: id ?? this.id,
@@ -82,6 +163,12 @@ class TuitionRecord {
       feeType: feeType ?? this.feeType,
       feeTitle: feeTitle ?? this.feeTitle,
       description: description ?? this.description,
+      isIncluded: isIncluded ?? this.isIncluded,
+      isCash: isCash ?? this.isCash,
+      isInstallment: isInstallment ?? this.isInstallment,
+      cashStages: cashStages ?? this.cashStages,
+      installmentCount: installmentCount ?? this.installmentCount,
+      documentNote: documentNote ?? this.documentNote,
     );
   }
 }
@@ -159,13 +246,69 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
     } else {
       final now = JalaliDate.now().formatted;
       _records = [
-        TuitionRecord(id: 'F1', studentName: 'آرتین شجاعی', className: 'پیش‌دبستانی آفتاب ☀️', amount: 4500000, status: 'پرداخت‌شده 🟢', date: now, receiptNo: 'RC-9821', feeType: 'شهریه', feeTitle: 'شهریه نیم‌سال اول', description: 'واریز کامل از طریق درگاه بانکی'),
-        TuitionRecord(id: 'F2', studentName: 'آرتین شجاعی', className: 'پیش‌دبستانی آفتاب ☀️', amount: 800000, status: 'پرداخت‌شده 🟢', date: now, receiptNo: 'RC-9825', feeType: 'سرویس', feeTitle: 'هزینه سرویس رفت و برگشت', description: 'پرداخت نقدی به دفتر'),
-        TuitionRecord(id: 'F3', studentName: 'سارا محمدی', className: 'پیش‌دبستانی آفتاب ☀️', amount: 4500000, status: 'در انتظار تأیید 🟡', date: now, receiptNo: 'RC-9822', feeType: 'شهریه', feeTitle: 'شهریه پایه', description: 'فیش فیزیکی تحویل دفتر گردید جهت استعلام'),
-        TuitionRecord(id: 'F4', studentName: 'سارا محمدی', className: 'پیش‌دبستانی آفتاب ☀️', amount: 500000, status: 'پرداخت‌شده 🟢', date: now, receiptNo: 'RC-9830', feeType: 'کتاب و لوازم', feeTitle: 'بسته آموزشی و کارگاه', description: 'تسویه شد'),
-        TuitionRecord(id: 'F5', studentName: 'علی احمدی', className: 'اول دبستان ستاره 🌟', amount: 6200000, status: 'معوقه / بدهکار 🔴', date: now, receiptNo: 'RC-9810', feeType: 'شهریه', feeTitle: 'شهریه سالانه', description: 'مهلت پرداخت تا آخر ماه تمدید شد'),
-        TuitionRecord(id: 'F6', studentName: 'نیلا صادقی', className: 'دوم دبستان مهتاب 🌙', amount: 6200000, status: 'پرداخت‌شده 🟢', date: now, receiptNo: 'RC-9819', feeType: 'شهریه', feeTitle: 'شهریه کل سال', description: 'پرداخت یکجا با تخفیف خوش‌حسابی'),
-        TuitionRecord(id: 'F7', studentName: 'نیلا صادقی', className: 'دوم دبستان مهتاب 🌙', amount: 1200000, status: 'پرداخت‌شده 🟢', date: now, receiptNo: 'RC-9844', feeType: 'فوق‌برنامه', feeTitle: 'کلاس زبان و رباتیک', description: 'ثبت‌نام دوره پاییزه'),
+        TuitionRecord(
+          id: 'F1',
+          studentName: 'آرتین شجاعی',
+          className: 'پیش‌دبستانی آفتاب ☀️',
+          amount: 4500000,
+          status: 'پرداخت‌شده 🟢',
+          date: now,
+          receiptNo: 'RC-9821',
+          feeType: 'شهریه',
+          feeTitle: 'شهریه سالانه',
+          description: 'پرداخت نقدی نهایی شد',
+          isIncluded: true,
+          isCash: true,
+          isInstallment: false,
+          cashStages: [CashStage(title: 'مرحله اول', amount: 4500000, dueDate: now, isSettled: true)],
+          documentNote: 'فیش بانکی ضمیمه گردید',
+        ),
+        TuitionRecord(
+          id: 'F2',
+          studentName: 'آرتین شجاعی',
+          className: 'پیش‌دبستانی آفتاب ☀️',
+          amount: 800000,
+          status: 'پرداخت‌شده 🟢',
+          date: now,
+          receiptNo: 'RC-9825',
+          feeType: 'سرویس',
+          feeTitle: 'هزینه سرویس رفت و برگشت',
+          description: 'پرداخت نقدی به دفتر',
+          isIncluded: true,
+          isCash: true,
+          isInstallment: false,
+          cashStages: [CashStage(title: 'مرحله اول', amount: 800000, dueDate: now, isSettled: true)],
+        ),
+        TuitionRecord(
+          id: 'F3',
+          studentName: 'آرتین شجاعی',
+          className: 'پیش‌دبستانی آفتاب ☀️',
+          amount: 600000,
+          status: 'معوقه / بدهکار 🔴',
+          date: now,
+          receiptNo: 'RC-9829',
+          feeType: 'ناهار',
+          feeTitle: 'هزینه برنامه ناهار گرم',
+          description: 'اختیاری',
+          isIncluded: false, // غیر شمول در ابتدا
+        ),
+        TuitionRecord(
+          id: 'F4',
+          studentName: 'سارا محمدی',
+          className: 'پیش‌دبستانی آفتاب ☀️',
+          amount: 4500000,
+          status: 'در انتظار تأیید 🟡',
+          date: now,
+          receiptNo: 'RC-9822',
+          feeType: 'شهریه',
+          feeTitle: 'شهریه پایه',
+          description: 'درخواست پرداخت اقساطی',
+          isIncluded: true,
+          isCash: false,
+          isInstallment: true,
+          installmentCount: 4,
+          documentNote: '۴ فقره چک صیادی دریافت شد',
+        ),
       ];
       await _saveFinancialData();
       if (!mounted) return;
@@ -196,11 +339,21 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
     return grouped;
   }
 
-  /// ویرایش توضیحات یا وضعیت یک هزینه مشخص
+  /// ویرایش توضیحات و تنظیمات پرداخت یک بند هزینه
   Future<void> _editRecordDialog(TuitionRecord record) async {
     if (!PermissionService.instance.can(Session.role, Perm.viewFinancial)) return;
     final descCtrl = TextEditingController(text: record.description);
+    final docNoteCtrl = TextEditingController(text: record.documentNote);
     String currentStatus = record.status;
+    bool isCash = record.isCash;
+    bool isInstallment = record.isInstallment;
+    int installmentCount = record.installmentCount;
+
+    // مراحل نقدی
+    List<CashStage> stages = List.from(record.cashStages);
+    if (stages.isEmpty) {
+      stages = [CashStage(title: 'مرحله اول', amount: record.amount, dueDate: JalaliDate.now().formatted, isSettled: record.status.contains('پرداخت‌شده'))];
+    }
 
     final updated = await showDialog<bool>(
       context: context,
@@ -209,44 +362,156 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
           textDirection: TextDirection.rtl,
           child: AlertDialog(
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-            title: Text('ویرایش بند مالی: ${record.feeTitle}'),
+            title: Text('پیکربندی بند مالی: ${record.feeTitle}'),
             content: SizedBox(
-              width: 400,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('نوآموز: ${record.studentName} (${record.className})', style: const TextStyle(fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 6),
-                  Text('مبلغ: ${_formatNumber(record.amount)} تومان | شماره فیش: ${record.receiptNo}'),
-                  const SizedBox(height: 16),
-                  InputDecorator(
-                    decoration: const InputDecoration(labelText: 'وضعیت پرداخت', border: OutlineInputBorder()),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<String>(
-                        value: currentStatus,
-                        isDense: true,
-                        isExpanded: true,
-                        items: const [
-                          DropdownMenuItem(value: 'پرداخت‌شده 🟢', child: Text('پرداخت‌شده 🟢')),
-                          DropdownMenuItem(value: 'در انتظار تأیید 🟡', child: Text('در انتظار تأیید فیش 🟡')),
-                          DropdownMenuItem(value: 'معوقه / بدهکار 🔴', child: Text('معوقه / بدهکار 🔴')),
-                        ],
-                        onChanged: (val) => setDState(() => currentStatus = val!),
+              width: 500,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('نوآموز: ${record.studentName} (${record.className})', style: const TextStyle(fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 6),
+                    Text('مبلغ کل بند: ${_formatNumber(record.amount)} تومان | شماره فیش: ${record.receiptNo}'),
+                    const SizedBox(height: 16),
+
+                    InputDecorator(
+                      decoration: const InputDecoration(labelText: 'وضعیت کلی پرداخت', border: OutlineInputBorder()),
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton<String>(
+                          value: currentStatus,
+                          isDense: true,
+                          isExpanded: true,
+                          items: const [
+                            DropdownMenuItem(value: 'پرداخت‌شده 🟢', child: Text('پرداخت‌شده 🟢')),
+                            DropdownMenuItem(value: 'در انتظار تأیید 🟡', child: Text('در انتظار تأیید فیش 🟡')),
+                            DropdownMenuItem(value: 'معوقه / بدهکار 🔴', child: Text('معوقه / بدهکار 🔴')),
+                          ],
+                          onChanged: (val) => setDState(() => currentStatus = val!),
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 12),
-                  TextField(
-                    controller: descCtrl,
-                    maxLines: 3,
-                    decoration: const InputDecoration(
-                      labelText: 'توضیحات مدیر / یادداشت بررسی',
-                      hintText: 'توضیحات لازم در خصوص این واریزی یا وضعیت بدهی را وارد کنید...',
-                      border: OutlineInputBorder(),
+                    const SizedBox(height: 12),
+
+                    // انتخاب روش پرداخت (نقد / اقساط)
+                    const Text('نوع پرداخت:', style: TextStyle(fontWeight: FontWeight.bold)),
+                    Row(
+                      children: [
+                        Checkbox(
+                          value: isCash,
+                          onChanged: (v) => setDState(() => isCash = v ?? false),
+                        ),
+                        const Text('پرداخت نقدی'),
+                        const SizedBox(width: 20),
+                        Checkbox(
+                          value: isInstallment,
+                          onChanged: (v) => setDState(() => isInstallment = v ?? false),
+                        ),
+                        const Text('پرداخت اقساطی'),
+                      ],
                     ),
-                  ),
-                ],
+
+                    if (isCash) ...[
+                      const Divider(),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('مراحل پرداخت نقدی (حداکثر ۳ مرحله): ${stages.length} مرحله', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF01579B))),
+                          if (stages.length < 3)
+                            TextButton.icon(
+                              icon: const Icon(Icons.add_rounded, size: 16),
+                              label: const Text('افزودن مرحله'),
+                              onPressed: () {
+                                setDState(() {
+                                  final numName = stages.length == 1 ? 'مرحله دوم' : 'مرحله سوم';
+                                  stages.add(CashStage(title: numName, amount: 0, dueDate: JalaliDate.now().formatted));
+                                });
+                              },
+                            ),
+                        ],
+                      ),
+                      for (int i = 0; i < stages.length; i++)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 4),
+                          child: Row(
+                            children: [
+                              Text(stages[i].title, style: const TextStyle(fontSize: 12)),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: TextFormField(
+                                  initialValue: '${stages[i].amount}',
+                                  keyboardType: TextInputType.number,
+                                  decoration: const InputDecoration(labelText: 'مبلغ', isDense: true, border: OutlineInputBorder()),
+                                  onChanged: (val) {
+                                    final amt = int.tryParse(val) ?? 0;
+                                    stages[i] = stages[i].copyWith(amount: amt);
+                                  },
+                                ),
+                              ),
+                              const SizedBox(width: 6),
+                              Checkbox(
+                                value: stages[i].isSettled,
+                                onChanged: (v) {
+                                  setDState(() {
+                                    stages[i] = stages[i].copyWith(isSettled: v ?? false);
+                                  });
+                                },
+                              ),
+                              const Text('تسویه', style: TextStyle(fontSize: 11)),
+                              if (stages.length > 1)
+                                IconButton(
+                                  icon: const Icon(Icons.delete_outline, color: Colors.red, size: 18),
+                                  onPressed: () {
+                                    setDState(() {
+                                      stages.removeAt(i);
+                                    });
+                                  },
+                                ),
+                            ],
+                          ),
+                        ),
+                    ],
+
+                    if (isInstallment) ...[
+                      const Divider(),
+                      const Text('تنظیمات اقساط ماهانه:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF01579B))),
+                      const SizedBox(height: 6),
+                      Row(
+                        children: [
+                          const Text('تعداد اقساط: '),
+                          DropdownButton<int>(
+                            value: installmentCount,
+                            items: List.generate(10, (idx) => idx + 1)
+                                .map((num) => DropdownMenuItem(value: num, child: Text('$num قسط ماهانه')))
+                                .toList(),
+                            onChanged: (val) {
+                              if (val != null) setDState(() => installmentCount = val);
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+
+                    const Divider(),
+                    TextField(
+                      controller: descCtrl,
+                      maxLines: 2,
+                      decoration: const InputDecoration(
+                        labelText: 'توضیحات و یادداشت مدیر',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: docNoteCtrl,
+                      decoration: const InputDecoration(
+                        labelText: 'مستندات و تصویر فیش/چک صیادی (توضیحات یا لینک)',
+                        prefixIcon: Icon(Icons.attach_file_rounded),
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             actions: [
@@ -268,6 +533,11 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
         final newRecord = _records[idx].copyWith(
           status: currentStatus,
           description: descCtrl.text.trim(),
+          isCash: isCash,
+          isInstallment: isInstallment,
+          cashStages: stages,
+          installmentCount: installmentCount,
+          documentNote: docNoteCtrl.text.trim(),
         );
 
         if (Backend.ready) {
@@ -277,7 +547,10 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
 
           await Backend.client
               .from('tuition_records')
-              .update({'status': statusDb, 'description': descCtrl.text.trim()})
+              .update({
+                'status': statusDb,
+                'description': descCtrl.text.trim(),
+              })
               .eq('id', record.id);
         }
 
@@ -290,12 +563,12 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
           actor: Session.userName,
           role: Session.role.label,
           action: 'ویرایش مشخصات بند مالی',
-          details: '${newRecord.studentName} • ${newRecord.feeTitle} • ${newRecord.status} • توضیحات: ${newRecord.description}',
+          details: '${newRecord.studentName} • ${newRecord.feeTitle} • ${newRecord.status}',
         );
 
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('✅ مشخصات و توضیحات با موفقیت به روزرسانی شد.'), backgroundColor: Colors.green),
+            const SnackBar(content: Text('✅ مشخصات و تنظیمات پرداخت به روزرسانی شد.'), backgroundColor: Colors.green),
           );
         }
       }
@@ -314,8 +587,11 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
           builder: (context, setModalState) {
             // دریافت آخرین رکوردهای این نوآموز
             final currentStudentRecords = _records.where((r) => r.studentName == studentName).toList();
-            int totalCharges = currentStudentRecords.fold(0, (sum, item) => sum + item.amount);
-            int paidCharges = currentStudentRecords
+
+            // فقط هزینه‌های شمول یافته (isIncluded == true) در محاسبات آورده می‌شوند
+            final includedRecords = currentStudentRecords.where((item) => item.isIncluded).toList();
+            int totalCharges = includedRecords.fold(0, (sum, item) => sum + item.amount);
+            int paidCharges = includedRecords
                 .where((item) => item.status.contains('پرداخت‌شده'))
                 .fold(0, (sum, item) => sum + item.amount);
             int pendingCharges = totalCharges - paidCharges;
@@ -323,11 +599,13 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
             return Directionality(
               textDirection: TextDirection.rtl,
               child: Dialog(
-                insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+                insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                 child: Container(
-                  width: 900,
-                  maxHeight: MediaQuery.of(context).size.height * 0.88,
+                  width: 1000,
+                  constraints: BoxConstraints(
+                    maxHeight: MediaQuery.of(context).size.height * 0.90,
+                  ),
                   padding: const EdgeInsets.all(20),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -349,10 +627,10 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'جدول و صورت‌حساب مالی $studentName',
+                                    'جدول صورت‌حساب مالی نوآموز: $studentName',
                                     style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF01579B)),
                                   ),
-                                  Text('کلاس: $className', style: const TextStyle(color: Colors.grey, fontSize: 13)),
+                                  Text('کلاس: $className • تعداد بندهای هزینه: ${currentStudentRecords.length}', style: const TextStyle(color: Colors.grey, fontSize: 13)),
                                 ],
                               ),
                             ],
@@ -363,26 +641,26 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 14),
 
                       // خلاصه سریع صورت‌حساب این نوآموز
                       Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: Colors.grey.shade100,
+                          color: Colors.blue.shade50.withOpacity(0.5),
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: Colors.grey.shade300),
+                          border: Border.all(color: Colors.blue.shade200),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            _summaryChip('جمع کل هزینه‌ها', '${_formatNumber(totalCharges)} تومان', Colors.blue.shade900),
-                            _summaryChip('پرداخت‌شده', '${_formatNumber(paidCharges)} تومان', Colors.green.shade800),
+                            _summaryChip('جمع کل هزینه‌های شمول‌یافته', '${_formatNumber(totalCharges)} تومان', Colors.blue.shade900),
+                            _summaryChip('کل پرداخت‌شده', '${_formatNumber(paidCharges)} تومان', Colors.green.shade800),
                             _summaryChip('مانده / بدهکار', '${_formatNumber(pendingCharges)} تومان', pendingCharges > 0 ? Colors.red.shade800 : Colors.green.shade800),
                           ],
                         ),
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 14),
 
                       // دکمه‌های خروجی و پرینت اختصاصی نوآموز
                       Row(
@@ -398,10 +676,19 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
                             onPressed: () {
                               ExportHelper.exportToExcel(
                                 context: context,
-                                title: 'صورت‌حساب مالی $studentName ($className)',
-                                headers: ['بخش هزینه', 'عنوان هزینه', 'مبلغ (تومان)', 'وضعیت', 'تاریخ', 'شماره فیش', 'توضیحات'],
+                                title: 'صورت‌حساب رسمی مالی $studentName ($className)',
+                                headers: ['شمول هزینه', 'بخش/عنوان', 'مبلغ (تومان)', 'نوع پرداخت', 'وضعیت', 'تاریخ', 'فیش/سند', 'توضیحات و مستندات'],
                                 rows: currentStudentRecords
-                                    .map((r) => [r.feeType, r.feeTitle, r.amount, r.status, r.date, r.receiptNo, r.description])
+                                    .map((r) => [
+                                          r.isIncluded ? 'شامل ✅' : 'عدم شمول ❌',
+                                          '${r.feeType} - ${r.feeTitle}',
+                                          r.amount,
+                                          '${r.isCash ? "نقد " : ""}${r.isInstallment ? "اقساط ($r.installmentCount)" : ""}',
+                                          r.status,
+                                          r.date,
+                                          r.receiptNo,
+                                          '${r.description} ${r.documentNote.isNotEmpty ? " | سند: ${r.documentNote}" : ""}'
+                                        ])
                                     .toList(),
                                 fileName: 'financial_${studentName.replaceAll(' ', '_')}_${DateTime.now().millisecondsSinceEpoch}',
                               );
@@ -419,10 +706,18 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
                             onPressed: () {
                               ExportHelper.exportToPdf(
                                 context: context,
-                                title: 'صورت‌حساب مالی $studentName ($className)',
-                                headers: ['بخش هزینه', 'عنوان', 'مبلغ (تومان)', 'وضعیت', 'تاریخ', 'شماره فیش', 'توضیحات'],
+                                title: 'صورت‌حساب رسمی مالی $studentName ($className)',
+                                headers: ['شمول', 'عنوان هزینه', 'مبلغ (تومان)', 'نوع پرداخت', 'وضعیت', 'تاریخ', 'توضیحات و مستندات'],
                                 rows: currentStudentRecords
-                                    .map((r) => [r.feeType, r.feeTitle, r.amount, r.status, r.date, r.receiptNo, r.description])
+                                    .map((r) => [
+                                          r.isIncluded ? 'بله' : 'خیر',
+                                          '${r.feeType} - ${r.feeTitle}',
+                                          r.amount,
+                                          '${r.isCash ? "نقدی" : ""}${r.isCash && r.isInstallment ? " / " : ""}${r.isInstallment ? "اقساطی" : ""}',
+                                          r.status,
+                                          r.date,
+                                          '${r.description} ${r.documentNote.isNotEmpty ? " | سند: ${r.documentNote}" : ""}'
+                                        ])
                                     .toList(),
                                 fileName: 'financial_${studentName.replaceAll(' ', '_')}_${DateTime.now().millisecondsSinceEpoch}',
                               );
@@ -440,9 +735,17 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
                               ExportHelper.printTable(
                                 context: context,
                                 title: 'صورت‌حساب رسمی مالی $studentName ($className)',
-                                headers: ['بخش هزینه', 'عنوان', 'مبلغ (تومان)', 'وضعیت', 'تاریخ', 'شماره فیش', 'توضیحات'],
+                                headers: ['شمول', 'عنوان هزینه', 'مبلغ (تومان)', 'نوع پرداخت', 'وضعیت', 'تاریخ', 'توضیحات و مستندات'],
                                 rows: currentStudentRecords
-                                    .map((r) => [r.feeType, r.feeTitle, r.amount, r.status, r.date, r.receiptNo, r.description])
+                                    .map((r) => [
+                                          r.isIncluded ? 'بله' : 'خیر',
+                                          '${r.feeType} - ${r.feeTitle}',
+                                          r.amount,
+                                          '${r.isCash ? "نقدی" : ""}${r.isCash && r.isInstallment ? " / " : ""}${r.isInstallment ? "اقساطی" : ""}',
+                                          r.status,
+                                          r.date,
+                                          '${r.description} ${r.documentNote.isNotEmpty ? " | سند: ${r.documentNote}" : ""}'
+                                        ])
                                     .toList(),
                                 fileName: 'financial_${studentName.replaceAll(' ', '_')}_${DateTime.now().millisecondsSinceEpoch}',
                               );
@@ -465,9 +768,9 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 14),
 
-                      // جدول گزینه‌ها و آیتم‌های مالی نوآموز (DataTable)
+                      // جدول اصلی صورت‌حساب نوآموز (DataTable)
                       Expanded(
                         child: Container(
                           width: double.infinity,
@@ -482,46 +785,163 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
                               child: DataTable(
                                 headingRowColor: WidgetStateProperty.all(const Color(0xFF01579B).withOpacity(0.08)),
                                 columns: const [
-                                  DataColumn(label: Text('بخش هزینه', style: TextStyle(fontWeight: FontWeight.bold))),
+                                  DataColumn(label: Text('تیک شمول هزینه', style: TextStyle(fontWeight: FontWeight.bold))),
                                   DataColumn(label: Text('عنوان هزینه', style: TextStyle(fontWeight: FontWeight.bold))),
                                   DataColumn(label: Text('مبلغ (تومان)', style: TextStyle(fontWeight: FontWeight.bold))),
-                                  DataColumn(label: Text('وضعیت', style: TextStyle(fontWeight: FontWeight.bold))),
-                                  DataColumn(label: Text('تاریخ', style: TextStyle(fontWeight: FontWeight.bold))),
-                                  DataColumn(label: Text('شماره فیش', style: TextStyle(fontWeight: FontWeight.bold))),
-                                  DataColumn(label: Text('توضیحات مدیر', style: TextStyle(fontWeight: FontWeight.bold))),
+                                  DataColumn(label: Text('نوع پرداخت (نقد / اقساط)', style: TextStyle(fontWeight: FontWeight.bold))),
+                                  DataColumn(label: Text('وضعیت و واریز والد', style: TextStyle(fontWeight: FontWeight.bold))),
+                                  DataColumn(label: Text('توضیحات و مستندات / پیوست', style: TextStyle(fontWeight: FontWeight.bold))),
                                   DataColumn(label: Text('عملیات', style: TextStyle(fontWeight: FontWeight.bold))),
                                 ],
                                 rows: currentStudentRecords.map((rec) {
                                   return DataRow(
+                                    color: WidgetStateProperty.resolveWith((states) {
+                                      return rec.isIncluded ? null : Colors.grey.shade100;
+                                    }),
                                     cells: [
-                                      DataCell(Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                        decoration: BoxDecoration(
-                                          color: Colors.blue.shade50,
-                                          borderRadius: BorderRadius.circular(6),
-                                        ),
-                                        child: Text(rec.feeType, style: TextStyle(fontSize: 12, color: Colors.blue.shade900, fontWeight: FontWeight.w600)),
-                                      )),
-                                      DataCell(Text(rec.feeTitle, style: const TextStyle(fontWeight: FontWeight.w500))),
-                                      DataCell(Text('${_formatNumber(rec.amount)} تومان', style: const TextStyle(fontWeight: FontWeight.bold))),
-                                      DataCell(Text(rec.status, style: const TextStyle(fontSize: 12))),
-                                      DataCell(Text(rec.date, style: const TextStyle(fontSize: 12))),
-                                      DataCell(Text(rec.receiptNo, style: const TextStyle(fontSize: 12))),
+                                      // ۱. چک‌باکس شمول هزینه
                                       DataCell(
-                                        SizedBox(
-                                          width: 200,
-                                          child: Text(
-                                            rec.description.isEmpty ? '—' : rec.description,
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(fontSize: 12, color: rec.description.isEmpty ? Colors.grey : Colors.black87),
+                                        Checkbox(
+                                          value: rec.isIncluded,
+                                          activeColor: const Color(0xFF01579B),
+                                          onChanged: (val) async {
+                                            final updatedValue = val ?? false;
+                                            final idx = _records.indexWhere((x) => x.id == rec.id);
+                                            if (idx >= 0) {
+                                              setState(() {
+                                                _records[idx] = _records[idx].copyWith(isIncluded: updatedValue);
+                                              });
+                                              await _saveFinancialData();
+                                              setModalState(() {});
+                                            }
+                                          },
+                                        ),
+                                      ),
+
+                                      // ۲. عنوان هزینه
+                                      DataCell(
+                                        Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              rec.feeTitle,
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                decoration: rec.isIncluded ? null : TextDecoration.lineThrough,
+                                                color: rec.isIncluded ? Colors.black87 : Colors.grey,
+                                              ),
+                                            ),
+                                            Text('بخش: ${rec.feeType}', style: const TextStyle(fontSize: 11, color: Colors.grey)),
+                                          ],
+                                        ),
+                                      ),
+
+                                      // ۳. مبلغ (تومان)
+                                      DataCell(
+                                        Text(
+                                          '${_formatNumber(rec.amount)} تومان',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            decoration: rec.isIncluded ? null : TextDecoration.lineThrough,
+                                            color: rec.isIncluded ? Colors.blue.shade900 : Colors.grey,
                                           ),
                                         ),
                                       ),
+
+                                      // ۴. نوع پرداخت (نقد / اقساط)
+                                      DataCell(
+                                        Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            FilterChip(
+                                              label: Text('نقد', style: TextStyle(fontSize: 11, color: rec.isCash ? Colors.green.shade900 : Colors.black54)),
+                                              selected: rec.isCash,
+                                              selectedColor: Colors.green.shade100,
+                                              onSelected: (val) async {
+                                                final idx = _records.indexWhere((x) => x.id == rec.id);
+                                                if (idx >= 0) {
+                                                  setState(() {
+                                                    _records[idx] = _records[idx].copyWith(isCash: val);
+                                                  });
+                                                  await _saveFinancialData();
+                                                  setModalState(() {});
+                                                }
+                                              },
+                                            ),
+                                            const SizedBox(width: 4),
+                                            FilterChip(
+                                              label: Text(
+                                                'اقساط (${rec.installmentCount} قسط)',
+                                                style: TextStyle(fontSize: 11, color: rec.isInstallment ? Colors.purple.shade900 : Colors.black54),
+                                              ),
+                                              selected: rec.isInstallment,
+                                              selectedColor: Colors.purple.shade100,
+                                              onSelected: (val) async {
+                                                final idx = _records.indexWhere((x) => x.id == rec.id);
+                                                if (idx >= 0) {
+                                                  setState(() {
+                                                    _records[idx] = _records[idx].copyWith(isInstallment: val);
+                                                  });
+                                                  await _saveFinancialData();
+                                                  setModalState(() {});
+                                                }
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+
+                                      // ۵. وضعیت و واریز والد
+                                      DataCell(
+                                        Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(rec.status, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                                            Text('فیش/پیگیری: ${rec.receiptNo}', style: const TextStyle(fontSize: 11, color: Colors.grey)),
+                                          ],
+                                        ),
+                                      ),
+
+                                      // ۶. توضیحات و مستندات / پیوست
+                                      DataCell(
+                                        SizedBox(
+                                          width: 220,
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                rec.description.isEmpty ? 'بدون یادداشت' : rec.description,
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: const TextStyle(fontSize: 12),
+                                              ),
+                                              if (rec.documentNote.isNotEmpty)
+                                                Row(
+                                                  children: [
+                                                    const Icon(Icons.attach_file, size: 12, color: Colors.blue),
+                                                    Expanded(
+                                                      child: Text(
+                                                        rec.documentNote,
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow.ellipsis,
+                                                        style: const TextStyle(fontSize: 10, color: Colors.blue, fontWeight: FontWeight.bold),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+
+                                      // ۷. عملیات
                                       DataCell(
                                         IconButton(
-                                          icon: const Icon(Icons.edit_note_rounded, color: Color(0xFF01579B)),
-                                          tooltip: 'ثبت/ویرایش توضیحات و وضعیت',
+                                          icon: const Icon(Icons.settings_suggest_rounded, color: Color(0xFF01579B)),
+                                          tooltip: 'پیکربندی اقساط/مراحل و مستندات',
                                           onPressed: () async {
                                             await _editRecordDialog(rec);
                                             setModalState(() {});
@@ -583,6 +1003,9 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
     final feeTitleCtrl = TextEditingController(text: 'شهریه ماهانه');
     final descCtrl = TextEditingController();
     final receiptCtrl = TextEditingController(text: 'RC-${DateTime.now().millisecond}');
+    bool isIncluded = true;
+    bool isCash = true;
+    bool isInstallment = false;
 
     await showDialog(
       context: context,
@@ -598,6 +1021,16 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    Row(
+                      children: [
+                        Checkbox(
+                          value: isIncluded,
+                          onChanged: (v) => setDialogState(() => isIncluded = v ?? true),
+                        ),
+                        const Text('شمول این هزینه در کل صورت‌حساب نوآموز', style: TextStyle(fontWeight: FontWeight.bold)),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
                     TextField(
                       controller: nameCtrl,
                       decoration: const InputDecoration(labelText: 'نام نوآموز', border: OutlineInputBorder()),
@@ -631,11 +1064,12 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
                                 isDense: true,
                                 isExpanded: true,
                                 items: const [
-                                  DropdownMenuItem(value: 'شهریه', child: Text('شهریه')),
+                                  DropdownMenuItem(value: 'شهریه', child: Text('شهریه سالانه')),
+                                  DropdownMenuItem(value: 'ناهار', child: Text('ناهار')),
+                                  DropdownMenuItem(value: 'میان‌وعده', child: Text('میان‌وعده')),
+                                  DropdownMenuItem(value: 'نگهداری', child: Text('نگهداری اضافه')),
+                                  DropdownMenuItem(value: 'اردو', child: Text('اردو و فوق‌برنامه')),
                                   DropdownMenuItem(value: 'سرویس', child: Text('سرویس')),
-                                  DropdownMenuItem(value: 'کتاب و لوازم', child: Text('کتاب و لوازم')),
-                                  DropdownMenuItem(value: 'فوق‌برنامه', child: Text('فوق‌برنامه')),
-                                  DropdownMenuItem(value: 'تغذیه', child: Text('تغذیه')),
                                   DropdownMenuItem(value: 'سایر', child: Text('سایر')),
                                 ],
                                 onChanged: (val) {
@@ -664,6 +1098,16 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
                       controller: amountCtrl,
                       keyboardType: TextInputType.number,
                       decoration: const InputDecoration(labelText: 'مبلغ (تومان)', border: OutlineInputBorder()),
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Checkbox(value: isCash, onChanged: (v) => setDialogState(() => isCash = v ?? false)),
+                        const Text('پرداخت نقدی'),
+                        const SizedBox(width: 12),
+                        Checkbox(value: isInstallment, onChanged: (v) => setDialogState(() => isInstallment = v ?? false)),
+                        const Text('پرداخت اقساطی'),
+                      ],
                     ),
                     const SizedBox(height: 12),
                     InputDecorator(
@@ -714,6 +1158,9 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
                       feeType: selectedFeeType,
                       feeTitle: feeTitleCtrl.text.trim().isEmpty ? selectedFeeType : feeTitleCtrl.text.trim(),
                       description: descCtrl.text.trim(),
+                      isIncluded: isIncluded,
+                      isCash: isCash,
+                      isInstallment: isInstallment,
                     );
 
                     if (Backend.ready) {
@@ -749,7 +1196,7 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
                     if (mounted) {
                       Navigator.pop(ctx);
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('✅ بند مالی با موفقیت ثبت شد!'), backgroundColor: Colors.green),
+                        const SnackBar(content: Text('✅ بند مالی جدید با موفقیت ثبت شد!'), backgroundColor: Colors.green),
                       );
                     }
                   }
@@ -766,7 +1213,7 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
   int get _totalIncome {
     int sum = 0;
     for (var r in _records) {
-      if (r.status.contains('پرداخت‌شده')) sum += r.amount;
+      if (r.isIncluded && r.status.contains('پرداخت‌شده')) sum += r.amount;
     }
     return sum;
   }
@@ -774,7 +1221,7 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
   int get _totalPending {
     int sum = 0;
     for (var r in _records) {
-      if (r.status.contains('بدهکار') || r.status.contains('معوقه') || r.status.contains('انتظار')) sum += r.amount;
+      if (r.isIncluded && (r.status.contains('بدهکار') || r.status.contains('معوقه') || r.status.contains('انتظار'))) sum += r.amount;
     }
     return sum;
   }
@@ -795,8 +1242,21 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
               ExportHelper.exportToExcel(
                 context: context,
                 title: 'گزارش جامع امور مالی و شهریه نوآموزان',
-                headers: ['نام نوآموز', 'کلاس', 'بخش هزینه', 'عنوان هزینه', 'مبلغ (تومان)', 'وضعیت', 'تاریخ', 'شماره فیش', 'توضیحات'],
-                rows: _records.map((r) => [r.studentName, r.className, r.feeType, r.feeTitle, r.amount, r.status, r.date, r.receiptNo, r.description]).toList(),
+                headers: ['نام نوآموز', 'کلاس', 'شمول', 'بخش هزینه', 'عنوان هزینه', 'مبلغ (تومان)', 'وضعیت', 'تاریخ', 'شماره فیش', 'توضیحات'],
+                rows: _records
+                    .map((r) => [
+                          r.studentName,
+                          r.className,
+                          r.isIncluded ? 'شامل' : 'غیرشمول',
+                          r.feeType,
+                          r.feeTitle,
+                          r.amount,
+                          r.status,
+                          r.date,
+                          r.receiptNo,
+                          r.description
+                        ])
+                    .toList(),
                 fileName: 'financial_report_all_${DateTime.now().millisecondsSinceEpoch}',
               );
             },
@@ -808,8 +1268,20 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
               ExportHelper.exportToPdf(
                 context: context,
                 title: 'گزارش جامع رسمی امور مالی و شهریه نوآموزان',
-                headers: ['نام نوآموز', 'کلاس', 'عنوان هزینه', 'مبلغ (تومان)', 'وضعیت', 'تاریخ', 'شماره فیش', 'توضیحات'],
-                rows: _records.map((r) => [r.studentName, r.className, r.feeTitle, r.amount, r.status, r.date, r.receiptNo, r.description]).toList(),
+                headers: ['نام نوآموز', 'کلاس', 'شمول', 'عنوان هزینه', 'مبلغ (تومان)', 'وضعیت', 'تاریخ', 'شماره فیش', 'توضیحات'],
+                rows: _records
+                    .map((r) => [
+                          r.studentName,
+                          r.className,
+                          r.isIncluded ? 'بله' : 'خیر',
+                          r.feeTitle,
+                          r.amount,
+                          r.status,
+                          r.date,
+                          r.receiptNo,
+                          r.description
+                        ])
+                    .toList(),
                 fileName: 'financial_report_all_${DateTime.now().millisecondsSinceEpoch}',
               );
             },
@@ -821,8 +1293,20 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
               ExportHelper.printTable(
                 context: context,
                 title: 'گزارش جامع رسمی امور مالی و شهریه نوآموزان',
-                headers: ['نام نوآموز', 'کلاس', 'عنوان هزینه', 'مبلغ (تومان)', 'وضعیت', 'تاریخ', 'شماره فیش', 'توضیحات'],
-                rows: _records.map((r) => [r.studentName, r.className, r.feeTitle, r.amount, r.status, r.date, r.receiptNo, r.description]).toList(),
+                headers: ['نام نوآموز', 'کلاس', 'شمول', 'عنوان هزینه', 'مبلغ (تومان)', 'وضعیت', 'تاریخ', 'شماره فیش', 'توضیحات'],
+                rows: _records
+                    .map((r) => [
+                          r.studentName,
+                          r.className,
+                          r.isIncluded ? 'بله' : 'خیر',
+                          r.feeTitle,
+                          r.amount,
+                          r.status,
+                          r.date,
+                          r.receiptNo,
+                          r.description
+                        ])
+                    .toList(),
                 fileName: 'financial_report_all_${DateTime.now().millisecondsSinceEpoch}',
               );
             },
@@ -856,7 +1340,7 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text('کل درآمد وصول‌شده', style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
+                                const Text('کل درآمد وصول‌شده (شامل‌شده)', style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
                                 const SizedBox(height: 8),
                                 Text('${_formatNumber(_totalIncome)} تومان', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                               ],
@@ -875,7 +1359,7 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text('مجموع معوقات و در انتظار', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+                                const Text('مجموع معوقات و در انتظار (شامل‌شده)', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
                                 const SizedBox(height: 8),
                                 Text('${_formatNumber(_totalPending)} تومان', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                               ],
@@ -907,7 +1391,7 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text(
-                        'لیست نوآموزان و وضعیت حساب مالی (جهت مشاهده جزئیات کلیک کنید):',
+                        'لیست نوآموزان و وضعیت حساب مالی (جهت مشاهده جدول صورت‌حساب کلیک کنید):',
                         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Color(0xFF01579B)),
                       ),
                       Text('تعداد نوآموزان: ${grouped.length}', style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),
@@ -931,12 +1415,13 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
                                 final studentRecords = grouped[studentName]!;
                                 final className = studentRecords.first.className;
 
-                                final total = studentRecords.fold(0, (sum, r) => sum + r.amount);
-                                final paid = studentRecords
+                                final includedItems = studentRecords.where((r) => r.isIncluded).toList();
+                                final total = includedItems.fold(0, (sum, r) => sum + r.amount);
+                                final paid = includedItems
                                     .where((r) => r.status.contains('پرداخت‌شده'))
                                     .fold(0, (sum, r) => sum + r.amount);
                                 final pending = total - paid;
-                                final hasPending = pending > 0 || studentRecords.any((r) => r.status.contains('انتظار'));
+                                final hasPending = pending > 0 || includedItems.any((r) => r.status.contains('انتظار'));
 
                                 return InkWell(
                                   onTap: () => _showStudentFinancialDetailsModal(studentName, studentRecords),
@@ -980,7 +1465,7 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
                                               ),
                                               const SizedBox(height: 4),
                                               Text(
-                                                'شامل ${studentRecords.length} بند هزینه • کل: ${_formatNumber(total)} تومان | پرداخت‌شده: ${_formatNumber(paid)} تومان',
+                                                'کل بندها: ${studentRecords.length} (شمول: ${includedItems.length}) • کل: ${_formatNumber(total)} تومان | واریزی: ${_formatNumber(paid)} تومان',
                                                 style: TextStyle(fontSize: 12, color: Colors.grey.shade700),
                                               ),
                                             ],
@@ -1000,7 +1485,7 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
                                             const SizedBox(height: 4),
                                             Row(
                                               children: const [
-                                                Text('مشاهده جدول هزینه‌ها', style: TextStyle(fontSize: 11, color: Color(0xFF01579B), fontWeight: FontWeight.bold)),
+                                                Text('مشاهده جدول صورت‌حساب', style: TextStyle(fontSize: 11, color: Color(0xFF01579B), fontWeight: FontWeight.bold)),
                                                 Icon(Icons.chevron_left_rounded, size: 16, color: Color(0xFF01579B)),
                                               ],
                                             ),
