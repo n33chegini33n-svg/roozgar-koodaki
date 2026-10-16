@@ -511,7 +511,7 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
                           DropdownButton<int>(
                             value: installmentCount,
                             items: List.generate(10, (idx) => idx + 1)
-                                .map((num) => DropdownMenuItem(value: num, child: Text('$num قسط ماهانه')))
+                                .map((countVal) => DropdownMenuItem(value: countVal, child: Text('$countVal قسط ماهانه')))
                                 .toList(),
                             onChanged: (val) {
                               if (val != null) setDState(() => installmentCount = val);
@@ -672,7 +672,7 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
                             children: [
                               CircleAvatar(
                                 radius: 24,
-                                backgroundColor: const Color(0xFF01579B).withOpacity(0.1),
+                                backgroundColor: const Color(0xFF01579B).withValues(alpha: 0.1),
                                 child: const Icon(Icons.account_balance_wallet_rounded, color: Color(0xFF01579B), size: 28),
                               ),
                               const SizedBox(width: 12),
@@ -700,7 +700,7 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
                       Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: Colors.blue.shade50.withOpacity(0.5),
+                          color: Colors.blue.shade50.withValues(alpha: 0.5),
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(color: Colors.blue.shade200),
                         ),
@@ -840,7 +840,7 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
                                 headingRowHeight: 48,
                                 dataRowMaxHeight: 88,
                                 dataRowMinHeight: 70,
-                                headingRowColor: WidgetStateProperty.all(const Color(0xFF01579B).withOpacity(0.08)),
+                                headingRowColor: WidgetStateProperty.all(const Color(0xFF01579B).withValues(alpha: 0.08)),
                                 columns: const [
                                   DataColumn(label: SizedBox(width: 100, child: Text('تیک شمول هزینه', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13), textAlign: TextAlign.center))),
                                   DataColumn(label: SizedBox(width: 150, child: Text('عنوان هزینه', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)))),
@@ -854,7 +854,7 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
                                   // محاسبه مراحل پرداخت نقدی (۳ مرحله)
                                   List<CashStage> stages = List.from(rec.cashStages);
                                   while (stages.length < 3) {
-                                    final numName = stages.length == 0 ? 'مرحله اول' : (stages.length == 1 ? 'مرحله دوم' : 'مرحله سوم');
+                                    final numName = stages.isEmpty ? 'مرحله اول' : (stages.length == 1 ? 'مرحله دوم' : 'مرحله سوم');
                                     stages.add(CashStage(title: numName, amount: 0, dueDate: rec.date));
                                   }
 
@@ -1274,13 +1274,13 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
     final nameCtrl = TextEditingController(text: prefilledStudent ?? '');
 
     // لیست کلاس‌های ممکن جهت جلوگیری از خطای نبود value در DropdownButton
-    final classOptions = [
+    final classOptions = <String>{
       if (prefilledClass != null && prefilledClass.isNotEmpty) prefilledClass,
       'پیش‌دبستانی آفتاب ☀️',
       'اول دبستان ستاره 🌟',
       'دوم دبستان مهتاب 🌙',
       ...kClassNames.map((name) => classLabel(name)),
-    ].toSet().toList();
+    }.toList();
 
     String selectedClass = (prefilledClass != null && classOptions.contains(prefilledClass))
         ? prefilledClass
@@ -1488,8 +1488,9 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
                     );
 
                     if (mounted) {
+                      final messenger = ScaffoldMessenger.of(context);
                       Navigator.pop(ctx);
-                      ScaffoldMessenger.of(context).showSnackBar(
+                      messenger.showSnackBar(
                         const SnackBar(content: Text('✅ بند مالی جدید با موفقیت ثبت شد!'), backgroundColor: Colors.green),
                       );
                     }
