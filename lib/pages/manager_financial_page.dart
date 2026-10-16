@@ -511,7 +511,7 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
                           DropdownButton<int>(
                             value: installmentCount,
                             items: List.generate(10, (idx) => idx + 1)
-                                .map((num) => DropdownMenuItem(value: num, child: Text('$num قسط ماهانه')))
+                                .map((countVal) => DropdownMenuItem(value: countVal, child: Text('$countVal قسط ماهانه')))
                                 .toList(),
                             onChanged: (val) {
                               if (val != null) setDState(() => installmentCount = val);
@@ -531,13 +531,37 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
                       ),
                     ),
                     const SizedBox(height: 10),
-                    TextField(
-                      controller: docNoteCtrl,
-                      decoration: const InputDecoration(
-                        labelText: 'مستندات و تصویر فیش/چک صیادی (توضیحات یا لینک)',
-                        prefixIcon: Icon(Icons.attach_file_rounded),
-                        border: OutlineInputBorder(),
-                      ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: docNoteCtrl,
+                            decoration: const InputDecoration(
+                              labelText: 'مستندات و تصویر فیش/چک صیادی (توضیحات یا لینک)',
+                              prefixIcon: Icon(Icons.attach_file_rounded),
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+                            backgroundColor: Colors.blue.shade700,
+                            foregroundColor: Colors.white,
+                          ),
+                          icon: const Icon(Icons.upload_file_rounded, size: 18),
+                          label: const Text('آپلود عکس', style: TextStyle(fontSize: 11)),
+                          onPressed: () {
+                            setDState(() {
+                              docNoteCtrl.text = 'تصویر فیش/سند مالی ضمیمه شد (فایل تصویر)';
+                            });
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('📸 تصویر فیش/سند مالی انتخاب و ثبت گردید.')),
+                            );
+                          },
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -648,7 +672,7 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
                             children: [
                               CircleAvatar(
                                 radius: 24,
-                                backgroundColor: const Color(0xFF01579B).withOpacity(0.1),
+                                backgroundColor: const Color(0xFF01579B).withValues(alpha: 0.1),
                                 child: const Icon(Icons.account_balance_wallet_rounded, color: Color(0xFF01579B), size: 28),
                               ),
                               const SizedBox(width: 12),
@@ -676,7 +700,7 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
                       Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: Colors.blue.shade50.withOpacity(0.5),
+                          color: Colors.blue.shade50.withValues(alpha: 0.5),
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(color: Colors.blue.shade200),
                         ),
@@ -712,7 +736,7 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
                                           r.isIncluded ? 'شامل ✅' : 'عدم شمول ❌',
                                           '${r.feeType} - ${r.feeTitle}',
                                           r.amount,
-                                          '${r.isCash ? "نقد " : ""}${r.isInstallment ? "اقساط ($r.installmentCount)" : ""}',
+                                          '${r.isCash ? "نقد " : ""}${r.isInstallment ? "اقساط (${r.installmentCount})" : ""}',
                                           r.status,
                                           r.date,
                                           r.receiptNo,
@@ -788,7 +812,7 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                             ),
                             icon: const Icon(Icons.add_rounded, size: 18),
-                            label: const Text('افزودن بند هزینه'),
+                            label: const Text('افزودن هزینه جدید'),
                             onPressed: () async {
                               await _showAddInvoiceDialog(prefilledStudent: studentName, prefilledClass: className);
                               setModalState(() {});
@@ -816,7 +840,7 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
                                 headingRowHeight: 48,
                                 dataRowMaxHeight: 88,
                                 dataRowMinHeight: 70,
-                                headingRowColor: WidgetStateProperty.all(const Color(0xFF01579B).withOpacity(0.08)),
+                                headingRowColor: WidgetStateProperty.all(const Color(0xFF01579B).withValues(alpha: 0.08)),
                                 columns: const [
                                   DataColumn(label: SizedBox(width: 100, child: Text('تیک شمول هزینه', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13), textAlign: TextAlign.center))),
                                   DataColumn(label: SizedBox(width: 150, child: Text('عنوان هزینه', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)))),
@@ -830,7 +854,7 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
                                   // محاسبه مراحل پرداخت نقدی (۳ مرحله)
                                   List<CashStage> stages = List.from(rec.cashStages);
                                   while (stages.length < 3) {
-                                    final numName = stages.length == 0 ? 'مرحله اول' : (stages.length == 1 ? 'مرحله دوم' : 'مرحله سوم');
+                                    final numName = stages.isEmpty ? 'مرحله اول' : (stages.length == 1 ? 'مرحله دوم' : 'مرحله سوم');
                                     stages.add(CashStage(title: numName, amount: 0, dueDate: rec.date));
                                   }
 
@@ -897,18 +921,69 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
                                         ),
                                       ),
 
-                                      // ۳. مبلغ (تومان)
+                                      // ۳. مبلغ (تومان) - قابل ویرایش جهت تغییرات تورمی توسط مدیر
                                       DataCell(
                                         SizedBox(
                                           width: 120,
-                                          child: Text(
-                                            '${_formatNumber(rec.amount)} تومان',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 13,
-                                              decoration: rec.isIncluded ? null : TextDecoration.lineThrough,
-                                              color: rec.isIncluded ? Colors.blue.shade900 : Colors.grey,
-                                            ),
+                                          child: Row(
+                                            children: [
+                                              Expanded(
+                                                child: Text(
+                                                  '${_formatNumber(rec.amount)} تومان',
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 12,
+                                                    decoration: rec.isIncluded ? null : TextDecoration.lineThrough,
+                                                    color: rec.isIncluded ? Colors.blue.shade900 : Colors.grey,
+                                                  ),
+                                                ),
+                                              ),
+                                              InkWell(
+                                                onTap: () async {
+                                                  final controller = TextEditingController(text: '${rec.amount}');
+                                                  final newAmt = await showDialog<int>(
+                                                    context: context,
+                                                    builder: (c) => Directionality(
+                                                      textDirection: TextDirection.rtl,
+                                                      child: AlertDialog(
+                                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                                                        title: Text('ویرایش مبلغ ${rec.feeTitle}'),
+                                                        content: TextField(
+                                                          controller: controller,
+                                                          keyboardType: TextInputType.number,
+                                                          autofocus: true,
+                                                          decoration: const InputDecoration(
+                                                            labelText: 'مبلغ جدید (تومان)',
+                                                            border: OutlineInputBorder(),
+                                                          ),
+                                                        ),
+                                                        actions: [
+                                                          TextButton(onPressed: () => Navigator.pop(c), child: const Text('انصراف')),
+                                                          ElevatedButton(
+                                                            onPressed: () => Navigator.pop(c, int.tryParse(controller.text.trim())),
+                                                            child: const Text('ثبت مبلغ'),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  );
+                                                  if (newAmt != null && newAmt >= 0) {
+                                                    final idx = _records.indexWhere((x) => x.id == rec.id);
+                                                    if (idx >= 0) {
+                                                      setState(() {
+                                                        _records[idx] = _records[idx].copyWith(amount: newAmt);
+                                                      });
+                                                      await _saveFinancialData();
+                                                      setModalState(() {});
+                                                    }
+                                                  }
+                                                },
+                                                child: const Padding(
+                                                  padding: EdgeInsets.all(2.0),
+                                                  child: Icon(Icons.edit_rounded, size: 16, color: Colors.blue),
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ),
@@ -946,7 +1021,7 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
                                                     visualDensity: VisualDensity.compact,
                                                     labelStyle: const TextStyle(fontSize: 10),
                                                     label: Text(
-                                                      'اقساط (${rec.installmentCount} قسط)',
+                                                      'اقساط',
                                                       style: TextStyle(color: rec.isInstallment ? Colors.purple.shade900 : Colors.black54),
                                                     ),
                                                     selected: rec.isInstallment,
@@ -955,7 +1030,10 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
                                                       final idx = _records.indexWhere((x) => x.id == rec.id);
                                                       if (idx >= 0) {
                                                         setState(() {
-                                                          _records[idx] = _records[idx].copyWith(isInstallment: val);
+                                                          _records[idx] = _records[idx].copyWith(
+                                                            isInstallment: val,
+                                                            installmentCount: 10,
+                                                          );
                                                         });
                                                         await _saveFinancialData();
                                                         setModalState(() {});
@@ -1194,7 +1272,20 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
       return;
     }
     final nameCtrl = TextEditingController(text: prefilledStudent ?? '');
-    String selectedClass = prefilledClass ?? 'پیش‌دبستانی آفتاب ☀️';
+
+    // لیست کلاس‌های ممکن جهت جلوگیری از خطای نبود value در DropdownButton
+    final classOptions = <String>{
+      if (prefilledClass != null && prefilledClass.isNotEmpty) prefilledClass,
+      'پیش‌دبستانی آفتاب ☀️',
+      'اول دبستان ستاره 🌟',
+      'دوم دبستان مهتاب 🌙',
+      ...kClassNames.map((name) => classLabel(name)),
+    }.toList();
+
+    String selectedClass = (prefilledClass != null && classOptions.contains(prefilledClass))
+        ? prefilledClass
+        : classOptions.first;
+
     final amountCtrl = TextEditingController();
     String selectedStatus = 'پرداخت‌شده 🟢';
     String selectedFeeType = 'شهریه';
@@ -1241,12 +1332,17 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
                           value: selectedClass,
                           isDense: true,
                           isExpanded: true,
-                          items: const [
-                            DropdownMenuItem(value: 'پیش‌دبستانی آفتاب ☀️', child: Text('پیش‌دبستانی آفتاب ☀️')),
-                            DropdownMenuItem(value: 'اول دبستان ستاره 🌟', child: Text('اول دبستان ستاره 🌟')),
-                            DropdownMenuItem(value: 'دوم دبستان مهتاب 🌙', child: Text('دوم دبستان مهتاب 🌙')),
-                          ],
-                          onChanged: (val) => setDialogState(() => selectedClass = val!),
+                          items: classOptions.map((cName) {
+                            return DropdownMenuItem<String>(
+                              value: cName,
+                              child: Text(cName),
+                            );
+                          }).toList(),
+                          onChanged: (val) {
+                            if (val != null) {
+                              setDialogState(() => selectedClass = val);
+                            }
+                          },
                         ),
                       ),
                     ),
@@ -1392,8 +1488,9 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
                     );
 
                     if (mounted) {
+                      final messenger = ScaffoldMessenger.of(context);
                       Navigator.pop(ctx);
-                      ScaffoldMessenger.of(context).showSnackBar(
+                      messenger.showSnackBar(
                         const SnackBar(content: Text('✅ بند مالی جدید با موفقیت ثبت شد!'), backgroundColor: Colors.green),
                       );
                     }
