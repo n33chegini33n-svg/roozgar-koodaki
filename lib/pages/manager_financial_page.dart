@@ -736,7 +736,7 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
                                           r.isIncluded ? 'شامل ✅' : 'عدم شمول ❌',
                                           '${r.feeType} - ${r.feeTitle}',
                                           r.amount,
-                                          '${r.isCash ? "نقد " : ""}${r.isInstallment ? "اقساط ($r.installmentCount)" : ""}',
+                                          '${r.isCash ? "نقد " : ""}${r.isInstallment ? "اقساط (${r.installmentCount})" : ""}',
                                           r.status,
                                           r.date,
                                           r.receiptNo,
