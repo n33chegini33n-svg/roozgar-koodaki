@@ -5,15 +5,34 @@ import '../services/backend.dart';
 class RegistrationDraft {
   final Map<String, String> values;
   final bool accepted;
-  const RegistrationDraft({required this.values, required this.accepted});
+  final String status; // 'submitted' (or 'pending'), 'approved', 'rejected'
+  final String? rejectionReason;
+  final String? attachmentUrl;
 
-  Map<String, dynamic> toJson() => {'values': values, 'accepted': accepted};
+  const RegistrationDraft({
+    required this.values,
+    required this.accepted,
+    this.status = 'submitted',
+    this.rejectionReason,
+    this.attachmentUrl,
+  });
+
+  Map<String, dynamic> toJson() => {
+        'values': values,
+        'accepted': accepted,
+        'status': status,
+        'rejection_reason': rejectionReason,
+        'attachment_url': attachmentUrl,
+      };
 
   factory RegistrationDraft.fromJson(Map<String, dynamic> json) {
     final raw = json['values'];
     return RegistrationDraft(
       values: raw is Map ? Map<String, String>.from(raw.map((k, v) => MapEntry('$k', '$v'))) : {},
       accepted: json['accepted'] == true,
+      status: json['status']?.toString() ?? 'submitted',
+      rejectionReason: json['rejection_reason']?.toString(),
+      attachmentUrl: json['attachment_url']?.toString(),
     );
   }
 }
@@ -24,12 +43,45 @@ class RegistrationDraftService {
   static Future<RegistrationDraft?> load() async {
     final prefs = await SharedPreferences.getInstance();
     final raw = prefs.getString(_key);
-    if (raw == null || raw.isEmpty) return null;
-    try {
-      return RegistrationDraft.fromJson(jsonDecode(raw) as Map<String, dynamic>);
-    } catch (_) {
-      return null;
+    RegistrationDraft? localDraft;
+    if (raw != null && raw.isNotEmpty) {
+      try {
+        localDraft = RegistrationDraft.fromJson(jsonDecode(raw) as Map<String, dynamic>);
+      } catch (_) {}
     }
+
+    if (!Backend.ready) return localDraft;
+
+    final user = Backend.client.auth.currentUser;
+    if (user == null) return localDraft;
+
+    try {
+      final remote = await Backend.client
+          .from('registration_records')
+          .select('data, status, rejection_reason, attachment_url')
+          .eq('parent_id', user.id)
+          .maybeSingle();
+
+      if (remote != null) {
+        final dataRaw = remote['data'];
+        final Map<String, String> values = dataRaw is Map
+            ? Map<String, String>.from(dataRaw.map((k, v) => MapEntry('$k', '$v')))
+            : (localDraft?.values ?? {});
+        final remoteStatus = remote['status']?.toString() ?? 'submitted';
+        final remoteReason = remote['rejection_reason']?.toString();
+        final remoteAttachment = remote['attachment_url']?.toString();
+
+        return RegistrationDraft(
+          values: values,
+          accepted: localDraft?.accepted ?? true,
+          status: remoteStatus,
+          rejectionReason: remoteReason,
+          attachmentUrl: remoteAttachment,
+        );
+      }
+    } catch (_) {}
+
+    return localDraft;
   }
 
   static Future<void> save(RegistrationDraft draft) async {
@@ -38,23 +90,27 @@ class RegistrationDraftService {
   }
 
   static Future<void> submit(RegistrationDraft draft) async {
-    if (!Backend.ready) {
-      await save(draft);
-      return;
-    }
+    await save(draft);
+    if (!Backend.ready) return;
+
     final user = Backend.client.auth.currentUser;
     if (user == null) throw Exception('حساب کاربر پیدا نشد');
+
     final payload = {
       'parent_id': user.id,
       'data': draft.values,
-      'status': 'submitted',
+      'status': draft.status,
+      'rejection_reason': draft.rejectionReason,
+      'attachment_url': draft.attachmentUrl,
       'submitted_at': DateTime.now().toUtc().toIso8601String(),
     };
+
     final existing = await Backend.client
         .from('registration_records')
         .select('parent_id')
         .eq('parent_id', user.id)
         .maybeSingle();
+
     if (existing == null) {
       await Backend.client.from('registration_records').insert(payload);
     } else {
@@ -63,5 +119,18 @@ class RegistrationDraftService {
           .update(payload)
           .eq('parent_id', user.id);
     }
+  }
+
+  static Future<void> updateStatus({
+    required String parentId,
+    required String status,
+    String? rejectionReason,
+  }) async {
+    if (!Backend.ready) return;
+    await Backend.client.from('registration_records').update({
+      'status': status,
+      'rejection_reason': rejectionReason,
+      'updated_at': DateTime.now().toUtc().toIso8601String(),
+    }).eq('parent_id', parentId);
   }
 }
