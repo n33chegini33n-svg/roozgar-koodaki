@@ -69,6 +69,7 @@ class TuitionRecord {
   final bool isInstallment; // پرداخت اقساطی
   final List<CashStage> cashStages; // مراحل پرداخت نقدی (حداکثر ۳ مرحله)
   final int installmentCount; // تعداد اقساط (۱ تا ۱۰ قسط)
+  final List<bool> installmentSettled; // وضعیت تسویه تک‌تک اقساط
   final String documentNote; // مستندات و چک/فیش
 
   TuitionRecord({
@@ -87,8 +88,14 @@ class TuitionRecord {
     this.isInstallment = false,
     List<CashStage>? cashStages,
     this.installmentCount = 1,
+    List<bool>? installmentSettled,
     this.documentNote = '',
-  }) : cashStages = cashStages ?? [];
+  })  : cashStages = cashStages ?? [
+          CashStage(title: 'مرحله اول', amount: amount, dueDate: date, isSettled: status.contains('پرداخت‌شده')),
+          CashStage(title: 'مرحله دوم', amount: 0, dueDate: date, isSettled: false),
+          CashStage(title: 'مرحله سوم', amount: 0, dueDate: date, isSettled: false),
+        ],
+        installmentSettled = installmentSettled ?? List.generate(installmentCount > 0 ? installmentCount : 1, (i) => status.contains('پرداخت‌شده'));
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -106,6 +113,7 @@ class TuitionRecord {
         'isInstallment': isInstallment,
         'cashStages': cashStages.map((e) => e.toJson()).toList(),
         'installmentCount': installmentCount,
+        'installmentSettled': installmentSettled,
         'documentNote': documentNote,
       };
 
@@ -114,13 +122,31 @@ class TuitionRecord {
     if (json['cashStages'] != null && json['cashStages'] is List) {
       stages = (json['cashStages'] as List).map((e) => CashStage.fromJson(Map<String, dynamic>.from(e))).toList();
     }
+    final amt = json['amount'] ?? 0;
+    final dt = json['date'] ?? JalaliDate.now().formatted;
+    final st = json['status'] ?? 'پرداخت‌شده 🟢';
+    if (stages.isEmpty) {
+      stages = [
+        CashStage(title: 'مرحله اول', amount: amt, dueDate: dt, isSettled: st.contains('پرداخت‌شده')),
+        CashStage(title: 'مرحله دوم', amount: 0, dueDate: dt, isSettled: false),
+        CashStage(title: 'مرحله سوم', amount: 0, dueDate: dt, isSettled: false),
+      ];
+    }
+    final instCount = json['installmentCount'] ?? 1;
+    List<bool> instSettled = [];
+    if (json['installmentSettled'] != null && json['installmentSettled'] is List) {
+      instSettled = List<bool>.from(json['installmentSettled']);
+    } else {
+      instSettled = List.generate(instCount, (_) => st.contains('پرداخت‌شده'));
+    }
+
     return TuitionRecord(
       id: json['id'] ?? '',
       studentName: json['studentName'] ?? '',
       className: normalizeClassName(((json['className']) ?? '').toString()),
-      amount: json['amount'] ?? 0,
-      status: json['status'] ?? 'پرداخت‌شده 🟢',
-      date: json['date'] ?? JalaliDate.now().formatted,
+      amount: amt,
+      status: st,
+      date: dt,
       receiptNo: json['receiptNo'] ?? 'REC-001',
       feeType: json['feeType'] ?? 'شهریه',
       feeTitle: json['feeTitle'] ?? 'شهریه',
@@ -129,7 +155,8 @@ class TuitionRecord {
       isCash: json['isCash'] ?? true,
       isInstallment: json['isInstallment'] ?? false,
       cashStages: stages,
-      installmentCount: json['installmentCount'] ?? 1,
+      installmentCount: instCount,
+      installmentSettled: instSettled,
       documentNote: json['documentNote'] ?? '',
     );
   }
@@ -150,6 +177,7 @@ class TuitionRecord {
     bool? isInstallment,
     List<CashStage>? cashStages,
     int? installmentCount,
+    List<bool>? installmentSettled,
     String? documentNote,
   }) {
     return TuitionRecord(
@@ -168,6 +196,7 @@ class TuitionRecord {
       isInstallment: isInstallment ?? this.isInstallment,
       cashStages: cashStages ?? this.cashStages,
       installmentCount: installmentCount ?? this.installmentCount,
+      installmentSettled: installmentSettled ?? this.installmentSettled,
       documentNote: documentNote ?? this.documentNote,
     );
   }
@@ -783,17 +812,37 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
                             child: SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
                               child: DataTable(
+                                columnSpacing: 16,
+                                headingRowHeight: 48,
+                                dataRowMaxHeight: 88,
+                                dataRowMinHeight: 70,
                                 headingRowColor: WidgetStateProperty.all(const Color(0xFF01579B).withOpacity(0.08)),
                                 columns: const [
-                                  DataColumn(label: Text('تیک شمول هزینه', style: TextStyle(fontWeight: FontWeight.bold))),
-                                  DataColumn(label: Text('عنوان هزینه', style: TextStyle(fontWeight: FontWeight.bold))),
-                                  DataColumn(label: Text('مبلغ (تومان)', style: TextStyle(fontWeight: FontWeight.bold))),
-                                  DataColumn(label: Text('نوع پرداخت (نقد / اقساط)', style: TextStyle(fontWeight: FontWeight.bold))),
-                                  DataColumn(label: Text('وضعیت و واریز والد', style: TextStyle(fontWeight: FontWeight.bold))),
-                                  DataColumn(label: Text('توضیحات و مستندات / پیوست', style: TextStyle(fontWeight: FontWeight.bold))),
-                                  DataColumn(label: Text('عملیات', style: TextStyle(fontWeight: FontWeight.bold))),
+                                  DataColumn(label: SizedBox(width: 100, child: Text('تیک شمول هزینه', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13), textAlign: TextAlign.center))),
+                                  DataColumn(label: SizedBox(width: 150, child: Text('عنوان هزینه', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)))),
+                                  DataColumn(label: SizedBox(width: 120, child: Text('مبلغ (تومان)', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)))),
+                                  DataColumn(label: SizedBox(width: 220, child: Text('نوع پرداخت (نقد / اقساط)', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)))),
+                                  DataColumn(label: SizedBox(width: 140, child: Text('وضعیت و واریز والد', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)))),
+                                  DataColumn(label: SizedBox(width: 180, child: Text('توضیحات و مستندات', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)))),
+                                  DataColumn(label: SizedBox(width: 70, child: Text('عملیات', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13), textAlign: TextAlign.center))),
                                 ],
                                 rows: currentStudentRecords.map((rec) {
+                                  // محاسبه مراحل پرداخت نقدی (۳ مرحله)
+                                  List<CashStage> stages = List.from(rec.cashStages);
+                                  while (stages.length < 3) {
+                                    final numName = stages.length == 0 ? 'مرحله اول' : (stages.length == 1 ? 'مرحله دوم' : 'مرحله سوم');
+                                    stages.add(CashStage(title: numName, amount: 0, dueDate: rec.date));
+                                  }
+
+                                  // محاسبه اقساط (تا ۱۰ قسط)
+                                  final instCount = rec.installmentCount > 0 ? rec.installmentCount : 1;
+                                  List<bool> instSettled = List.from(rec.installmentSettled);
+                                  if (instSettled.length < instCount) {
+                                    instSettled.addAll(List.generate(instCount - instSettled.length, (_) => false));
+                                  } else if (instSettled.length > instCount) {
+                                    instSettled = instSettled.sublist(0, instCount);
+                                  }
+
                                   return DataRow(
                                     color: WidgetStateProperty.resolveWith((states) {
                                       return rec.isIncluded ? null : Colors.grey.shade100;
@@ -801,113 +850,257 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
                                     cells: [
                                       // ۱. چک‌باکس شمول هزینه
                                       DataCell(
-                                        Checkbox(
-                                          value: rec.isIncluded,
-                                          activeColor: const Color(0xFF01579B),
-                                          onChanged: (val) async {
-                                            final updatedValue = val ?? false;
-                                            final idx = _records.indexWhere((x) => x.id == rec.id);
-                                            if (idx >= 0) {
-                                              setState(() {
-                                                _records[idx] = _records[idx].copyWith(isIncluded: updatedValue);
-                                              });
-                                              await _saveFinancialData();
-                                              setModalState(() {});
-                                            }
-                                          },
+                                        SizedBox(
+                                          width: 100,
+                                          child: Center(
+                                            child: Checkbox(
+                                              value: rec.isIncluded,
+                                              activeColor: const Color(0xFF01579B),
+                                              onChanged: (val) async {
+                                                final updatedValue = val ?? false;
+                                                final idx = _records.indexWhere((x) => x.id == rec.id);
+                                                if (idx >= 0) {
+                                                  setState(() {
+                                                    _records[idx] = _records[idx].copyWith(isIncluded: updatedValue);
+                                                  });
+                                                  await _saveFinancialData();
+                                                  setModalState(() {});
+                                                }
+                                              },
+                                            ),
+                                          ),
                                         ),
                                       ),
 
                                       // ۲. عنوان هزینه
                                       DataCell(
-                                        Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              rec.feeTitle,
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                decoration: rec.isIncluded ? null : TextDecoration.lineThrough,
-                                                color: rec.isIncluded ? Colors.black87 : Colors.grey,
+                                        SizedBox(
+                                          width: 150,
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                rec.feeTitle,
+                                                maxLines: 2,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 13,
+                                                  decoration: rec.isIncluded ? null : TextDecoration.lineThrough,
+                                                  color: rec.isIncluded ? Colors.black87 : Colors.grey,
+                                                ),
                                               ),
-                                            ),
-                                            Text('بخش: ${rec.feeType}', style: const TextStyle(fontSize: 11, color: Colors.grey)),
-                                          ],
+                                              Text('بخش: ${rec.feeType}', style: const TextStyle(fontSize: 11, color: Colors.grey)),
+                                            ],
+                                          ),
                                         ),
                                       ),
 
                                       // ۳. مبلغ (تومان)
                                       DataCell(
-                                        Text(
-                                          '${_formatNumber(rec.amount)} تومان',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            decoration: rec.isIncluded ? null : TextDecoration.lineThrough,
-                                            color: rec.isIncluded ? Colors.blue.shade900 : Colors.grey,
+                                        SizedBox(
+                                          width: 120,
+                                          child: Text(
+                                            '${_formatNumber(rec.amount)} تومان',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 13,
+                                              decoration: rec.isIncluded ? null : TextDecoration.lineThrough,
+                                              color: rec.isIncluded ? Colors.blue.shade900 : Colors.grey,
+                                            ),
                                           ),
                                         ),
                                       ),
 
-                                      // ۴. نوع پرداخت (نقد / اقساط)
+                                      // ۴. نوع پرداخت (نقد / اقساط) + چک‌باکس‌های تعاملی مراحل
                                       DataCell(
-                                        Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            FilterChip(
-                                              label: Text('نقد', style: TextStyle(fontSize: 11, color: rec.isCash ? Colors.green.shade900 : Colors.black54)),
-                                              selected: rec.isCash,
-                                              selectedColor: Colors.green.shade100,
-                                              onSelected: (val) async {
-                                                final idx = _records.indexWhere((x) => x.id == rec.id);
-                                                if (idx >= 0) {
-                                                  setState(() {
-                                                    _records[idx] = _records[idx].copyWith(isCash: val);
-                                                  });
-                                                  await _saveFinancialData();
-                                                  setModalState(() {});
-                                                }
-                                              },
-                                            ),
-                                            const SizedBox(width: 4),
-                                            FilterChip(
-                                              label: Text(
-                                                'اقساط (${rec.installmentCount} قسط)',
-                                                style: TextStyle(fontSize: 11, color: rec.isInstallment ? Colors.purple.shade900 : Colors.black54),
+                                        SizedBox(
+                                          width: 220,
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  FilterChip(
+                                                    visualDensity: VisualDensity.compact,
+                                                    labelStyle: const TextStyle(fontSize: 10),
+                                                    label: Text('نقد', style: TextStyle(color: rec.isCash ? Colors.green.shade900 : Colors.black54)),
+                                                    selected: rec.isCash,
+                                                    selectedColor: Colors.green.shade100,
+                                                    onSelected: (val) async {
+                                                      final idx = _records.indexWhere((x) => x.id == rec.id);
+                                                      if (idx >= 0) {
+                                                        setState(() {
+                                                          _records[idx] = _records[idx].copyWith(isCash: val);
+                                                        });
+                                                        await _saveFinancialData();
+                                                        setModalState(() {});
+                                                      }
+                                                    },
+                                                  ),
+                                                  const SizedBox(width: 4),
+                                                  FilterChip(
+                                                    visualDensity: VisualDensity.compact,
+                                                    labelStyle: const TextStyle(fontSize: 10),
+                                                    label: Text(
+                                                      'اقساط (${rec.installmentCount} قسط)',
+                                                      style: TextStyle(color: rec.isInstallment ? Colors.purple.shade900 : Colors.black54),
+                                                    ),
+                                                    selected: rec.isInstallment,
+                                                    selectedColor: Colors.purple.shade100,
+                                                    onSelected: (val) async {
+                                                      final idx = _records.indexWhere((x) => x.id == rec.id);
+                                                      if (idx >= 0) {
+                                                        setState(() {
+                                                          _records[idx] = _records[idx].copyWith(isInstallment: val);
+                                                        });
+                                                        await _saveFinancialData();
+                                                        setModalState(() {});
+                                                      }
+                                                    },
+                                                  ),
+                                                ],
                                               ),
-                                              selected: rec.isInstallment,
-                                              selectedColor: Colors.purple.shade100,
-                                              onSelected: (val) async {
-                                                final idx = _records.indexWhere((x) => x.id == rec.id);
-                                                if (idx >= 0) {
-                                                  setState(() {
-                                                    _records[idx] = _records[idx].copyWith(isInstallment: val);
-                                                  });
-                                                  await _saveFinancialData();
-                                                  setModalState(() {});
-                                                }
-                                              },
-                                            ),
-                                          ],
+                                              const SizedBox(height: 2),
+
+                                              // اگر پرداخت نقدی فعال باشد: ۳ مربعی کوچیک زیرش
+                                              if (rec.isCash)
+                                                Row(
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  children: List.generate(3, (stageIdx) {
+                                                    final isChecked = stages[stageIdx].isSettled;
+                                                    return InkWell(
+                                                      onTap: () async {
+                                                        final idx = _records.indexWhere((x) => x.id == rec.id);
+                                                        if (idx >= 0) {
+                                                          final updatedStages = List<CashStage>.from(stages);
+                                                          updatedStages[stageIdx] = updatedStages[stageIdx].copyWith(isSettled: !isChecked);
+
+                                                          // بررسی وضعیت جدید
+                                                          final allSettled = updatedStages.every((st) => st.isSettled);
+                                                          final anySettled = updatedStages.any((st) => st.isSettled);
+                                                          String newStatus = allSettled
+                                                              ? 'پرداخت‌شده 🟢'
+                                                              : (anySettled ? 'در انتظار تأیید 🟡' : 'معوقه / بدهکار 🔴');
+
+                                                          setState(() {
+                                                            _records[idx] = _records[idx].copyWith(
+                                                              cashStages: updatedStages,
+                                                              status: newStatus,
+                                                            );
+                                                          });
+                                                          await _saveFinancialData();
+                                                          setModalState(() {});
+                                                        }
+                                                      },
+                                                      child: Container(
+                                                        margin: const EdgeInsets.only(left: 4, top: 2),
+                                                        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                                                        decoration: BoxDecoration(
+                                                          color: isChecked ? Colors.green.shade600 : Colors.grey.shade200,
+                                                          borderRadius: BorderRadius.circular(4),
+                                                          border: Border.all(color: isChecked ? Colors.green.shade800 : Colors.grey.shade400),
+                                                        ),
+                                                        child: Row(
+                                                          mainAxisSize: MainAxisSize.min,
+                                                          children: [
+                                                            Icon(
+                                                              isChecked ? Icons.check_box_rounded : Icons.check_box_outline_blank_rounded,
+                                                              size: 12,
+                                                              color: isChecked ? Colors.white : Colors.black54,
+                                                            ),
+                                                            const SizedBox(width: 2),
+                                                            Text(
+                                                              'مرحله ${stageIdx + 1}',
+                                                              style: TextStyle(
+                                                                fontSize: 9,
+                                                                fontWeight: isChecked ? FontWeight.bold : FontWeight.normal,
+                                                                color: isChecked ? Colors.white : Colors.black87,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    );
+                                                  }),
+                                                ),
+
+                                              // اگر پرداخت اقساطی فعال باشد: ۱۰ مربع کوچک تحت عنوان اقساط
+                                              if (rec.isInstallment)
+                                                Wrap(
+                                                  spacing: 2,
+                                                  runSpacing: 2,
+                                                  children: List.generate(instCount, (instIdx) {
+                                                    final isChecked = instSettled[instIdx];
+                                                    return InkWell(
+                                                      onTap: () async {
+                                                        final idx = _records.indexWhere((x) => x.id == rec.id);
+                                                        if (idx >= 0) {
+                                                          final updatedSettled = List<bool>.from(instSettled);
+                                                          updatedSettled[instIdx] = !isChecked;
+
+                                                          final allSettled = updatedSettled.every((st) => st);
+                                                          final anySettled = updatedSettled.any((st) => st);
+                                                          String newStatus = allSettled
+                                                              ? 'پرداخت‌شده 🟢'
+                                                              : (anySettled ? 'در انتظار تأیید 🟡' : 'معوقه / بدهکار 🔴');
+
+                                                          setState(() {
+                                                            _records[idx] = _records[idx].copyWith(
+                                                              installmentSettled: updatedSettled,
+                                                              status: newStatus,
+                                                            );
+                                                          });
+                                                          await _saveFinancialData();
+                                                          setModalState(() {});
+                                                        }
+                                                      },
+                                                      child: Container(
+                                                        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                                                        decoration: BoxDecoration(
+                                                          color: isChecked ? Colors.purple.shade700 : Colors.purple.shade50,
+                                                          borderRadius: BorderRadius.circular(3),
+                                                          border: Border.all(color: isChecked ? Colors.purple.shade900 : Colors.purple.shade200),
+                                                        ),
+                                                        child: Text(
+                                                          'ق${instIdx + 1}',
+                                                          style: TextStyle(
+                                                            fontSize: 9,
+                                                            fontWeight: isChecked ? FontWeight.bold : FontWeight.normal,
+                                                            color: isChecked ? Colors.white : Colors.purple.shade900,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  }),
+                                                ),
+                                            ],
+                                          ),
                                         ),
                                       ),
 
                                       // ۵. وضعیت و واریز والد
                                       DataCell(
-                                        Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(rec.status, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
-                                            Text('فیش/پیگیری: ${rec.receiptNo}', style: const TextStyle(fontSize: 11, color: Colors.grey)),
-                                          ],
+                                        SizedBox(
+                                          width: 140,
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(rec.status, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                                              Text('فیش/پیگیری: ${rec.receiptNo}', style: const TextStyle(fontSize: 10, color: Colors.grey)),
+                                            ],
+                                          ),
                                         ),
                                       ),
 
                                       // ۶. توضیحات و مستندات / پیوست
                                       DataCell(
                                         SizedBox(
-                                          width: 220,
+                                          width: 180,
                                           child: Column(
                                             mainAxisAlignment: MainAxisAlignment.center,
                                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -916,7 +1109,7 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
                                                 rec.description.isEmpty ? 'بدون یادداشت' : rec.description,
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
-                                                style: const TextStyle(fontSize: 12),
+                                                style: const TextStyle(fontSize: 11),
                                               ),
                                               if (rec.documentNote.isNotEmpty)
                                                 Row(
@@ -939,14 +1132,19 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
 
                                       // ۷. عملیات
                                       DataCell(
-                                        IconButton(
-                                          icon: const Icon(Icons.settings_suggest_rounded, color: Color(0xFF01579B)),
-                                          tooltip: 'پیکربندی اقساط/مراحل و مستندات',
-                                          onPressed: () async {
-                                            await _editRecordDialog(rec);
-                                            setModalState(() {});
-                                            setState(() {});
-                                          },
+                                        SizedBox(
+                                          width: 70,
+                                          child: Center(
+                                            child: IconButton(
+                                              icon: const Icon(Icons.settings_suggest_rounded, color: Color(0xFF01579B)),
+                                              tooltip: 'پیکربندی اقساط/مراحل و مستندات',
+                                              onPressed: () async {
+                                                await _editRecordDialog(rec);
+                                                setModalState(() {});
+                                                setState(() {});
+                                              },
+                                            ),
+                                          ),
                                         ),
                                       ),
                                     ],
