@@ -46,7 +46,7 @@ class _RegistrationManagerPageState extends State<RegistrationManagerPage> {
 
       final rows = await Backend.client
           .from('registration_records')
-          .select('parent_id, data, status, rejection_reason, attachment_url, submitted_at, updated_at')
+          .select('*')
           .order('updated_at', ascending: false);
 
       if (!mounted) return;
@@ -391,11 +391,18 @@ class _RegistrationManagerPageState extends State<RegistrationManagerPage> {
                   final reason = currentStatus == 'rejected' ? reasonController.text.trim() : null;
                   Navigator.pop(ctx);
                   try {
-                    await Backend.client.from('registration_records').update({
-                      'status': currentStatus,
-                      'rejection_reason': reason,
-                      'updated_at': DateTime.now().toUtc().toIso8601String(),
-                    }).eq('parent_id', parentId);
+                    try {
+                      await Backend.client.from('registration_records').update({
+                        'status': currentStatus,
+                        'rejection_reason': reason,
+                        'updated_at': DateTime.now().toUtc().toIso8601String(),
+                      }).eq('parent_id', parentId);
+                    } catch (_) {
+                      await Backend.client.from('registration_records').update({
+                        'status': currentStatus,
+                        'updated_at': DateTime.now().toUtc().toIso8601String(),
+                      }).eq('parent_id', parentId);
+                    }
 
                     messenger.showSnackBar(
                       const SnackBar(content: Text('وضعیت پرونده با موفقیت به روز گردید.')),

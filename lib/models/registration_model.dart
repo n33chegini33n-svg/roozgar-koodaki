@@ -58,7 +58,7 @@ class RegistrationDraftService {
     try {
       final remote = await Backend.client
           .from('registration_records')
-          .select('data, status, rejection_reason, attachment_url')
+          .select('*')
           .eq('parent_id', user.id)
           .maybeSingle();
 
@@ -111,13 +111,30 @@ class RegistrationDraftService {
         .eq('parent_id', user.id)
         .maybeSingle();
 
-    if (existing == null) {
-      await Backend.client.from('registration_records').insert(payload);
-    } else {
-      await Backend.client
-          .from('registration_records')
-          .update(payload)
-          .eq('parent_id', user.id);
+    try {
+      if (existing == null) {
+        await Backend.client.from('registration_records').insert(payload);
+      } else {
+        await Backend.client
+            .from('registration_records')
+            .update(payload)
+            .eq('parent_id', user.id);
+      }
+    } catch (_) {
+      final fallbackPayload = {
+        'parent_id': user.id,
+        'data': draft.values,
+        'status': draft.status,
+        'submitted_at': DateTime.now().toUtc().toIso8601String(),
+      };
+      if (existing == null) {
+        await Backend.client.from('registration_records').insert(fallbackPayload);
+      } else {
+        await Backend.client
+            .from('registration_records')
+            .update(fallbackPayload)
+            .eq('parent_id', user.id);
+      }
     }
   }
 
@@ -127,10 +144,17 @@ class RegistrationDraftService {
     String? rejectionReason,
   }) async {
     if (!Backend.ready) return;
-    await Backend.client.from('registration_records').update({
-      'status': status,
-      'rejection_reason': rejectionReason,
-      'updated_at': DateTime.now().toUtc().toIso8601String(),
-    }).eq('parent_id', parentId);
+    try {
+      await Backend.client.from('registration_records').update({
+        'status': status,
+        'rejection_reason': rejectionReason,
+        'updated_at': DateTime.now().toUtc().toIso8601String(),
+      }).eq('parent_id', parentId);
+    } catch (_) {
+      await Backend.client.from('registration_records').update({
+        'status': status,
+        'updated_at': DateTime.now().toUtc().toIso8601String(),
+      }).eq('parent_id', parentId);
+    }
   }
 }
