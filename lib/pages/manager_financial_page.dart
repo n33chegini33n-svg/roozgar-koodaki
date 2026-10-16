@@ -1279,7 +1279,7 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
       'پیش‌دبستانی آفتاب ☀️',
       'اول دبستان ستاره 🌟',
       'دوم دبستان مهتاب 🌙',
-      ...SchoolClasses.allClasses,
+      ...kClassNames.map((name) => classLabel(name)),
     ].toSet().toList();
 
     String selectedClass = (prefilledClass != null && classOptions.contains(prefilledClass))
