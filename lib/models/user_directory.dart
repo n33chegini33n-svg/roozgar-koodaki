@@ -85,27 +85,37 @@ class UserDirectory {
 
   static void clearCache() => _cache = null;
 
-  /// حالت سرور: نوآموزان و مربیان از دیتابیس (فقط‌خواندنی تا مرحلهٔ ساخت حساب از داخل برنامه)
+  /// حالت سرور: خواندن تمامی کاربران (دانش‌آموزان، اولیاء، کادر، مدیران) از جدول profiles دیتابیس
   static Future<List<UserModel>> _loadServer() async {
     if (_cache != null) return _cache!;
     await ServerDirectory.ensureLoaded();
-    final list = <UserModel>[
-      for (final s in ServerDirectory.students)
-        UserModel(id: s.id, name: s.name, role: 'student', className: s.className, phone: ''),
-    ];
+    final list = <UserModel>[];
+
+    // ۱. لیست نوآموزان ثبت‌شده در جدول students
+    for (final s in ServerDirectory.students) {
+      list.add(UserModel(id: s.id, name: s.name, role: 'student', className: s.className, phone: ''));
+    }
+
     try {
-      final teachers = await Backend.client.from('profiles').select('id, full_name, phone, classes(name)').eq('role', 'teacher');
-      for (final t in teachers) {
-        final c = t['classes'];
-        list.add(
-          UserModel(
-            id: t['id'] as String,
-            name: (t['full_name'] ?? '') as String,
-            role: 'teacher',
-            className: normalizeClassName(c is Map && c['name'] is String ? c['name'] as String : ''),
-            phone: (t['phone'] ?? '') as String,
-          ),
-        );
+      // ۲. لیست تمام کاربران ثبت‌شده در جدول profiles
+      final profiles = await Backend.client.from('profiles').select('id, full_name, role, phone, grade, classes(name)');
+      final existingStudentNames = list.map((u) => u.name).toSet();
+
+      for (final p in profiles) {
+        final role = (p['role'] ?? 'parent').toString();
+        final name = (p['full_name'] ?? '').toString();
+        final phone = (p['phone'] ?? '').toString();
+        final c = p['classes'];
+        final className = normalizeClassName(c is Map && c['name'] is String ? c['name'] as String : (p['grade'] ?? ''));
+
+        // اگر کاربر دانش‌آموز است و قبلاً از جدول students اضافه نشده، اضافه می‌شود
+        if (role == 'student') {
+          if (!existingStudentNames.contains(name) && name.isNotEmpty) {
+            list.add(UserModel(id: p['id'] as String, name: name, role: 'student', className: className, phone: phone));
+          }
+        } else {
+          list.add(UserModel(id: p['id'] as String, name: name, role: role, className: className, phone: phone));
+        }
       }
     } catch (_) {}
     return _cache = list;
