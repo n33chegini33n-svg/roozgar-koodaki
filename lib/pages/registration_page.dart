@@ -211,19 +211,19 @@ class _RegistrationPageState extends State<RegistrationPage> {
     if (_status == 'approved') {
       statusColor = const Color(0xFF2E7D32);
       statusIcon = Icons.check_circle_rounded;
-      statusTitle = 'وضعیت: تأیید شده توسط مدیریت (سبز)';
+      statusTitle = 'وضعیت: تأیید شده توسط مدیریت';
       statusDesc = 'پرونده ثبت‌نام فرزند شما توسط مدیریت بررسی و تأیید نهایی شده است.';
     } else if (_status == 'rejected') {
       statusColor = const Color(0xFFC62828);
       statusIcon = Icons.cancel_rounded;
-      statusTitle = 'وضعیت: نیاز به اصلاح / عدم تأیید (قرمز)';
+      statusTitle = 'وضعیت: نیاز به اصلاح / عدم تأیید';
       statusDesc = _rejectionReason != null && _rejectionReason!.isNotEmpty
           ? 'علت عدم تأیید: $_rejectionReason'
           : 'پرونده شما رد شده است. لطفاً موارد فوق را بررسی و مجدداً ارسال نمایید.';
     } else {
       statusColor = const Color(0xFFF57F17);
       statusIcon = Icons.hourglass_bottom_rounded;
-      statusTitle = 'وضعیت: در انتظار بررسی و تأیید مدیریت (زرد)';
+      statusTitle = 'وضعیت: در انتظار بررسی و تأیید مدیریت';
       statusDesc = 'اطلاعات پرونده ثبت شده و در صف بررسی توسط مدیریت مرکز قرار دارد.';
     }
 
