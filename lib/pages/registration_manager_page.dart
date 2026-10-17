@@ -16,6 +16,7 @@ class _RegistrationManagerPageState extends State<RegistrationManagerPage> {
   String? _error;
   List<Map<String, dynamic>> _records = [];
   String _searchQuery = '';
+  String _selectedStatusFilter = 'all'; // 'all', 'submitted', 'approved', 'rejected'
   final TextEditingController _searchController = TextEditingController();
 
   @override
@@ -64,9 +65,15 @@ class _RegistrationManagerPageState extends State<RegistrationManagerPage> {
   }
 
   List<Map<String, dynamic>> get _filteredRecords {
-    if (_searchQuery.trim().isEmpty) return _records;
-    final query = _searchQuery.trim().toLowerCase();
     return _records.where((rec) {
+      final status = '${rec['status'] ?? 'submitted'}';
+      if (_selectedStatusFilter != 'all' && status != _selectedStatusFilter) {
+        return false;
+      }
+
+      if (_searchQuery.trim().isEmpty) return true;
+      final query = _searchQuery.trim().toLowerCase();
+
       final data = rec['data'] is Map ? Map<String, dynamic>.from(rec['data'] as Map) : <String, dynamic>{};
       final studentName = '${data['نام نوآموز'] ?? data['نام'] ?? ''} ${data['نام خانوادگی'] ?? ''}'.toLowerCase();
       final fatherName = '${data['نام و خانوادگی پدر'] ?? ''}'.toLowerCase();
@@ -183,6 +190,21 @@ class _RegistrationManagerPageState extends State<RegistrationManagerPage> {
             ],
           ),
           const SizedBox(height: 10),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                _buildStatusFilterChip(label: 'همه پرونده‌ها', value: 'all', color: AppColors.navy),
+                const SizedBox(width: 8),
+                _buildStatusFilterChip(label: 'در انتظار بررسی', value: 'submitted', color: const Color(0xFFF57F17)),
+                const SizedBox(width: 8),
+                _buildStatusFilterChip(label: 'تأیید شده', value: 'approved', color: const Color(0xFF2E7D32)),
+                const SizedBox(width: 8),
+                _buildStatusFilterChip(label: 'عدم تأیید', value: 'rejected', color: const Color(0xFFC62828)),
+              ],
+            ),
+          ),
+          const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -211,6 +233,27 @@ class _RegistrationManagerPageState extends State<RegistrationManagerPage> {
     );
   }
 
+  Widget _buildStatusFilterChip({required String label, required String value, required Color color}) {
+    final isSelected = _selectedStatusFilter == value;
+    return FilterChip(
+      selected: isSelected,
+      label: Text(label),
+      labelStyle: TextStyle(
+        fontSize: 12,
+        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+        color: isSelected ? Colors.white : color,
+      ),
+      selectedColor: color,
+      backgroundColor: color.withValues(alpha: 0.1),
+      checkmarkColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+        side: BorderSide(color: color.withValues(alpha: isSelected ? 1.0 : 0.4)),
+      ),
+      onSelected: (_) => setState(() => _selectedStatusFilter = value),
+    );
+  }
+
   Widget _recordCard(Map<String, dynamic> record) {
     final data = record['data'] is Map ? Map<String, dynamic>.from(record['data'] as Map) : <String, dynamic>{};
     final studentName = '${data['نام نوآموز'] ?? data['نام'] ?? ''} ${data['نام خانوادگی'] ?? ''}'.trim();
@@ -222,13 +265,13 @@ class _RegistrationManagerPageState extends State<RegistrationManagerPage> {
     String statusText;
     if (status == 'approved') {
       statusColor = const Color(0xFF2E7D32);
-      statusText = 'تأیید شده (سبز)';
+      statusText = 'تأیید شده';
     } else if (status == 'rejected') {
       statusColor = const Color(0xFFC62828);
-      statusText = 'عدم تأیید (قرمز)';
+      statusText = 'عدم تأیید';
     } else {
       statusColor = const Color(0xFFF57F17);
-      statusText = 'در انتظار بررسی (زرد)';
+      statusText = 'در انتظار بررسی';
     }
 
     return softCard(
@@ -349,21 +392,21 @@ class _RegistrationManagerPageState extends State<RegistrationManagerPage> {
                   const SizedBox(height: 12),
                   RadioListTile<String>(
                     activeColor: const Color(0xFFF57F17),
-                    title: const Text('در انتظار بررسی (چراغ زرد)'),
+                    title: const Text('در انتظار بررسی'),
                     value: 'submitted',
                     groupValue: currentStatus,
                     onChanged: (val) => setDialogState(() => currentStatus = val!),
                   ),
                   RadioListTile<String>(
                     activeColor: const Color(0xFF2E7D32),
-                    title: const Text('تأیید نهایی پرونده (چراغ سبز)'),
+                    title: const Text('تأیید نهایی پرونده'),
                     value: 'approved',
                     groupValue: currentStatus,
                     onChanged: (val) => setDialogState(() => currentStatus = val!),
                   ),
                   RadioListTile<String>(
                     activeColor: const Color(0xFFC62828),
-                    title: const Text('عدم تأیید / نیاز به اصلاح (چراغ قرمز)'),
+                    title: const Text('عدم تأیید / نیاز به اصلاح'),
                     value: 'rejected',
                     groupValue: currentStatus,
                     onChanged: (val) => setDialogState(() => currentStatus = val!),
@@ -425,6 +468,8 @@ class _RegistrationManagerPageState extends State<RegistrationManagerPage> {
 
   void _showDetailsDialog(Map<String, dynamic> record) {
     final data = record['data'] is Map ? Map<String, dynamic>.from(record['data'] as Map) : <String, dynamic>{};
+    final studentName = '${data['نام نوآموز'] ?? data['نام'] ?? ''} ${data['نام خانوادگی'] ?? ''}'.trim();
+    final status = '${record['status'] ?? 'submitted'}';
     final controllers = <String, TextEditingController>{};
     for (final entry in data.entries) {
       controllers[entry.key] = TextEditingController(text: '${entry.value}');
@@ -433,7 +478,68 @@ class _RegistrationManagerPageState extends State<RegistrationManagerPage> {
     showDialog<void>(
       context: context,
       builder: (dialogCtx) => AlertDialog(
-        title: Text('مشاهده و ویرایش پرونده: ${data['نام نوآموز'] ?? data['نام'] ?? 'نوآموز'}'),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Text(
+                'مشاهده و ویرایش پرونده: ${studentName.isEmpty ? "نوآموز" : studentName}',
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.table_chart_rounded, color: Colors.green, size: 20),
+                  tooltip: 'خروجی اکسل این پرونده',
+                  onPressed: () {
+                    final rows = controllers.entries.map((e) => [e.key, e.value.text]).toList();
+                    ExportHelper.exportToExcel(
+                      context: context,
+                      title: 'پرونده ثبت‌نام نوآموز $studentName',
+                      headers: ['عنوان فیلد', 'مقدار ثبت شده'],
+                      rows: rows,
+                      fileName: 'پرونده_$studentName',
+                    );
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.picture_as_pdf_rounded, color: Colors.red, size: 20),
+                  tooltip: 'خروجی PDF این پرونده',
+                  onPressed: () {
+                    final currentData = <String, dynamic>{
+                      for (final e in controllers.entries) e.key: e.value.text,
+                    };
+                    ExportHelper.exportRegistrationFormPdf(
+                      context: context,
+                      studentName: studentName,
+                      status: status,
+                      data: currentData,
+                      printOnly: false,
+                    );
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.print_rounded, color: AppColors.navy, size: 20),
+                  tooltip: 'چاپ مستقیم فرم A4',
+                  onPressed: () {
+                    final currentData = <String, dynamic>{
+                      for (final e in controllers.entries) e.key: e.value.text,
+                    };
+                    ExportHelper.exportRegistrationFormPdf(
+                      context: context,
+                      studentName: studentName,
+                      status: status,
+                      data: currentData,
+                      printOnly: true,
+                    );
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
         content: SizedBox(
           width: 650,
           child: SingleChildScrollView(
@@ -492,14 +598,14 @@ class _RegistrationManagerPageState extends State<RegistrationManagerPage> {
   void _printSingleRecord(Map<String, dynamic> record) {
     final data = record['data'] is Map ? Map<String, dynamic>.from(record['data'] as Map) : <String, dynamic>{};
     final studentName = '${data['نام نوآموز'] ?? data['نام'] ?? ''} ${data['نام خانوادگی'] ?? ''}'.trim();
-    final rows = data.entries.map((e) => [e.key, '${e.value}']).toList();
+    final status = '${record['status'] ?? 'submitted'}';
 
-    ExportHelper.printTable(
+    ExportHelper.exportRegistrationFormPdf(
       context: context,
-      title: 'پرونده ثبت‌نام نوآموز: $studentName',
-      headers: ['عنوان فیلد', 'مقدار ثبت شده'],
-      rows: rows,
-      fileName: 'پرونده_$studentName',
+      studentName: studentName,
+      status: status,
+      data: data,
+      printOnly: true,
     );
   }
 

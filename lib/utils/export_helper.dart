@@ -71,6 +71,148 @@ class ExportHelper {
   }) =>
       exportToPdf(context: context, title: title, headers: headers, rows: rows, fileName: fileName, printOnly: true);
 
+  /// چاپ فرم پرونده فردی نوآموز در قالب A4 پرینتی
+  static Future<void> exportRegistrationFormPdf({
+    required BuildContext context,
+    required String studentName,
+    required String status,
+    required Map<String, dynamic> data,
+    bool printOnly = false,
+  }) async {
+    try {
+      final pdf = pw.Document();
+
+      final font = await _loadFont('assets/fonts/Vazirmatn-Regular.ttf', PdfGoogleFonts.vazirmatnRegular);
+      final boldFont = await _loadFont('assets/fonts/Vazirmatn-Bold.ttf', PdfGoogleFonts.vazirmatnBold);
+
+      final statusStr = status == 'approved'
+          ? 'تأیید شده'
+          : (status == 'rejected' ? 'عدم تأیید' : 'در انتظار بررسی');
+
+      pdf.addPage(
+        pw.MultiPage(
+          pageFormat: PdfPageFormat.a4,
+          margin: const pw.EdgeInsets.all(32),
+          textDirection: pw.TextDirection.rtl,
+          theme: pw.ThemeData.withFont(
+            base: font,
+            bold: boldFont,
+          ),
+          build: (pw.Context context) {
+            final tableRows = data.entries.map((e) {
+              return [
+                pw.Text(e.key, textDirection: pw.TextDirection.rtl, style: pw.TextStyle(font: boldFont, fontSize: 10)),
+                pw.Text('${e.value}', textDirection: pw.TextDirection.rtl, style: pw.TextStyle(font: font, fontSize: 10)),
+              ];
+            }).toList();
+
+            return [
+              pw.Container(
+                padding: const pw.EdgeInsets.all(12),
+                decoration: pw.BoxDecoration(
+                  border: pw.Border.all(color: PdfColors.indigo900, width: 1.5),
+                  borderRadius: pw.BorderRadius.circular(8),
+                ),
+                child: pw.Column(
+                  children: [
+                    pw.Row(
+                      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                      children: [
+                        pw.Text(
+                          'پرونده جامع ثبت‌نام نوآموز',
+                          textDirection: pw.TextDirection.rtl,
+                          style: pw.TextStyle(font: boldFont, fontSize: 16, color: PdfColors.indigo900),
+                        ),
+                        pw.Text(
+                          'مجموعه آموزشی روزگار کودکی',
+                          textDirection: pw.TextDirection.rtl,
+                          style: pw.TextStyle(font: boldFont, fontSize: 12, color: PdfColors.grey800),
+                        ),
+                      ],
+                    ),
+                    pw.SizedBox(height: 6),
+                    pw.Row(
+                      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                      children: [
+                        pw.Text('نام نوآموز: ${studentName.isEmpty ? "نامشخص" : studentName}', textDirection: pw.TextDirection.rtl, style: pw.TextStyle(font: boldFont, fontSize: 11)),
+                        pw.Text('وضعیت پرونده: $statusStr', textDirection: pw.TextDirection.rtl, style: pw.TextStyle(font: boldFont, fontSize: 11, color: PdfColors.indigo800)),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              pw.SizedBox(height: 16),
+              pw.Table(
+                border: pw.TableBorder.all(color: PdfColors.grey400, width: 0.5),
+                columnWidths: {
+                  0: const pw.FlexColumnWidth(2),
+                  1: const pw.FlexColumnWidth(3),
+                },
+                children: [
+                  pw.TableRow(
+                    decoration: const pw.BoxDecoration(color: PdfColors.indigo700),
+                    children: [
+                      pw.Padding(
+                        padding: const pw.EdgeInsets.all(6),
+                        child: pw.Text('عنوان فیلد', textDirection: pw.TextDirection.rtl, style: pw.TextStyle(font: boldFont, color: PdfColors.white, fontSize: 11)),
+                      ),
+                      pw.Padding(
+                        padding: const pw.EdgeInsets.all(6),
+                        child: pw.Text('اطلاعات ثبت‌شده', textDirection: pw.TextDirection.rtl, style: pw.TextStyle(font: boldFont, color: PdfColors.white, fontSize: 11)),
+                      ),
+                    ],
+                  ),
+                  for (final row in tableRows)
+                    pw.TableRow(
+                      children: [
+                        pw.Padding(
+                          padding: const pw.EdgeInsets.all(6),
+                          child: row[0],
+                        ),
+                        pw.Padding(
+                          padding: const pw.EdgeInsets.all(6),
+                          child: row[1],
+                        ),
+                      ],
+                    ),
+                ],
+              ),
+              pw.SizedBox(height: 20),
+              pw.Divider(color: PdfColors.grey400),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
+                  pw.Text('تأییدیه مدیریت مهد و دبستان روزگار کودکی', textDirection: pw.TextDirection.rtl, style: pw.TextStyle(font: font, fontSize: 9)),
+                  pw.Text('تاریخ صدور: ${DateTime.now().toString().substring(0, 10)}', textDirection: pw.TextDirection.rtl, style: pw.TextStyle(font: font, fontSize: 9)),
+                ],
+              ),
+            ];
+          },
+        ),
+      );
+
+      final pdfBytes = await pdf.save();
+
+      if (printOnly) {
+        await Printing.layoutPdf(
+          onLayout: (PdfPageFormat format) async => pdfBytes,
+          name: 'پرونده_$studentName.pdf',
+        );
+      } else {
+        await Printing.sharePdf(
+          bytes: pdfBytes,
+          filename: 'پرونده_$studentName.pdf',
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('❌ خطا در تولید PDF پرونده: $e'), backgroundColor: Colors.red),
+        );
+      }
+    }
+  }
+
   // Export data as PDF document with Persian font support (Vazirmatn)
   static Future<void> exportToPdf({
     required BuildContext context,
@@ -105,10 +247,12 @@ class ExportHelper {
                   children: [
                     pw.Text(
                       title,
+                      textDirection: pw.TextDirection.rtl,
                       style: pw.TextStyle(font: boldFont, fontSize: 18, color: PdfColors.indigo900),
                     ),
                     pw.Text(
                       'مهد و دبستان روزگار کودکی',
+                      textDirection: pw.TextDirection.rtl,
                       style: pw.TextStyle(font: font, fontSize: 12, color: PdfColors.grey700),
                     ),
                   ],
@@ -118,6 +262,7 @@ class ExportHelper {
               pw.TableHelper.fromTextArray(
                 headers: headers,
                 data: rows,
+                tableDirection: pw.TextDirection.rtl,
                 headerStyle: pw.TextStyle(font: boldFont, fontSize: 11, color: PdfColors.white),
                 headerDecoration: const pw.BoxDecoration(color: PdfColors.indigo700),
                 cellStyle: pw.TextStyle(font: font, fontSize: 10, color: PdfColors.black),
@@ -134,10 +279,12 @@ class ExportHelper {
                 children: [
                   pw.Text(
                     'سیستم جامع مدیریت روزگار کودکی - گزارش رسمی مدیریت',
+                    textDirection: pw.TextDirection.rtl,
                     style: pw.TextStyle(font: font, fontSize: 8, color: PdfColors.grey600),
                   ),
                   pw.Text(
                     'تاریخ چاپ: ${DateTime.now().toString().substring(0, 10)}',
+                    textDirection: pw.TextDirection.rtl,
                     style: pw.TextStyle(font: font, fontSize: 8, color: PdfColors.grey600),
                   ),
                 ],
