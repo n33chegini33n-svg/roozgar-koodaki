@@ -15,12 +15,18 @@ Future<bool> showCreateAccountDialog(BuildContext context) async {
   if (!context.mounted) return false;
 
   final isAdmin = Session.role == AppRole.admin;
-  final roles = <String, String>{
-    if (isAdmin) 'manager': 'مدیر',
-    'deputy': 'معاون / ناظم',
-    'teacher': 'مربی / معلم',
-    'parent': 'ولی',
-  };
+
+  const grades = [
+    'مهدکودک 👶',
+    'پیش‌دبستانی 🎨',
+    'اول دبستان ✏️',
+    'دوم دبستان 📖',
+    'سوم دبستان 📘',
+    'چهارم دبستان 📐',
+    'پنجم دبستان 🔬',
+    'ششم دبستان 🎓',
+  ];
+  var selectedGrade = grades[1]; // پیش‌دبستانی
 
   final name = TextEditingController();
   final phone = TextEditingController();
@@ -47,6 +53,7 @@ Future<bool> showCreateAccountDialog(BuildContext context) async {
               'phone': phone.text.trim(),
               'password': code.text.trim(),
               'role': role,
+              'grade': selectedGrade,
               if (role == 'teacher') 'class_id': classId,
               if (role == 'parent') 'student_ids': selected.toList(),
             });
@@ -95,10 +102,49 @@ Future<bool> showCreateAccountDialog(BuildContext context) async {
                     ),
                     const SizedBox(height: 10),
                     DropdownButtonFormField<String>(
-                      initialValue: role,
-                      decoration: const InputDecoration(labelText: 'نقش', border: OutlineInputBorder(), isDense: true),
-                      items: [for (final e in roles.entries) DropdownMenuItem(value: e.key, child: Text(e.value))],
-                      onChanged: (v) => setD(() => role = v ?? role),
+                      value: selectedGrade,
+                      decoration: const InputDecoration(labelText: 'دوره / مقطع تحصیلی', border: OutlineInputBorder(), isDense: true),
+                      items: [for (final g in grades) DropdownMenuItem(value: g, child: Text(g))],
+                      onChanged: (v) {
+                        if (v != null) {
+                          setD(() {
+                            selectedGrade = v;
+                            final isGrade2OrHigher = selectedGrade.contains('دوم') ||
+                                selectedGrade.contains('سوم') ||
+                                selectedGrade.contains('چهارم') ||
+                                selectedGrade.contains('پنجم') ||
+                                selectedGrade.contains('ششم');
+                            if (!isGrade2OrHigher && role == 'student') {
+                              role = 'parent';
+                            }
+                          });
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    Builder(
+                      builder: (context) {
+                        final isGrade2OrHigher = selectedGrade.contains('دوم') ||
+                            selectedGrade.contains('سوم') ||
+                            selectedGrade.contains('چهارم') ||
+                            selectedGrade.contains('پنجم') ||
+                            selectedGrade.contains('ششم');
+
+                        final roles = <String, String>{
+                          if (isAdmin) 'manager': 'مدیر',
+                          'deputy': 'معاون / ناظم',
+                          'teacher': 'مربی / معلم',
+                          'parent': 'ولی',
+                          if (isGrade2OrHigher) 'student': 'دانش‌آموز (حساب مستقل) 🎒',
+                        };
+
+                        return DropdownButtonFormField<String>(
+                          value: roles.containsKey(role) ? role : 'parent',
+                          decoration: const InputDecoration(labelText: 'نقش کاربر', border: OutlineInputBorder(), isDense: true),
+                          items: [for (final e in roles.entries) DropdownMenuItem(value: e.key, child: Text(e.value))],
+                          onChanged: (v) => setD(() => role = v ?? role),
+                        );
+                      },
                     ),
                     const SizedBox(height: 10),
                     TextField(
