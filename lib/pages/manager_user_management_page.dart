@@ -1,55 +1,13 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/export_helper.dart';
 import '../models/audit_log_model.dart';
 import '../services/backend.dart';
 import '../services/backend_directory.dart';
 import 'create_account_dialog.dart';
-import '../utils/jalali.dart';
 import '../models/permissions.dart';
 import '../models/user_directory.dart';
 import '../models/school_classes.dart';
 
-class HealthRecordItem {
-  final String id;
-  final String date;
-  final String centerName;
-  final String weight;
-  final String height;
-  final String vaccinationStatus;
-  final String notes;
-
-  HealthRecordItem({
-    required this.id,
-    required this.date,
-    required this.centerName,
-    required this.weight,
-    required this.height,
-    required this.vaccinationStatus,
-    required this.notes,
-  });
-
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'date': date,
-        'centerName': centerName,
-        'weight': weight,
-        'height': height,
-        'vaccinationStatus': vaccinationStatus,
-        'notes': notes,
-      };
-
-  factory HealthRecordItem.fromJson(Map<String, dynamic> json) => HealthRecordItem(
-        id: json['id'] ?? '',
-        date: json['date'] ?? JalaliDate.now().formatted,
-        centerName: json['centerName'] ?? 'خانه بهداشت مرکزی',
-        weight: json['weight'] ?? '18 کیلوگرم',
-        height: json['height'] ?? '110 سانتی‌متر',
-        vaccinationStatus: json['vaccinationStatus'] ?? 'تکمیل واکسیناسیون سن ۵ سالگی',
-        notes: json['notes'] ?? 'سلامت عمومی عالی، بدون حساسیت',
-      );
-}
 
 class ManagerUserManagementPage extends StatefulWidget {
   const ManagerUserManagementPage({super.key});
@@ -62,6 +20,9 @@ class _ManagerUserManagementPageState extends State<ManagerUserManagementPage> w
   late TabController _tabController;
   bool _isLoading = true;
   List<UserModel> _users = [];
+  String _searchQuery = '';
+  String _selectedClassFilter = 'همه کلاس‌ها';
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
@@ -73,6 +34,7 @@ class _ManagerUserManagementPageState extends State<ManagerUserManagementPage> w
   @override
   void dispose() {
     _tabController.dispose();
+    _searchController.dispose();
     super.dispose();
   }
 
@@ -112,8 +74,22 @@ class _ManagerUserManagementPageState extends State<ManagerUserManagementPage> w
       return;
     }
     final nameCtrl = TextEditingController(text: editUser?.name ?? '');
-    String selectedRole = editUser?.role ?? 'student';
-    
+    final phoneCtrl = TextEditingController(text: editUser?.phone ?? '');
+
+    const grades = [
+      'مهدکودک 👶',
+      'پیش‌دبستانی 🎨',
+      'اول دبستان ✏️',
+      'دوم دبستان 📖',
+      'سوم دبستان 📘',
+      'چهارم دبستان 📐',
+      'پنجم دبستان 🔬',
+      'ششم دبستان 🎓',
+    ];
+    String selectedGrade = grades[1]; // default to پیش‌دبستانی
+
+    String selectedRole = editUser?.role ?? 'parent';
+
     const validClasses = [...kClassNames, 'والدین و اولیاء', 'مدیریت'];
     String selectedClass = (editUser != null && validClasses.contains(normalizeClassName(editUser.className)))
         ? normalizeClassName(editUser.className)
@@ -122,8 +98,6 @@ class _ManagerUserManagementPageState extends State<ManagerUserManagementPage> w
     String linkedStudent = (editUser != null && studentNames.contains(editUser.linkedStudent))
         ? editUser.linkedStudent
         : (studentNames.isEmpty ? '' : studentNames.first);
-
-    final phoneCtrl = TextEditingController(text: editUser?.phone ?? '');
 
     showDialog(
       context: context,
@@ -145,21 +119,59 @@ class _ManagerUserManagementPageState extends State<ManagerUserManagementPage> w
                     ),
                     const SizedBox(height: 12),
                     InputDecorator(
-                      decoration: const InputDecoration(labelText: 'نقش کاربر', border: OutlineInputBorder()),
+                      decoration: const InputDecoration(labelText: 'دوره / مقطع تحصیلی', border: OutlineInputBorder()),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
-                          value: selectedRole,
+                          value: selectedGrade,
                           isDense: true,
                           isExpanded: true,
-                          items: const [
-                            DropdownMenuItem(value: 'student', child: Text('دانش‌آموز / نوآموز 🎒')),
-                            DropdownMenuItem(value: 'teacher', child: Text('مربی / معلم 👩‍🏫')),
-                            DropdownMenuItem(value: 'parent', child: Text('اولیاء (والدین) 👨‍👩‍👦')),
-                            DropdownMenuItem(value: 'deputy', child: Text('معاون / ناظم 🧑‍💼')),
+                          items: [
+                            for (final g in grades) DropdownMenuItem(value: g, child: Text(g)),
                           ],
-                          onChanged: (val) => setDialogState(() => selectedRole = val!),
+                          onChanged: (val) {
+                            setDialogState(() {
+                              selectedGrade = val!;
+                              final isGrade2OrHigher = selectedGrade.contains('دوم') ||
+                                  selectedGrade.contains('سوم') ||
+                                  selectedGrade.contains('چهارم') ||
+                                  selectedGrade.contains('پنجم') ||
+                                  selectedGrade.contains('ششم');
+                              if (!isGrade2OrHigher && selectedRole == 'student') {
+                                selectedRole = 'parent';
+                              }
+                            });
+                          },
                         ),
                       ),
+                    ),
+                    const SizedBox(height: 12),
+                    Builder(
+                      builder: (context) {
+                        final isGrade2OrHigher = selectedGrade.contains('دوم') ||
+                            selectedGrade.contains('سوم') ||
+                            selectedGrade.contains('چهارم') ||
+                            selectedGrade.contains('پنجم') ||
+                            selectedGrade.contains('ششم');
+
+                        return InputDecorator(
+                          decoration: const InputDecoration(labelText: 'نقش کاربر', border: OutlineInputBorder()),
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton<String>(
+                              value: selectedRole,
+                              isDense: true,
+                              isExpanded: true,
+                              items: [
+                                if (isGrade2OrHigher)
+                                  const DropdownMenuItem(value: 'student', child: Text('دانش‌آموز (حساب مستقل) 🎒')),
+                                const DropdownMenuItem(value: 'parent', child: Text('اولیاء / والدین 👨‍👩‍👦')),
+                                const DropdownMenuItem(value: 'teacher', child: Text('مربی / معلم 👩‍🏫')),
+                                const DropdownMenuItem(value: 'deputy', child: Text('معاون / ناظم 🧑‍💼')),
+                              ],
+                              onChanged: (val) => setDialogState(() => selectedRole = val!),
+                            ),
+                          ),
+                        );
+                      },
                     ),
                     const SizedBox(height: 12),
                     InputDecorator(
@@ -255,12 +267,6 @@ class _ManagerUserManagementPageState extends State<ManagerUserManagementPage> w
     );
   }
 
-  void _openHealthCardDialog(UserModel student) {
-    showDialog(
-      context: context,
-      builder: (ctx) => _HealthCardDialogContent(student: student),
-    );
-  }
 
   void _deleteUser(String id) {
     showDialog(
@@ -301,11 +307,32 @@ class _ManagerUserManagementPageState extends State<ManagerUserManagementPage> w
     );
   }
 
+  List<UserModel> _filterUserList(List<UserModel> baseList) {
+    return baseList.where((u) {
+      if (_selectedClassFilter != 'همه کلاس‌ها' && u.className != _selectedClassFilter) {
+        return false;
+      }
+
+      if (_searchQuery.trim().isEmpty) return true;
+      final q = _searchQuery.trim().toLowerCase();
+
+      return u.name.toLowerCase().contains(q) ||
+          u.phone.toLowerCase().contains(q) ||
+          u.className.toLowerCase().contains(q) ||
+          u.linkedStudent.toLowerCase().contains(q);
+    }).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
-    List<UserModel> students = _users.where((u) => u.role == 'student').toList();
-    List<UserModel> teachers = _users.where((u) => u.role == 'teacher' || u.role == 'deputy' || u.role == 'manager').toList();
-    List<UserModel> parents = _users.where((u) => u.role == 'parent').toList();
+    List<UserModel> students = _filterUserList(_users.where((u) => u.role == 'student').toList());
+    List<UserModel> teachers = _filterUserList(_users.where((u) => u.role == 'teacher' || u.role == 'deputy' || u.role == 'manager').toList());
+    List<UserModel> parents = _filterUserList(_users.where((u) => u.role == 'parent').toList());
+
+    final totalCount = _users.length;
+    final studentCount = _users.where((u) => u.role == 'student').length;
+    final staffCount = _users.where((u) => u.role == 'teacher' || u.role == 'deputy' || u.role == 'manager').length;
+    final parentCount = _users.where((u) => u.role == 'parent').length;
 
     return Scaffold(
       appBar: AppBar(
@@ -374,14 +401,126 @@ class _ManagerUserManagementPageState extends State<ManagerUserManagementPage> w
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
-          : TabBarView(
-              controller: _tabController,
+          : Column(
               children: [
-                _buildUserList(students),
-                _buildUserList(teachers),
-                _buildUserList(parents),
+                _buildStatsAndSearchHeader(
+                  total: totalCount,
+                  students: studentCount,
+                  staff: staffCount,
+                  parents: parentCount,
+                ),
+                Expanded(
+                  child: TabBarView(
+                    controller: _tabController,
+                    children: [
+                      _buildUserList(students),
+                      _buildUserList(teachers),
+                      _buildUserList(parents),
+                    ],
+                  ),
+                ),
               ],
             ),
+    );
+  }
+
+  Widget _buildStatsAndSearchHeader({
+    required int total,
+    required int students,
+    required int staff,
+    required int parents,
+  }) {
+    final classOptions = ['همه کلاس‌ها', ...kClassNames.map((c) => classLabel(c)), 'والدین و اولیاء', 'مدیریت'];
+
+    return Container(
+      padding: const EdgeInsets.all(14),
+      color: Colors.white,
+      child: Column(
+        children: [
+          Row(
+            children: [
+              _statChip('کل کاربران', '$total', Colors.blue.shade800, Colors.blue.shade50),
+              const SizedBox(width: 8),
+              _statChip('دانش‌آموزان', '$students', Colors.orange.shade800, Colors.orange.shade50),
+              const SizedBox(width: 8),
+              _statChip('مربیان/کادر', '$staff', Colors.purple.shade800, Colors.purple.shade50),
+              const SizedBox(width: 8),
+              _statChip('اولیاء', '$parents', Colors.teal.shade800, Colors.teal.shade50),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: _searchController,
+                  onChanged: (val) => setState(() => _searchQuery = val),
+                  decoration: InputDecoration(
+                    hintText: 'جستجوی نام، تلفن، کلاس یا فرزند...',
+                    prefixIcon: const Icon(Icons.search_rounded, color: Color(0xFF01579B)),
+                    suffixIcon: _searchQuery.isNotEmpty
+                        ? IconButton(
+                            icon: const Icon(Icons.clear_rounded),
+                            onPressed: () {
+                              _searchController.clear();
+                              setState(() => _searchQuery = '');
+                            },
+                          )
+                        : null,
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                    isDense: true,
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey.shade400),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                    value: _selectedClassFilter,
+                    isDense: true,
+                    items: [
+                      for (final opt in classOptions)
+                        DropdownMenuItem(
+                          value: opt,
+                          child: Text(opt, style: const TextStyle(fontSize: 12)),
+                        ),
+                    ],
+                    onChanged: (val) {
+                      if (val != null) setState(() => _selectedClassFilter = val);
+                    },
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _statChip(String label, String value, Color textColor, Color bgColor) {
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+        decoration: BoxDecoration(
+          color: bgColor,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: textColor.withValues(alpha: 0.3)),
+        ),
+        child: Column(
+          children: [
+            Text(value, style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: textColor)),
+            const SizedBox(height: 2),
+            Text(label, style: TextStyle(fontSize: 10, color: textColor), textAlign: TextAlign.center),
+          ],
+        ),
+      ),
     );
   }
 
@@ -434,13 +573,6 @@ class _ManagerUserManagementPageState extends State<ManagerUserManagementPage> w
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Health Card button (only for students)
-                if (u.role == 'student')
-                  IconButton(
-                    icon: const Icon(Icons.medical_services_rounded, color: Colors.teal),
-                    tooltip: 'کارت خانه بهداشت و پرونده سلامت',
-                    onPressed: () => _openHealthCardDialog(u),
-                  ),
                 IconButton(
                   icon: const Icon(Icons.edit_rounded, color: Colors.blue),
                   tooltip: 'ویرایش مشخصات',
@@ -460,311 +592,3 @@ class _ManagerUserManagementPageState extends State<ManagerUserManagementPage> w
   }
 }
 
-// ==========================================
-// کارت خانه بهداشت و پرونده سلامت کودک
-// ==========================================
-class _HealthCardDialogContent extends StatefulWidget {
-  final UserModel student;
-  const _HealthCardDialogContent({required this.student});
-
-  @override
-  State<_HealthCardDialogContent> createState() => _HealthCardDialogContentState();
-}
-
-class _HealthCardDialogContentState extends State<_HealthCardDialogContent> {
-  bool _isLoading = true;
-  List<HealthRecordItem> _records = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _loadHealthRecords();
-  }
-
-  Future<void> _loadHealthRecords() async {
-    final prefs = await SharedPreferences.getInstance();
-    final String? data = prefs.getString('health_records_${widget.student.id}');
-    if (data != null) {
-      List decoded = jsonDecode(data);
-      setState(() {
-        _records = decoded.map((e) => HealthRecordItem.fromJson(e)).toList();
-        _isLoading = false;
-      });
-    } else {
-      _records = [
-        HealthRecordItem(
-          id: 'H1',
-          date: JalaliDate.now().formatted,
-          centerName: 'خانه بهداشت شماره ۴ مرکزی',
-          weight: '17.5 کیلوگرم',
-          height: '108 سانتی‌متر',
-          vaccinationStatus: 'واکسن ۶ سالگی کامل',
-          notes: 'بینایی و شنوایی سنجی: نرمال و تایید شده',
-        ),
-        HealthRecordItem(
-          id: 'H2',
-          date: '1402/05/10',
-          centerName: 'پایگاه سلامت کودکان',
-          weight: '15.2 کیلوگرم',
-          height: '102 سانتی‌متر',
-          vaccinationStatus: 'واکسن ۱۸ ماهگی کامل',
-          notes: 'پایش رشد و قد و وزن عالی',
-        ),
-      ];
-      await _saveHealthRecords();
-      setState(() => _isLoading = false);
-    }
-  }
-
-  Future<void> _saveHealthRecords() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('health_records_${widget.student.id}', jsonEncode(_records.map((e) => e.toJson()).toList()));
-  }
-
-  void _showAddEditRecordDialog({HealthRecordItem? editItem}) {
-    final dateCtrl = TextEditingController(text: editItem?.date ?? JalaliDate.now().formatted);
-    final centerCtrl = TextEditingController(text: editItem?.centerName ?? 'خانه بهداشت مرکزی');
-    final weightCtrl = TextEditingController(text: editItem?.weight ?? '');
-    final heightCtrl = TextEditingController(text: editItem?.height ?? '');
-    final vaxCtrl = TextEditingController(text: editItem?.vaccinationStatus ?? '');
-    final notesCtrl = TextEditingController(text: editItem?.notes ?? '');
-
-    showDialog(
-      context: context,
-      builder: (ctx) => Directionality(
-        textDirection: TextDirection.rtl,
-        child: AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          title: Text(editItem == null ? '➕ ثبت چکاپ و سابقه سلامت جدید' : '✏️ ویرایش سابقه سلامت'),
-          content: SizedBox(
-            width: 450,
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextField(controller: dateCtrl, decoration: InputDecoration(labelText: 'تاریخ چکاپ (مثلا ${JalaliDate.now().formatted})', border: const OutlineInputBorder())),
-                  const SizedBox(height: 10),
-                  TextField(controller: centerCtrl, decoration: const InputDecoration(labelText: 'نام خانه بهداشت / درمانگاه', border: OutlineInputBorder())),
-                  const SizedBox(height: 10),
-                  Row(
-                    children: [
-                      Expanded(child: TextField(controller: weightCtrl, decoration: const InputDecoration(labelText: 'وزن', border: OutlineInputBorder()))),
-                      const SizedBox(width: 8),
-                      Expanded(child: TextField(controller: heightCtrl, decoration: const InputDecoration(labelText: 'قد', border: OutlineInputBorder()))),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  TextField(controller: vaxCtrl, decoration: const InputDecoration(labelText: 'وضعیت واکسیناسیون', border: OutlineInputBorder())),
-                  const SizedBox(height: 10),
-                  TextField(controller: notesCtrl, maxLines: 2, decoration: const InputDecoration(labelText: 'توضیحات پزشک / سلامت عمومی', border: OutlineInputBorder())),
-                ],
-              ),
-            ),
-          ),
-          actions: [
-            TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('انصراف')),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.teal, foregroundColor: Colors.white),
-              onPressed: () {
-                if (dateCtrl.text.trim().isNotEmpty) {
-                  setState(() {
-                    if (editItem == null) {
-                      _records.insert(0, HealthRecordItem(
-                        id: 'H-${DateTime.now().millisecondsSinceEpoch}',
-                        date: dateCtrl.text.trim(),
-                        centerName: centerCtrl.text.trim(),
-                        weight: weightCtrl.text.trim(),
-                        height: heightCtrl.text.trim(),
-                        vaccinationStatus: vaxCtrl.text.trim(),
-                        notes: notesCtrl.text.trim(),
-                      ));
-                    } else {
-                      final idx = _records.indexWhere((r) => r.id == editItem.id);
-                      if (idx != -1) {
-                        _records[idx] = HealthRecordItem(
-                          id: editItem.id,
-                          date: dateCtrl.text.trim(),
-                          centerName: centerCtrl.text.trim(),
-                          weight: weightCtrl.text.trim(),
-                          height: heightCtrl.text.trim(),
-                          vaccinationStatus: vaxCtrl.text.trim(),
-                          notes: notesCtrl.text.trim(),
-                        );
-                      }
-                    }
-                    _saveHealthRecords();
-                  });
-                  Navigator.pop(ctx);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('✅ اطلاعات خانه بهداشت با موفقیت ذخیره شد!'), backgroundColor: Colors.teal),
-                  );
-                }
-              },
-              child: const Text('ذخیره اطلاعات'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _deleteRecord(String id) {
-    setState(() {
-      _records.removeWhere((r) => r.id == id);
-      _saveHealthRecords();
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-        title: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(color: Colors.teal.shade50, shape: BoxShape.circle),
-              child: const Icon(Icons.medical_services_rounded, color: Colors.teal),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('کارت خانه بهداشت: ${widget.student.name}', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                  Text('کلاس: ${widget.student.className}', style: const TextStyle(fontSize: 12, color: Colors.grey)),
-                ],
-              ),
-            ),
-            IconButton(
-              icon: const Icon(Icons.table_chart_rounded, color: Colors.green),
-              tooltip: 'خروجی اکسل کارت سلامت',
-              onPressed: () {
-                ExportHelper.exportToExcel(
-                  context: context,
-                  title: 'کارت خانه بهداشت و پرونده سلامت - ${widget.student.name}',
-                  headers: ['تاریخ', 'خانه بهداشت', 'وزن', 'قد', 'واکسیناسیون', 'توضیحات پزشک'],
-                  rows: _records.map((r) => [r.date, r.centerName, r.weight, r.height, r.vaccinationStatus, r.notes]).toList(),
-                  fileName: 'health_card_${widget.student.id}',
-                );
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.picture_as_pdf_rounded, color: Colors.red),
-              tooltip: 'خروجی PDF کارت سلامت',
-              onPressed: () {
-                ExportHelper.exportToPdf(
-                  context: context,
-                  title: 'گزارش رسمی کارت خانه بهداشت - ${widget.student.name}',
-                  headers: ['تاریخ', 'خانه بهداشت', 'وزن', 'قد', 'واکسیناسیون', 'توضیحات'],
-                  rows: _records.map((r) => [r.date, r.centerName, r.weight, r.height, r.vaccinationStatus, r.notes]).toList(),
-                  fileName: 'health_card_${widget.student.id}',
-                );
-              },
-            ),
-            /*print*/
-            IconButton(
-              icon: const Icon(Icons.print_rounded, color: Colors.red),
-              tooltip: 'چاپ',
-              onPressed: () {
-                ExportHelper.printTable(
-                  context: context,
-                  title: 'گزارش رسمی کارت خانه بهداشت - ${widget.student.name}',
-                  headers: ['تاریخ', 'خانه بهداشت', 'وزن', 'قد', 'واکسیناسیون', 'توضیحات'],
-                  rows: _records.map((r) => [r.date, r.centerName, r.weight, r.height, r.vaccinationStatus, r.notes]).toList(),
-                  fileName: 'health_card_${widget.student.id}',
-                );
-              },
-            ),
-          ],
-        ),
-        content: SizedBox(
-          width: 600,
-          height: 450,
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text('سوابق معاینات و واکسیناسیون:', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.teal)),
-                  ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(backgroundColor: Colors.teal, foregroundColor: Colors.white),
-                    onPressed: () => _showAddEditRecordDialog(),
-                    icon: const Icon(Icons.add, size: 16),
-                    label: const Text('افزودن چکاپ جدید'),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              Expanded(
-                child: _isLoading
-                    ? const Center(child: CircularProgressIndicator())
-                    : _records.isEmpty
-                        ? const Center(child: Text('هیچ سابقه سلامتی ثبت نشده است.'))
-                        : ListView.builder(
-                            itemCount: _records.length,
-                            itemBuilder: (context, index) {
-                              final r = _records[index];
-                              return Card(
-                                elevation: 2,
-                                margin: const EdgeInsets.symmetric(vertical: 6),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(12.0),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text('📅 تاریخ: ${r.date}', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.teal)),
-                                          Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              IconButton(
-                                                icon: const Icon(Icons.edit, size: 18, color: Colors.blue),
-                                                onPressed: () => _showAddEditRecordDialog(editItem: r),
-                                              ),
-                                              IconButton(
-                                                icon: const Icon(Icons.delete, size: 18, color: Colors.red),
-                                                onPressed: () => _deleteRecord(r.id),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                      const Divider(),
-                                      Text('🏥 مرکز / خانه بهداشت: ${r.centerName}'),
-                                      const SizedBox(height: 4),
-                                      Row(
-                                        children: [
-                                          Expanded(child: Text('⚖️ وزن: ${r.weight}')),
-                                          Expanded(child: Text('📏 قد: ${r.height}')),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Text('💉 واکسیناسیون: ${r.vaccinationStatus}'),
-                                      const SizedBox(height: 4),
-                                      Text('📝 توضیحات پزشک: ${r.notes}', style: const TextStyle(color: Colors.black87)),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('بستن'),
-          ),
-        ],
-      ),
-    );
-  }
-}
