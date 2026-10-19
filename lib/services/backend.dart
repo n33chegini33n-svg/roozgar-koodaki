@@ -65,10 +65,14 @@ class Backend {
 
   /// null یعنی موفق؛ در غیر این صورت پیام خطا برای نمایش
   static Future<String?> signIn(String phone, String password) async {
+    Session.reset();
     try {
       await client.auth.signInWithPassword(email: emailFor(phone), password: password);
-      return await _loadSession();
+      final error = await _loadSession();
+      if (error != null) await _clearAuthState();
+      return error;
     } on sup.AuthException catch (e) {
+      await _clearAuthState();
       final m = e.message.toLowerCase();
       if (m.contains('invalid login')) {
         // در حالت توسعه، ایمیلی که برنامه امتحان کرده نشان داده می‌شود تا اشکال‌یابی ساده باشد
@@ -85,6 +89,7 @@ class Backend {
       }
       return 'خطای ورود: ${e.message}';
     } catch (e) {
+      await _clearAuthState();
       return 'ارتباط با سرور برقرار نشد: $e';
     }
   }
@@ -108,10 +113,12 @@ class Backend {
       return 'حساب شما غیرفعال است؛ با مدیریت تماس بگیرید';
     }
 
-    final role = AppRole.values.firstWhere(
-      (r) => r.name == p['role'],
-      orElse: () => AppRole.parent,
-    );
+    final roleName = p['role'];
+    final matchingRoles = AppRole.values.where((r) => r.name == roleName);
+    if (matchingRoles.isEmpty) {
+      return 'نقش حساب معتبر نیست؛ از مدیریت بخواهید نقش حساب را اصلاح کند';
+    }
+    final role = matchingRoles.first;
     Session.signIn(role);
     final name = p['full_name'];
     if (name is String && name.isNotEmpty) Session.userName = name;
@@ -142,11 +149,17 @@ class Backend {
   }
 
   static Future<void> signOut() async {
-    if (!_ready) return;
-    try {
-      await client.auth.signOut();
-    } catch (_) {}
-    // کش‌ها پاک می‌شوند تا داده‌های یک کاربر برای کاربر بعدی نماند
+    await _clearAuthState();
+  }
+
+  static Future<void> _clearAuthState() async {
+    if (_ready) {
+      try {
+        await client.auth.signOut();
+      } catch (_) {}
+    }
+    // پاک‌سازی همیشه انجام می‌شود؛ حتی اگر سرور در دسترس نباشد.
+    Session.reset();
     ServerDirectory.reset();
     AttendanceArchiveService.clearCache();
     UserDirectory.clearCache();

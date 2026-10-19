@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'auth/welcome_page.dart';
 import 'parent/parent_shell.dart';
@@ -85,11 +86,20 @@ Widget homeForRole(String roleKey) {
 }
 
 Future<AuthResult> performLogin(String phone, String code, String? demoRole) async {
+  // Never allow the offline/demo login path in profile or release builds.
+  Session.reset();
+  if (!Backend.ready && !kDebugMode) {
+    return AuthResult.error('ورود واقعی در دسترس نیست. اتصال سرور را بررسی کنید و دوباره تلاش کنید.');
+  }
+
   String roleKey;
   if (Backend.ready) {
     // ورود واقعی: نقش و هویت از دیتابیس می‌آید
     final err = await Backend.signIn(phone, code);
-    if (err != null) return AuthResult.error(err);
+    if (err != null) {
+      Session.reset();
+      return AuthResult.error(err);
+    }
     roleKey = _roleKeyOf(Session.role);
   } else {
     // حالت نمایشی: نقش از فهرست کاربران (بر اساس شماره) یا انتخاب کاربر

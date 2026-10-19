@@ -217,6 +217,14 @@ class Session {
   // نوآموز مرتبط با حساب ولی (نمونه تا زمان اتصال به سرور)
   static String childName = 'آرتین شجاعی';
 
+  /// پاک‌کردن هویت فعال و مقادیر نمونه هنگام خروج یا شکست ورود.
+  static void reset() {
+    role = AppRole.parent;
+    userName = '';
+    className = '';
+    childName = '';
+  }
+
   static void signIn(AppRole r) {
     role = r;
     switch (r) {

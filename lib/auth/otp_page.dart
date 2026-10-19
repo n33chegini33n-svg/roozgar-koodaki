@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 import 'dart:ui' as ui;
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../theme/app_colors.dart';
@@ -160,11 +161,13 @@ class _OtpPageState extends State<OtpPage> {
         Text(
           Backend.ready
               ? 'شمارهٔ ${widget.phone} • کد ورود را مدیریت مدرسه به شما داده است'
-              : 'شمارهٔ ${widget.phone} • حالت نمایشی: هر کد ۶ رقمی پذیرفته می‌شود',
+              : (kDebugMode
+                  ? 'شمارهٔ ${widget.phone} • حالت نمایشی توسعه: هر کد ۶ رقمی پذیرفته می‌شود'
+                  : 'شمارهٔ ${widget.phone} • ورود موقتاً در دسترس نیست؛ اتصال سرور را بررسی کنید'),
           textAlign: TextAlign.center,
           style: const TextStyle(color: AppColors.textGrey),
         ),
-        if (!Backend.ready) ...[
+        if (!Backend.ready && kDebugMode) ...[
           const SizedBox(height: 14),
           DropdownButtonFormField<String>(
             initialValue: _demoRole,
