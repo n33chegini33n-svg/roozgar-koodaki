@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'auth/welcome_page.dart';
 import 'parent/parent_shell.dart';
@@ -89,9 +90,15 @@ Future<AuthResult> performLogin(String phone, String code, String? demoRole) asy
   if (Backend.ready) {
     // ورود واقعی: نقش و هویت از دیتابیس می‌آید
     final err = await Backend.signIn(phone, code);
-    if (err != null) return AuthResult.error(err);
+    if (err != null) {
+      await Backend.signOut();
+      return AuthResult.error(err);
+    }
     roleKey = _roleKeyOf(Session.role);
   } else {
+    if (kReleaseMode) {
+      return AuthResult.error('اتصال به سرور برقرار نیست و حالت نمایشی در نسخهٔ انتشار غیرفعال است.');
+    }
     // حالت نمایشی: نقش از فهرست کاربران (بر اساس شماره) یا انتخاب کاربر
     var role = demoRole ?? 'student';
     UserModel? match;

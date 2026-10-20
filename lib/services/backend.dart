@@ -142,11 +142,13 @@ class Backend {
   }
 
   static Future<void> signOut() async {
-    if (!_ready) return;
-    try {
-      await client.auth.signOut();
-    } catch (_) {}
-    // کش‌ها پاک می‌شوند تا داده‌های یک کاربر برای کاربر بعدی نماند
+    if (_ready) {
+      try {
+        await client.auth.signOut();
+      } catch (_) {}
+    }
+    // کش‌ها و اطلاعات نشست محلی پاک می‌شوند
+    Session.reset();
     ServerDirectory.reset();
     AttendanceArchiveService.clearCache();
     UserDirectory.clearCache();
