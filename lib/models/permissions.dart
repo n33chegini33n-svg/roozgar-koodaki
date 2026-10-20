@@ -211,11 +211,18 @@ const List<AppRole> kConfigurableRoles = [AppRole.deputy, AppRole.teacher];
 
 /// هویت کاربر واردشده (تا زمان اتصال به سرور، نمونه است)
 class Session {
-  static AppRole role = AppRole.manager;
-  static String userName = 'مدیر';
+  static AppRole role = AppRole.parent;
+  static String userName = 'ولی';
   static String className = 'پیش‌دبستانی آفتاب';
   // نوآموز مرتبط با حساب ولی (نمونه تا زمان اتصال به سرور)
   static String childName = 'آرتین شجاعی';
+
+  static void reset() {
+    role = AppRole.parent;
+    userName = 'ولی';
+    className = 'پیش‌دبستانی آفتاب';
+    childName = 'آرتین شجاعی';
+  }
 
   static void signIn(AppRole r) {
     role = r;
