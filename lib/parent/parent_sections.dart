@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
+import '../services/backend.dart';
 import '../main.dart';
 import '../models/attendance_archive_model.dart';
 import '../models/permissions.dart';
@@ -42,7 +43,9 @@ class SectionScaffold extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.power_settings_new_rounded),
             tooltip: 'خروج',
-            onPressed: () {
+            onPressed: () async {
+              await Backend.signOut();
+              if (!context.mounted) return;
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(

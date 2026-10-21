@@ -211,13 +211,12 @@ const List<AppRole> kConfigurableRoles = [AppRole.deputy, AppRole.teacher];
 
 /// هویت کاربر واردشده (تا زمان اتصال به سرور، نمونه است)
 class Session {
-  static AppRole role = AppRole.manager;
-  static String userName = 'مدیر';
-  static String className = 'پیش‌دبستانی آفتاب';
-  // نوآموز مرتبط با حساب ولی (نمونه تا زمان اتصال به سرور)
-  static String childName = 'آرتین شجاعی';
+  static AppRole role = AppRole.parent;
+  static String userName = '';
+  static String className = '';
+  static String childName = '';
 
-  /// پاک‌کردن هویت فعال و مقادیر نمونه هنگام خروج یا شکست ورود.
+  /// پاک‌کردن هویت فعال
   static void reset() {
     role = AppRole.parent;
     userName = '';
