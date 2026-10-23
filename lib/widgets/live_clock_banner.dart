@@ -75,6 +75,9 @@ class _LiveClockBannerState extends State<LiveClockBanner> {
       case AppRole.admin:
         file = 'ill_admin.png';
         break;
+      case AppRole.student:
+        file = 'ill_students.png';
+        break;
     }
     return Container(
       width: 46,

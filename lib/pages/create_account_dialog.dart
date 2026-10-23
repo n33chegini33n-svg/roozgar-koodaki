@@ -9,6 +9,7 @@ import '../services/backend_directory.dart';
 /// اگر حساب ساخته شد true برمی‌گرداند.
 Future<bool> showCreateAccountDialog(BuildContext context) async {
   if (!Backend.ready) return false;
+  if (!PermissionService.instance.can(Session.role, Perm.manageUsers)) return false;
   try {
     await ServerDirectory.ensureLoaded(force: true);
   } catch (_) {}

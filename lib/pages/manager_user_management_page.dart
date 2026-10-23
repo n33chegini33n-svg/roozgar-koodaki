@@ -19,6 +19,7 @@ class ManagerUserManagementPage extends StatefulWidget {
 class _ManagerUserManagementPageState extends State<ManagerUserManagementPage> with SingleTickerProviderStateMixin {
   late TabController _tabController;
   bool _isLoading = true;
+  bool _hasAccess = true;
   List<UserModel> _users = [];
   String _searchQuery = '';
   String _selectedClassFilter = 'همه کلاس‌ها';
@@ -39,6 +40,15 @@ class _ManagerUserManagementPageState extends State<ManagerUserManagementPage> w
   }
 
   Future<void> _loadUsers() async {
+    if (!PermissionService.instance.can(Session.role, Perm.manageUsers)) {
+      if (!mounted) return;
+      setState(() {
+        _users = [];
+        _isLoading = false;
+        _hasAccess = false;
+      });
+      return;
+    }
     final list = await UserDirectory.load();
     if (!mounted) return;
     setState(() {
@@ -50,6 +60,12 @@ class _ManagerUserManagementPageState extends State<ManagerUserManagementPage> w
   Future<void> _saveUsers() => UserDirectory.save(_users);
 
   void _showAddUserDialog({UserModel? editUser}) {
+    if (!PermissionService.instance.can(Session.role, Perm.manageUsers)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('شما اجازهٔ مدیریت کاربران را ندارید'), backgroundColor: Colors.red),
+      );
+      return;
+    }
     if (Backend.ready) {
       // حالت سرور: ساخت حساب واقعی با تابع سمت سرور
       if (editUser != null) {
@@ -65,12 +81,6 @@ class _ManagerUserManagementPageState extends State<ManagerUserManagementPage> w
           _loadUsers();
         }
       });
-      return;
-    }
-    if (!PermissionService.instance.can(Session.role, Perm.manageUsers)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('شما اجازهٔ مدیریت کاربران را ندارید'), backgroundColor: Colors.red),
-      );
       return;
     }
     final nameCtrl = TextEditingController(text: editUser?.name ?? '');
@@ -269,6 +279,7 @@ class _ManagerUserManagementPageState extends State<ManagerUserManagementPage> w
 
 
   void _deleteUser(String id) {
+    if (Backend.ready || !PermissionService.instance.can(Session.role, Perm.manageUsers)) return;
     showDialog(
       context: context,
       builder: (ctx) => Directionality(
@@ -325,6 +336,9 @@ class _ManagerUserManagementPageState extends State<ManagerUserManagementPage> w
 
   @override
   Widget build(BuildContext context) {
+    if (!_hasAccess) {
+      return const Scaffold(body: Center(child: Text('شما اجازهٔ مدیریت کاربران را ندارید')));
+    }
     List<UserModel> students = _filterUserList(_users.where((u) => u.role == 'student').toList());
     List<UserModel> teachers = _filterUserList(_users.where((u) => u.role == 'teacher' || u.role == 'deputy' || u.role == 'manager').toList());
     List<UserModel> parents = _filterUserList(_users.where((u) => u.role == 'parent').toList());
@@ -581,7 +595,7 @@ class _ManagerUserManagementPageState extends State<ManagerUserManagementPage> w
                 IconButton(
                   icon: const Icon(Icons.delete_rounded, color: Colors.red),
                   tooltip: 'حذف کاربر',
-                  onPressed: () => _deleteUser(u.id),
+                  onPressed: Backend.ready ? null : () => _deleteUser(u.id),
                 ),
               ],
             ),

@@ -13,3 +13,7 @@
 1. تمامی ارتباطات با سوپابیس باید در لایه سرویس (Service Layer) بمانند و مستقیم در UI فراخوانی نشوند.
 2. کلیدهای حساس (Supabase URL و Anon Key) باید از طریق فایل `.env` خوانده شوند و هرگز در کد Hardcode نشوند.
 3. تمامی مدل‌های داده (Data Models) باید متدهای `fromJson` و `toJson` داشته باشند.
+4. ## Supabase Database Workflow
+- Never alter the Supabase database manually via the web dashboard SQL Editor.
+- Always create database schema changes, tables, and policies as migration files inside `supabase/migrations/`.
+- Apply changes using the terminal command: `supabase db push`.

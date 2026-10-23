@@ -7,6 +7,7 @@ import '../models/permissions.dart';
 import '../utils/jalali.dart';
 import '../models/school_classes.dart';
 import '../services/backend.dart';
+import '../services/financial_access_policy.dart';
 
 /// مدل مرحله پرداخت نقدی (حداکثر ۳ مرحله)
 class CashStage {
@@ -214,6 +215,11 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
   List<TuitionRecord> _records = [];
   String _searchQuery = '';
 
+  bool get _canReadLedger =>
+      FinancialAccessPolicy.canReadManagementLedger(Session.role);
+  bool get _canManageLedger =>
+      FinancialAccessPolicy.canManageLedger(Session.role);
+
   @override
   void initState() {
     super.initState();
@@ -221,6 +227,15 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
   }
 
   Future<void> _loadFinancialData() async {
+    if (!_canReadLedger) {
+      if (!mounted) return;
+      setState(() {
+        _records = [];
+        _isLoading = false;
+      });
+      return;
+    }
+
     if (Backend.ready) {
       try {
         final rows = await Backend.client
@@ -346,6 +361,7 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
   }
 
   Future<void> _saveFinancialData() async {
+    if (!_canManageLedger) return;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('manager_financial_records_v1', jsonEncode(_records.map((e) => e.toJson()).toList()));
   }
@@ -370,7 +386,7 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
 
   /// ویرایش توضیحات و تنظیمات پرداخت یک بند هزینه
   Future<void> _editRecordDialog(TuitionRecord record) async {
-    if (!PermissionService.instance.can(Session.role, Perm.viewFinancial)) return;
+    if (!_canManageLedger) return;
     final descCtrl = TextEditingController(text: record.description);
     final docNoteCtrl = TextEditingController(text: record.documentNote);
     String currentStatus = record.status;
@@ -580,7 +596,7 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
       ),
     );
 
-    if (updated == true) {
+    if (updated == true && _canManageLedger) {
       final idx = _records.indexWhere((x) => x.id == record.id);
       if (idx >= 0) {
         final newRecord = _records[idx].copyWith(
@@ -881,6 +897,7 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
                                               value: rec.isIncluded,
                                               activeColor: const Color(0xFF01579B),
                                               onChanged: (val) async {
+                                                if (!_canManageLedger) return;
                                                 final updatedValue = val ?? false;
                                                 final idx = _records.indexWhere((x) => x.id == rec.id);
                                                 if (idx >= 0) {
@@ -940,6 +957,7 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
                                               ),
                                               InkWell(
                                                 onTap: () async {
+                                                  if (!_canManageLedger) return;
                                                   final controller = TextEditingController(text: '${rec.amount}');
                                                   final newAmt = await showDialog<int>(
                                                     context: context,
@@ -1006,6 +1024,7 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
                                                     selected: rec.isCash,
                                                     selectedColor: Colors.green.shade100,
                                                     onSelected: (val) async {
+                                                      if (!_canManageLedger) return;
                                                       final idx = _records.indexWhere((x) => x.id == rec.id);
                                                       if (idx >= 0) {
                                                         setState(() {
@@ -1027,6 +1046,7 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
                                                     selected: rec.isInstallment,
                                                     selectedColor: Colors.purple.shade100,
                                                     onSelected: (val) async {
+                                                      if (!_canManageLedger) return;
                                                       final idx = _records.indexWhere((x) => x.id == rec.id);
                                                       if (idx >= 0) {
                                                         setState(() {
@@ -1052,6 +1072,7 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
                                                     final isChecked = stages[stageIdx].isSettled;
                                                     return InkWell(
                                                       onTap: () async {
+                                                        if (!_canManageLedger) return;
                                                         final idx = _records.indexWhere((x) => x.id == rec.id);
                                                         if (idx >= 0) {
                                                           final updatedStages = List<CashStage>.from(stages);
@@ -1115,6 +1136,7 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
                                                     final isChecked = instSettled[instIdx];
                                                     return InkWell(
                                                       onTap: () async {
+                                                        if (!_canManageLedger) return;
                                                         final idx = _records.indexWhere((x) => x.id == rec.id);
                                                         if (idx >= 0) {
                                                           final updatedSettled = List<bool>.from(instSettled);
@@ -1265,7 +1287,7 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
   }
 
   Future<void> _showAddInvoiceDialog({String? prefilledStudent, String? prefilledClass}) async {
-    if (!PermissionService.instance.can(Session.role, Perm.viewFinancial)) {
+    if (!_canManageLedger) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('شما اجازهٔ ثبت رکورد مالی را ندارید'), backgroundColor: Colors.red),
       );
@@ -1440,6 +1462,10 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
               ElevatedButton(
                 style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF0288D1), foregroundColor: Colors.white),
                 onPressed: () async {
+                  if (!_canManageLedger) {
+                    Navigator.pop(ctx);
+                    return;
+                  }
                   if (nameCtrl.text.trim().isNotEmpty && amountCtrl.text.trim().isNotEmpty) {
                     final newRecord = TuitionRecord(
                       id: 'F-${DateTime.now().millisecondsSinceEpoch}',
@@ -1523,6 +1549,13 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (!_canReadLedger) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('امور مالی و حسابداری شهریه')),
+        body: const Center(child: Text('شما اجازهٔ مشاهدهٔ دفتر مالی را ندارید.')),
+      );
+    }
+
     final grouped = _groupedRecords;
 
     return Scaffold(
@@ -1609,7 +1642,7 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => _showAddInvoiceDialog(),
+        onPressed: _canManageLedger ? () => _showAddInvoiceDialog() : null,
         backgroundColor: Colors.green.shade700,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add_card_rounded),

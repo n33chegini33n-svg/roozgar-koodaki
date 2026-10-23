@@ -26,9 +26,9 @@ class ManagerPermissionsPage extends StatelessWidget {
             for (final s in options)
               DropdownMenuItem(value: s, child: Text(s.labelFor(role), style: const TextStyle(fontSize: 13))),
           ],
-          onChanged: (v) {
+          onChanged: service.allowsLocalOverrides ? (v) {
             if (v != null) service.setScope(role, perm, v);
-          },
+          } : null,
         ),
       ),
     );
@@ -51,7 +51,7 @@ class ManagerPermissionsPage extends StatelessWidget {
             IconButton(
               tooltip: 'بازگشت به پیش‌فرض',
               icon: const Icon(Icons.restore_rounded),
-              onPressed: () async {
+              onPressed: service.allowsLocalOverrides ? () async {
                 final ok = await showDialog<bool>(
                   context: context,
                   builder: (ctx) => Directionality(
@@ -67,7 +67,7 @@ class ManagerPermissionsPage extends StatelessWidget {
                   ),
                 );
                 if (ok == true) await service.resetToDefaults();
-              },
+              } : null,
             ),
           ],
         ),

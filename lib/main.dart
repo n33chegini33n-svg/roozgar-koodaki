@@ -27,6 +27,7 @@ import 'teacher/teacher_sections.dart' show PageHost;
 import 'pages/toolbox_page.dart';
 import 'models/permissions.dart';
 import 'services/backend.dart';
+import 'services/demo_auth_policy.dart';
 import 'models/user_directory.dart';
 import 'auth/auth_types.dart';
 import 'utils/export_helper.dart';
@@ -38,8 +39,14 @@ import 'pages/registration_manager_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await PermissionService.instance.load();
   await Backend.init();
+  await PermissionService.instance.load(
+    allowLocalOverrides: DemoAuthPolicy.isAllowed(
+      isDebugBuild: kDebugMode,
+      backendConfigured: Backend.configured,
+      backendReady: Backend.ready,
+    ),
+  );
   runApp(const RoozgarKoodakiApp());
 }
 
@@ -60,6 +67,8 @@ String _roleKeyOf(AppRole r) {
       return 'teacher';
     case AppRole.parent:
       return 'parent';
+    case AppRole.student:
+      return 'student';
   }
 }
 
@@ -86,9 +95,13 @@ Widget homeForRole(String roleKey) {
 }
 
 Future<AuthResult> performLogin(String phone, String code, String? demoRole) async {
-  // Never allow the offline/demo login path in profile or release builds.
   Session.reset();
-  if (!Backend.ready && !kDebugMode) {
+  final demoAllowed = DemoAuthPolicy.isAllowed(
+    isDebugBuild: kDebugMode,
+    backendConfigured: Backend.configured,
+    backendReady: Backend.ready,
+  );
+  if (!Backend.ready && !demoAllowed) {
     return AuthResult.error('ورود واقعی در دسترس نیست. اتصال سرور را بررسی کنید و دوباره تلاش کنید.');
   }
 
@@ -103,11 +116,8 @@ Future<AuthResult> performLogin(String phone, String code, String? demoRole) asy
     }
     roleKey = _roleKeyOf(Session.role);
   } else {
-    if (kReleaseMode) {
-      return AuthResult.error('اتصال به سرور برقرار نیست و حالت نمایشی در نسخهٔ انتشار غیرفعال است.');
-    }
     // حالت نمایشی: نقش از فهرست کاربران (بر اساس شماره) یا انتخاب کاربر
-    var role = demoRole ?? 'student';
+    String? role = DemoAuthPolicy.validRole(demoRole ?? 'student');
     UserModel? match;
     try {
       final wanted = Backend.latinDigits(phone);
@@ -118,7 +128,12 @@ Future<AuthResult> performLogin(String phone, String code, String? demoRole) asy
         }
       }
     } catch (_) {}
-    if (match != null && match.role.isNotEmpty) role = match.role;
+    if (match != null && match.role.isNotEmpty) {
+      role = DemoAuthPolicy.validRole(match.role);
+    }
+    if (role == null) {
+      return AuthResult.error('نقش انتخاب‌شده معتبر نیست.');
+    }
     switch (role) {
       case 'teacher':
         Session.signIn(AppRole.teacher);
@@ -132,11 +147,15 @@ Future<AuthResult> performLogin(String phone, String code, String? demoRole) asy
       case 'admin':
         Session.signIn(AppRole.admin);
         break;
-      default: // parent / student
+      case 'student':
+        Session.signIn(AppRole.student);
+        break;
+      default: // parent
         Session.signIn(AppRole.parent);
     }
     if (match != null) {
       if (match.name.isNotEmpty) Session.userName = match.name;
+      if (role == 'student' && match.name.isNotEmpty) Session.childName = match.name;
       if (role == 'teacher' && match.className.isNotEmpty) Session.className = match.className;
       if (role == 'parent' && match.linkedStudent.isNotEmpty) Session.childName = match.linkedStudent;
     }

@@ -5,7 +5,7 @@ import 'audit_log_model.dart';
 import 'school_classes.dart';
 
 /// نقش‌های سیستم. «معاون» در مدرسه همان «ناظم» است.
-enum AppRole { admin, manager, deputy, teacher, parent }
+enum AppRole { admin, manager, deputy, teacher, parent, student }
 
 extension AppRoleLabel on AppRole {
   String get label {
@@ -20,6 +20,8 @@ extension AppRoleLabel on AppRole {
         return 'مربی / معلم';
       case AppRole.parent:
         return 'ولی';
+      case AppRole.student:
+        return 'دانش‌آموز';
     }
   }
 }
@@ -33,7 +35,9 @@ extension ScopeLabel on Scope {
       case Scope.none:
         return 'ندارد';
       case Scope.own:
-        return role == AppRole.parent ? 'فرزند خودش' : 'کلاس خودش';
+      if (role == AppRole.parent) return 'فرزند خودش';
+      if (role == AppRole.student) return 'خودش';
+      return 'کلاس خودش';
       case Scope.all:
         return 'همه';
     }
@@ -204,6 +208,8 @@ const Map<AppRole, Map<Perm, Scope>> _defaults = {
     Perm.sendPrivateMessage: Scope.own,
     Perm.viewReportCard: Scope.own,
   },
+  // دانش‌آموز ورود مستقل دارد، اما مجوز داده‌ای از سمت کلاینت نمی‌گیرد.
+  AppRole.student: {},
 };
 
 /// نقش‌هایی که مدیر می‌تواند دسترسی‌شان را تغییر دهد
@@ -242,6 +248,9 @@ class Session {
       case AppRole.parent:
         userName = 'ولی';
         break;
+      case AppRole.student:
+        userName = 'دانش‌آموز';
+        break;
     }
   }
 }
@@ -252,11 +261,21 @@ class PermissionService extends ChangeNotifier {
   static final PermissionService instance = PermissionService._();
 
   static const String _key = 'role_permissions_v2';
+  bool _allowLocalOverrides = false;
+
+  bool get allowsLocalOverrides => _allowLocalOverrides;
   final Map<AppRole, Map<Perm, Scope>> _matrix = {
     for (final e in _defaults.entries) e.key: {...e.value},
   };
 
-  Future<void> load() async {
+  Future<void> load({bool allowLocalOverrides = false}) async {
+    _allowLocalOverrides = allowLocalOverrides;
+    if (!allowLocalOverrides) {
+      for (final role in kConfigurableRoles) {
+        _matrix[role] = {..._defaults[role]!};
+      }
+      return;
+    }
     try {
       final prefs = await SharedPreferences.getInstance();
       final raw = prefs.getString(_key);
@@ -294,7 +313,7 @@ class PermissionService extends ChangeNotifier {
   }
 
   Future<void> setScope(AppRole role, Perm perm, Scope scope) async {
-    if (!kConfigurableRoles.contains(role)) return;
+    if (!_allowLocalOverrides || !kConfigurableRoles.contains(role)) return;
     final before = scopeOf(role, perm);
     if (before == scope) return;
     _matrix.putIfAbsent(role, () => {})[perm] = scope;
@@ -309,6 +328,7 @@ class PermissionService extends ChangeNotifier {
   }
 
   Future<void> resetToDefaults() async {
+    if (!_allowLocalOverrides) return;
     for (final role in kConfigurableRoles) {
       _matrix[role] = {..._defaults[role]!};
     }

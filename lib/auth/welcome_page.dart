@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../theme/app_colors.dart';
 import '../widgets/safe_image.dart';
+import '../widgets/floating_stationery.dart';
 import 'auth_types.dart';
 import 'otp_page.dart';
 
@@ -30,10 +31,13 @@ class WelcomePage extends StatefulWidget {
 class _WelcomePageState extends State<WelcomePage> {
   final TextEditingController _phoneController = TextEditingController();
   String? _error;
+  final GlobalKey _cardKey = GlobalKey();
+  final ValueNotifier<double> _areaH = ValueNotifier<double>(0);
 
   @override
   void dispose() {
     _phoneController.dispose();
+    _areaH.dispose();
     super.dispose();
   }
 
@@ -62,6 +66,15 @@ class _WelcomePageState extends State<WelcomePage> {
     final size = media.size;
     final keyboard = media.viewInsets.bottom;
 
+    // ارتفاع ناحیهٔ آبی = بالای کارت سفید (برای اشکال معلق)
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final rb = _cardKey.currentContext?.findRenderObject() as RenderBox?;
+      if (rb == null || !rb.attached) return;
+      final top = rb.localToGlobal(Offset.zero).dy;
+      final v = (top - 4).clamp(0.0, size.height * 0.62);
+      if ((v - _areaH.value).abs() > 0.5) _areaH.value = v;
+    });
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: AppColors.sky,
@@ -79,6 +92,13 @@ class _WelcomePageState extends State<WelcomePage> {
               alignment: Alignment.topCenter,
             ),
           ),
+          // لوازم تحریر معلق (فقط در ناحیهٔ آبی)
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: FloatingStationery(areaHeight: _areaH),
+          ),
           // کارت سفید پایین صفحه
           Align(
             alignment: Alignment.bottomCenter,
@@ -89,6 +109,7 @@ class _WelcomePageState extends State<WelcomePage> {
                   maxHeight: size.height - keyboard - media.padding.top,
                 ),
                 child: Container(
+                  key: _cardKey,
                   width: double.infinity,
                   decoration: const BoxDecoration(
                     color: Colors.white,

@@ -122,6 +122,9 @@ class Backend {
     Session.signIn(role);
     final name = p['full_name'];
     if (name is String && name.isNotEmpty) Session.userName = name;
+    if (role == AppRole.student && name is String && name.isNotEmpty) {
+      Session.childName = name;
+    }
     final cls = p['classes'];
     if (cls is Map && cls['name'] is String) {
       Session.className = normalizeClassName(cls['name'] as String);

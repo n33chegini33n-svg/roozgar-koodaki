@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import '../theme/app_colors.dart';
 import '../widgets/safe_image.dart';
 import '../services/backend.dart';
+import '../services/demo_auth_policy.dart';
 import 'auth_types.dart';
 import 'welcome_page.dart' show normalizeDigits;
 
@@ -52,7 +53,17 @@ class _OtpPageState extends State<OtpPage> {
       _busy = true;
       _error = null;
     });
-    final result = await widget.authenticate(widget.phone, code, Backend.ready ? null : _demoRole);
+    final result = await widget.authenticate(
+      widget.phone,
+      code,
+      DemoAuthPolicy.isAllowed(
+        isDebugBuild: kDebugMode,
+        backendConfigured: Backend.configured,
+        backendReady: Backend.ready,
+      )
+          ? _demoRole
+          : null,
+    );
     if (!mounted) return;
     if (result.error != null || result.home == null) {
       setState(() {
