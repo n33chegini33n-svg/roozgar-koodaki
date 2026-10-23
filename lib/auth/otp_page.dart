@@ -36,6 +36,12 @@ class _OtpPageState extends State<OtpPage> {
   bool _busy = false;
   String _demoRole = 'student';
 
+  bool get _demoAllowed => DemoAuthPolicy.isAllowed(
+        isDebugBuild: kDebugMode,
+        backendConfigured: Backend.configured,
+        backendReady: Backend.ready,
+      );
+
   @override
   void dispose() {
     _codeController.dispose();
@@ -56,13 +62,7 @@ class _OtpPageState extends State<OtpPage> {
     final result = await widget.authenticate(
       widget.phone,
       code,
-      DemoAuthPolicy.isAllowed(
-        isDebugBuild: kDebugMode,
-        backendConfigured: Backend.configured,
-        backendReady: Backend.ready,
-      )
-          ? _demoRole
-          : null,
+      _demoAllowed ? _demoRole : null,
     );
     if (!mounted) return;
     if (result.error != null || result.home == null) {
@@ -172,13 +172,13 @@ class _OtpPageState extends State<OtpPage> {
         Text(
           Backend.ready
               ? 'شمارهٔ ${widget.phone} • کد ورود را مدیریت مدرسه به شما داده است'
-              : (kDebugMode
+              : (_demoAllowed
                   ? 'شمارهٔ ${widget.phone} • حالت نمایشی توسعه: هر کد ۶ رقمی پذیرفته می‌شود'
                   : 'شمارهٔ ${widget.phone} • ورود موقتاً در دسترس نیست؛ اتصال سرور را بررسی کنید'),
           textAlign: TextAlign.center,
           style: const TextStyle(color: AppColors.textGrey),
         ),
-        if (!Backend.ready && kDebugMode) ...[
+        if (_demoAllowed) ...[
           const SizedBox(height: 14),
           DropdownButtonFormField<String>(
             initialValue: _demoRole,
