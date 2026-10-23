@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
+import '../models/app_settings_model.dart';
 import '../models/permissions.dart';
 import '../teacher/teacher_sections.dart' show PageHost;
 import '../utils/jalali.dart';
@@ -29,13 +31,24 @@ class ToolboxPage extends StatelessWidget {
   final WidgetBuilder? classTools;
   const ToolboxPage({super.key, this.classTools});
 
+  Future<void> _openSchoolRoute(BuildContext context) async {
+    final settings = await AppSettingsService.get();
+    final destination = settings.address.trim().isNotEmpty ? settings.address.trim() : settings.schoolName.trim();
+    final uri = Uri.https('www.google.com', '/maps/dir/', {'api': '1', 'destination': destination});
+    if (await launchUrl(uri, mode: LaunchMode.externalApplication)) return;
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('بازکردن مسیریاب ممکن نشد.')));
+  }
+
   @override
   Widget build(BuildContext context) {
     final tools = <_Tool>[
       _Tool('مبدل‌ها', 'تاریخ، دما، طول، وزن', Icons.swap_horiz_rounded, const Color(0xFF1473C9), const ConverterPage()),
       _Tool('دفترچه یادداشت', 'نوشتن و ذخیره', Icons.edit_note_rounded, const Color(0xFF2E9E6B), const NotebookPage()),
       _Tool('ماشین‌حساب مهندسی', 'توابع و پرانتز', Icons.calculate_rounded, const Color(0xFFF59E0B), const CalculatorPage()),
-      if (Session.role != AppRole.parent)
+      _Tool('نقشه و مسیریاب', 'مسیریابی تا مجموعه', Icons.directions_rounded, const Color(0xFF0288D1), null,
+          onTap: _openSchoolRoute),
+      if (AiAssistantPage.allowsRole(Session.role))
         _Tool('دستیار هوشمند', 'ایده، متن و پاسخ سریع', Icons.auto_awesome_rounded, const Color(0xFFE91E63), const AiAssistantPage()),
       if (classTools != null)
         _Tool('ابزارهای کلاس', 'قرعه‌کشی، تایمر، گروه‌بندی', Icons.handyman_rounded, const Color(0xFF7C4DFF), null),
@@ -64,6 +77,10 @@ class ToolboxPage extends StatelessWidget {
                     child: InkWell(
                       borderRadius: BorderRadius.circular(18),
                       onTap: () {
+                        if (t.onTap != null) {
+                          t.onTap!(context);
+                          return;
+                        }
                         final page = t.page ?? PageHost(title: 'ابزارهای کلاس', child: classTools!(context));
                         Navigator.push(context, MaterialPageRoute(builder: (_) => page));
                       },
@@ -105,7 +122,8 @@ class _Tool {
   final IconData icon;
   final Color color;
   final Widget? page;
-  const _Tool(this.title, this.subtitle, this.icon, this.color, this.page);
+  final void Function(BuildContext context)? onTap;
+  const _Tool(this.title, this.subtitle, this.icon, this.color, this.page, {this.onTap});
 }
 
 // =====================================================================

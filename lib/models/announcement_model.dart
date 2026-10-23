@@ -72,12 +72,11 @@ class AnnouncementService {
 
   static Future<List<Announcement>> visibleTo(AppRole role, {String className = ''}) async {
     final all = await getAll();
-    if (Backend.ready) return all;
     switch (role) {
       case AppRole.admin: case AppRole.manager: case AppRole.deputy: return all;
       case AppRole.teacher: return all.where((a) => a.audience == Audience.all || a.audience == Audience.staff || (a.audience == Audience.classOnly && sameClass(a.className, className))).toList();
       case AppRole.parent: return all.where((a) => a.audience == Audience.all || a.audience == Audience.parents || (a.audience == Audience.classOnly && sameClass(a.className, className))).toList();
-      case AppRole.student: return [];
+      case AppRole.student: return all.where((a) => a.audience == Audience.classOnly && sameClass(a.className, className)).toList();
     }
   }
 }

@@ -14,6 +14,7 @@ import '../widgets/plans_view.dart';
 import '../pages/private_message_page.dart';
 import '../pages/report_card_pages.dart';
 import '../pages/registration_page.dart';
+import '../pages/video_meetings_page.dart';
 
 class _Section {
   final String title;
@@ -90,6 +91,7 @@ class _ParentHomePageState extends State<ParentHomePage> {
       _Section('اطلاعیه‌ها', 'ill_announcement.png', const Color(0xFFFCE4EC), (c) => _push(c, const AnnouncementsPage())),
       _Section('پیام خصوصی به مربی', 'scene_messages.png', const Color(0xFFE3F2FD), (c) => _push(c, PrivateChatPage(studentName: Session.childName)), Perm.sendPrivateMessage),
       _Section('جعبه ابزار', 'ill_toolbox.png', const Color(0xFFEDE7F6), (c) => _push(c, const ToolboxPage())),
+      _Section('جلسهٔ تصویری', 'scene_messages.png', const Color(0xFFE3F2FD), (c) => _push(c, const VideoMeetingsPage(role: AppRole.parent))),
       _Section('پرداخت و اشتراک', 'scene_payment.png', const Color(0xFFFFF8E1), (c) => _push(c, const PaymentPage()), Perm.viewFinancial),
       _Section('پرونده ثبت‌نام نوآموز', 'ill_students.png', const Color(0xFFE1F5FE), (c) => _push(c, const RegistrationPage())),
     ];
@@ -158,15 +160,43 @@ class _ParentHomePageState extends State<ParentHomePage> {
   }
 
   Widget _stats(bool stretch) {
-    return Row(
-      crossAxisAlignment: stretch ? CrossAxisAlignment.stretch : CrossAxisAlignment.center,
-      children: [
-        _miniStat(Icons.check_circle_rounded, 'امروز', _today, const Color(0xFF2E9E6B)),
-        const SizedBox(width: 8),
-        _miniStat(Icons.restaurant_rounded, 'منوی امروز', _menu, const Color(0xFFF59E0B)),
-        const SizedBox(width: 8),
-        _miniStat(Icons.campaign_rounded, 'اطلاعیه', _announcements, const Color(0xFF1473C9)),
-      ],
+    final today = JalaliDate.now();
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(color: AppColors.sky.withValues(alpha: 0.9)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'خلاصهٔ امروز',
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: AppColors.navy),
+              ),
+              Text(
+                '${today.weekdayName} ${faDigits(today.day)} ${today.monthName}',
+                style: const TextStyle(fontSize: 11, color: AppColors.textGrey),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            crossAxisAlignment: stretch ? CrossAxisAlignment.stretch : CrossAxisAlignment.center,
+            children: [
+              _miniStat(Icons.check_circle_rounded, 'امروز', _today, const Color(0xFF2E9E6B)),
+              const SizedBox(width: 8),
+              _miniStat(Icons.restaurant_rounded, 'منوی امروز', _menu, const Color(0xFFF59E0B)),
+              const SizedBox(width: 8),
+              _miniStat(Icons.campaign_rounded, 'اطلاعیه', _announcements, const Color(0xFF1473C9)),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -218,17 +248,17 @@ class _ParentHomePageState extends State<ParentHomePage> {
   Widget _miniStat(IconData icon, String label, String value, Color c) {
     return Expanded(
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 6),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(18),
-          boxShadow: const [BoxShadow(color: Color(0x14000000), blurRadius: 8, offset: Offset(0, 2))],
+          color: c.withValues(alpha: 0.08),
+          borderRadius: BorderRadius.circular(16),
         ),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, color: c),
+            Icon(icon, color: c, size: 21),
             const SizedBox(height: 4),
-            Text(value, textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold, color: c, fontSize: 13)),
+            Text(value, textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold, color: c, fontSize: 12)),
             Text(label, textAlign: TextAlign.center, style: const TextStyle(fontSize: 12, color: AppColors.textGrey)),
           ],
         ),
