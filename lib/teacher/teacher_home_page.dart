@@ -17,6 +17,7 @@ import '../widgets/plans_view.dart';
 import '../models/school_classes.dart';
 import '../pages/private_message_page.dart';
 import '../pages/report_card_pages.dart';
+import '../pages/video_meetings_page.dart';
 
 class _TSection {
   final String title;
@@ -86,6 +87,8 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
       _TSection('گزارش کلاس', 'scene_report.png', const Color(0xFFFFE8E0), (c) => _push(c, const ClassReportPage())),
       _TSection('جعبه ابزار', 'ill_toolbox.png', const Color(0xFFEDE7F6),
           (c) => _push(c, ToolboxPage(classTools: widget.toolkitBuilder))),
+      _TSection('کلاس تصویری', 'scene_messages.png', const Color(0xFFE3F2FD),
+          (c) => _push(c, const VideoMeetingsPage(role: AppRole.teacher))),
       _TSection('بخشنامه‌ها', 'ill_circular_rules.png', const Color(0xFFFFF3CD), (c) => _push(c, const BulletinPage(role: AppRole.teacher))),
       _TSection('منو و حساسیت‌ها', 'ill_nutrition_health.png', const Color(0xFFE8F5E9), (c) => _push(c, const TeacherNutritionPage())),
       _TSection('برنامه‌های آموزشی', 'ill_educational_planning.png', const Color(0xFFEDE7F6), (c) => _push(c, const PlansPage(role: AppRole.teacher)), Perm.viewPlans),

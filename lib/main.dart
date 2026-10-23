@@ -34,6 +34,7 @@ import 'utils/export_helper.dart';
 import 'models/school_classes.dart';
 import 'pages/private_message_page.dart';
 import 'pages/report_card_pages.dart';
+import 'pages/video_meetings_page.dart';
 
 import 'pages/registration_manager_page.dart';
 
@@ -674,6 +675,11 @@ class _StudentHomeDashboardState extends State<StudentHomeDashboard> {
                     avatar: const Icon(Icons.handyman_rounded, size: 18),
                     label: const Text('جعبه ابزار'),
                     onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ToolboxPage())),
+                  ),
+                  ActionChip(
+                    avatar: const Icon(Icons.video_call_rounded, size: 18),
+                    label: const Text('کلاس تصویری'),
+                    onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const VideoMeetingsPage(role: AppRole.student))),
                   ),
                 ],
               ),
@@ -3181,6 +3187,16 @@ class _ManagerOverviewPageState extends State<ManagerOverviewPage> {
                     () => Navigator.push(
                       context,
                       MaterialPageRoute(builder: (_) => ToolboxPage(classTools: (_) => const TeacherToolkitPage())),
+                    ),
+                  ),
+                  _buildManagementCard(
+                    'جلسهٔ تصویری کارکنان',
+                    'ساخت و مشاهدهٔ پیوند جلسه برای کادر مدرسه',
+                    Icons.video_call_rounded,
+                    Colors.teal,
+                    () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => VideoMeetingsPage(role: widget.role)),
                     ),
                   ),
                   _buildManagementCard(
