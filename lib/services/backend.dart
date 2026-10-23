@@ -90,7 +90,10 @@ class Backend {
       return 'خطای ورود: ${e.message}';
     } catch (e) {
       await _clearAuthState();
-      return 'ارتباط با سرور برقرار نشد: $e';
+      debugPrint('Supabase sign-in failed: $e');
+      return kDebugMode
+          ? 'ارتباط با سرور برقرار نشد: $e'
+          : 'ارتباط با سرور برقرار نشد؛ لطفاً دوباره تلاش کنید';
     }
   }
 
