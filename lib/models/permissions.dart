@@ -221,6 +221,7 @@ class Session {
   static String userName = '';
   static String className = '';
   static String childName = '';
+  static List<String> childStudentIds = [];
 
   /// پاک‌کردن هویت فعال
   static void reset() {
@@ -228,6 +229,7 @@ class Session {
     userName = '';
     className = '';
     childName = '';
+    childStudentIds = [];
   }
 
   static void signIn(AppRole r) {

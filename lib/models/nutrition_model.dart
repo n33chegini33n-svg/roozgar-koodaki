@@ -14,6 +14,7 @@ const List<String> kSeverities = ['خفیف', 'متوسط', 'شدید'];
 /// حساسیت یا محدودیت غذایی یک نوآموز (اطلاعات سلامت: فقط برای افراد مجاز)
 class AllergyRecord {
   final String id;
+  final String studentId;
   final String studentName;
   final String className;
   final String allergen;
@@ -22,6 +23,7 @@ class AllergyRecord {
 
   const AllergyRecord({
     required this.id,
+    this.studentId = '',
     required this.studentName,
     required this.className,
     required this.allergen,
@@ -31,6 +33,7 @@ class AllergyRecord {
 
   Map<String, dynamic> toJson() => {
         'id': id,
+        'studentId': studentId,
         'studentName': studentName,
         'className': className,
         'allergen': allergen,
@@ -40,6 +43,7 @@ class AllergyRecord {
 
   factory AllergyRecord.fromJson(Map<String, dynamic> j) => AllergyRecord(
         id: j['id'] ?? '',
+        studentId: j['studentId'] ?? '',
         studentName: j['studentName'] ?? '',
         className: normalizeClassName(((j['className']) ?? '').toString()),
         allergen: j['allergen'] ?? '',
@@ -49,9 +53,10 @@ class AllergyRecord {
 }
 
 class StudentInfo {
+  final String id;
   final String name;
   final String className;
-  const StudentInfo(this.name, this.className);
+  const StudentInfo(this.id, this.name, this.className);
 }
 
 /// فهرست نوآموزان؛ منبع واحد: UserDirectory
@@ -63,10 +68,17 @@ class StudentDirectory {
   }
 
   static Future<List<StudentInfo>> load() async {
+    if (Backend.ready) {
+      await ServerDirectory.ensureLoaded();
+      return [
+        for (final student in ServerDirectory.students)
+          StudentInfo(student.id, student.name, student.className),
+      ];
+    }
     final list = await UserDirectory.load();
     return [
       for (final u in list)
-        if (u.role == 'student') StudentInfo(u.name, u.className),
+        if (u.role == 'student') StudentInfo(u.id, u.name, u.className),
     ];
   }
 }
@@ -92,15 +104,20 @@ class NutritionService {
     return menu;
   }
 
-  static Future<List<AllergyRecord>> _srvAllergies() async {
-    final rows = await Backend.client
+  static Future<List<AllergyRecord>> _srvAllergies({Set<String>? studentIds}) async {
+    var query = Backend.client
         .from('allergies')
-        .select('id, allergen, severity, notes, students(full_name, classes(name))')
-        .order('created_at', ascending: false);
+        .select('id, student_id, allergen, severity, notes, students(full_name, classes(name))');
+    if (studentIds != null) {
+      if (studentIds.isEmpty) return [];
+      query = query.inFilter('student_id', studentIds.toList());
+    }
+    final rows = await query.order('created_at', ascending: false);
     return [
       for (final r in rows)
         AllergyRecord(
           id: r['id'] as String,
+          studentId: '${r['student_id'] ?? ''}',
           studentName: r['students'] is Map ? ((r['students']['full_name'] ?? '') as String) : '',
           className: normalizeClassName(
             r['students'] is Map && r['students']['classes'] is Map ? ((r['students']['classes']['name'] ?? '') as String) : '',
@@ -161,17 +178,45 @@ class NutritionService {
   }
 
   static Future<List<AllergyRecord>> getAllergies() async {
-    if (Backend.ready) return _srvAllergies();
+    final role = Session.role;
+    final scope = PermissionService.instance.scopeOf(role, Perm.viewHealthRecords);
+    if (scope == Scope.none) return [];
+
+    if (Backend.ready) {
+      if (role == AppRole.parent) {
+        final linkedIds = Session.childStudentIds.toSet();
+        if (linkedIds.isEmpty) return [];
+        return _srvAllergies(studentIds: linkedIds);
+      }
+      final rows = await _srvAllergies();
+      if (scope == Scope.all) return rows;
+      return rows.where((a) => sameClass(a.className, Session.className)).toList();
+    }
+
+    final local = await _loadAllLocal();
+    return _filterLocalAllergies(local, role, scope);
+  }
+
+  static Future<List<AllergyRecord>> _loadAllLocal() async {
     if (_allergies != null) return _allergies!;
     final prefs = await SharedPreferences.getInstance();
     final raw = prefs.getString(_allergyKey);
     if (raw == null || raw.isEmpty) return _allergies = [];
     try {
       final list = jsonDecode(raw) as List;
-      return _allergies = list.map((e) => AllergyRecord.fromJson(Map<String, dynamic>.from(e as Map))).toList();
+      _allergies = list.map((e) => AllergyRecord.fromJson(Map<String, dynamic>.from(e as Map))).toList();
     } catch (_) {
-      return _allergies = [];
+      _allergies = [];
     }
+    return _allergies!;
+  }
+
+  static List<AllergyRecord> _filterLocalAllergies(List<AllergyRecord> records, AppRole role, Scope scope) {
+    if (scope == Scope.all) return records;
+    if (role == AppRole.parent) {
+      return records.where((a) => a.studentName == Session.childName).toList();
+    }
+    return records.where((a) => sameClass(a.className, Session.className)).toList();
   }
 
   static Future<void> _saveAllergies() async {
@@ -180,10 +225,12 @@ class NutritionService {
   }
 
   static Future<void> addAllergy(AllergyRecord r) async {
+    if (!PermissionService.instance.can(Session.role, Perm.manageNutrition)) {
+      throw Exception('اجازهٔ ثبت اطلاعات سلامت را ندارید');
+    }
     if (Backend.ready) {
-      await ServerDirectory.ensureLoaded();
-      final sid = ServerDirectory.studentId(r.studentName, r.className);
-      if (sid == null) throw Exception('نوآموز «${r.studentName}» در سرور پیدا نشد');
+      final sid = r.studentId;
+      if (sid.isEmpty) throw Exception('شناسهٔ نوآموز در سرور پیدا نشد');
       await Backend.client.from('allergies').insert({
         'student_id': sid,
         'allergen': r.allergen,
@@ -192,7 +239,7 @@ class NutritionService {
       });
       return; // ثبت در گزارش تغییرات را تریگر دیتابیس انجام می‌دهد
     }
-    final all = await getAllergies();
+    final all = await _loadAllLocal();
     all.insert(0, r);
     await _saveAllergies();
     await AuditLogService.log(
@@ -204,11 +251,14 @@ class NutritionService {
   }
 
   static Future<void> removeAllergy(String id) async {
+    if (!PermissionService.instance.can(Session.role, Perm.manageNutrition)) {
+      throw Exception('اجازهٔ حذف اطلاعات سلامت را ندارید');
+    }
     if (Backend.ready) {
       await Backend.client.from('allergies').delete().eq('id', id);
       return;
     }
-    final all = await getAllergies();
+    final all = await _loadAllLocal();
     final i = all.indexWhere((a) => a.id == id);
     if (i < 0) return;
     final r = all.removeAt(i);
@@ -224,13 +274,7 @@ class NutritionService {
   /// حساسیت‌هایی که این نقش مجاز به دیدنشان است
   /// parent: فقط فرزند خودش | teacher/deputy با دامنهٔ own: فقط کلاس خودش
   static Future<List<AllergyRecord>> visibleTo(AppRole role) async {
-    final all = await getAllergies();
-    final scope = PermissionService.instance.scopeOf(role, Perm.viewHealthRecords);
-    if (scope == Scope.none) return [];
-    if (scope == Scope.all) return all;
-    if (role == AppRole.parent) {
-      return all.where((a) => a.studentName == Session.childName).toList();
-    }
-    return all.where((a) => sameClass(a.className, Session.className)).toList();
+    if (role != Session.role) return [];
+    return getAllergies();
   }
 }

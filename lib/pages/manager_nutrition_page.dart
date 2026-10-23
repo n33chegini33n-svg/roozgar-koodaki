@@ -39,7 +39,7 @@ class _ManagerNutritionPageState extends State<ManagerNutritionPage> {
 
   Future<void> _load() async {
     final menu = await NutritionService.getMenu();
-    final allergies = await NutritionService.getAllergies();
+    final allergies = await NutritionService.visibleTo(Session.role);
     if (!mounted) return;
     setState(() {
       for (final d in kMenuDays) {
@@ -146,6 +146,7 @@ class _ManagerNutritionPageState extends State<ManagerNutritionPage> {
       await NutritionService.addAllergy(
       AllergyRecord(
         id: 'ALG-${DateTime.now().millisecondsSinceEpoch}',
+        studentId: selected.id,
         studentName: selected.name,
         className: selected.className,
         allergen: allergen,
@@ -157,7 +158,7 @@ class _ManagerNutritionPageState extends State<ManagerNutritionPage> {
       _snack('$e'.replaceFirst('Exception: ', ''), Colors.red);
       return;
     }
-    final fresh = await NutritionService.getAllergies();
+    final fresh = await NutritionService.visibleTo(Session.role);
     if (!mounted) return;
     setState(() => _allergies = List.of(fresh));
     _snack('✅ حساسیت ثبت شد', Colors.green);
@@ -180,7 +181,7 @@ class _ManagerNutritionPageState extends State<ManagerNutritionPage> {
     );
     if (ok != true) return;
     await NutritionService.removeAllergy(a.id);
-    final fresh = await NutritionService.getAllergies();
+    final fresh = await NutritionService.visibleTo(Session.role);
     if (!mounted) return;
     setState(() => _allergies = List.of(fresh));
   }

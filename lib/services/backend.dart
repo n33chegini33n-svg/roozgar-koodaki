@@ -136,8 +136,15 @@ class Backend {
     if (role == AppRole.parent) {
       final rows = await client
           .from('parent_students')
-          .select('students(full_name, classes(name))')
+          .select('students(id, full_name, classes(name))')
           .eq('parent_id', user.id);
+      Session.childStudentIds = rows
+          .map((r) => r['students'])
+          .whereType<Map>()
+          .map((student) => '${student['id'] ?? ''}')
+          .where((id) => id.isNotEmpty)
+          .toSet()
+          .toList();
       if (rows.isNotEmpty) {
         final st = rows.first['students'];
         if (st is Map) {
