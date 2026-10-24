@@ -58,6 +58,7 @@ class ThreadSummary {
 class PrivateMessageService {
   static const String _key = 'private_messages_v1';
   static List<PrivateMessage>? _cache;
+  static void clearCache() => _cache = null;
 
   static Future<List<PrivateMessage>> _all() async {
     if (_cache != null) return _cache!;

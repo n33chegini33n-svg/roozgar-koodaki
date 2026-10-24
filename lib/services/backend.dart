@@ -2,6 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as sup;
 
 import '../models/permissions.dart';
+import '../models/private_message_model.dart';
+import '../models/report_card_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/school_classes.dart';
 import '../models/attendance_archive_model.dart';
 import '../models/user_directory.dart';
@@ -176,5 +179,13 @@ class Backend {
     ServerDirectory.reset();
     AttendanceArchiveService.clearCache();
     UserDirectory.clearCache();
+    PrivateMessageService.clearCache();
+    ReportCardService.clearCache();
+    if (_ready) {
+      final prefs = await SharedPreferences.getInstance();
+      for (final k in ['private_messages_v1', 'report_cards_v1', 'registration_draft_v1']) {
+        await prefs.remove(k);
+      }
+    }
   }
 }
