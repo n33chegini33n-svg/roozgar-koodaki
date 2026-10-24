@@ -1,4 +1,4 @@
-import 'dart:async';
+﻿import 'dart:async';
 import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +8,7 @@ import 'teacher/teacher_shell.dart';
 import 'pages/manager_attendance_archive_page.dart';
 import 'pages/manager_user_management_page.dart';
 import 'pages/manager_financial_page.dart';
+import 'pages/manager_payment_receipts_page.dart';
 import 'pages/manager_permissions_page.dart';
 import 'pages/manager_requests_page.dart';
 import 'pages/audit_log_page.dart';
@@ -3133,6 +3134,28 @@ class _ManagerOverviewPageState extends State<ManagerOverviewPage> {
                     () => Navigator.push(
                       context,
                       MaterialPageRoute(builder: (_) => const ManagerFinancialPage()),
+                    ),
+                  ),
+                  if (_can(Perm.viewFinancial))
+                  _buildManagementCard(
+                    'رسیدهای پرداخت',
+                    'تأیید یا رد رسیدهای ارسالی والدین',
+                    Icons.receipt_long_rounded,
+                    Colors.teal,
+                    () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const ManagerPaymentReceiptsPage()),
+                    ),
+                  ),
+                  if (_can(Perm.viewFinancial))
+                  _buildManagementCard(
+                    'رسیدهای پرداخت',
+                    'تأیید یا رد رسید واریزی اولیا',
+                    Icons.receipt_long_rounded,
+                    Colors.teal,
+                    () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const ManagerPaymentReceiptsPage()),
                     ),
                   ),
                   if (_can(Perm.manageNutrition))
