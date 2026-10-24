@@ -8,7 +8,7 @@ import '../utils/jalali.dart';
 import '../models/school_classes.dart';
 import '../services/backend.dart';
 import '../services/financial_access_policy.dart';
-
+import '../services/backend_directory.dart';
 /// مدل مرحله پرداخت نقدی (حداکثر ۳ مرحله)
 class CashStage {
   final String title; // مرحله اول، مرحله دوم، مرحله سوم
@@ -1484,12 +1484,21 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
                     );
 
                     if (Backend.ready) {
+                      final messenger = ScaffoldMessenger.of(context);
                       try {
+                        await ServerDirectory.ensureLoaded();
+                        final sid = ServerDirectory.studentId(newRecord.studentName, newRecord.className);
+                        if (sid == null) {
+                          messenger.showSnackBar(
+                            const SnackBar(content: Text('نوآموز در سرور پیدا نشد؛ ثبت انجام نشد'), backgroundColor: Colors.red),
+                          );
+                          return;
+                        }
                         String dbStatus = 'overdue';
                         if (selectedStatus.contains('پرداخت‌شده')) dbStatus = 'paid';
                         if (selectedStatus.contains('انتظار')) dbStatus = 'pending';
-
                         await Backend.client.from('tuition_records').insert({
+                          'student_id': sid,
                           'amount': newRecord.amount,
                           'status': dbStatus,
                           'receipt_no': newRecord.receiptNo,
@@ -1498,7 +1507,12 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
                           'fee_title': newRecord.feeTitle,
                           'description': newRecord.description,
                         });
-                      } catch (_) {}
+                      } catch (e) {
+                        messenger.showSnackBar(
+                          SnackBar(content: Text('ثبت در سرور انجام نشد: $e'), backgroundColor: Colors.red),
+                        );
+                        return;
+                      }
                     }
 
                     setState(() {
@@ -1513,8 +1527,8 @@ class _ManagerFinancialPageState extends State<ManagerFinancialPage> {
                       details: '${newRecord.studentName} • ${newRecord.feeTitle} (${newRecord.feeType}) • ${_formatNumber(newRecord.amount)} تومان',
                     );
 
-                    if (mounted) {
-                      final messenger = ScaffoldMessenger.of(context);
+                    if (ctx.mounted) {
+                      final messenger = ScaffoldMessenger.of(ctx);
                       Navigator.pop(ctx);
                       messenger.showSnackBar(
                         const SnackBar(content: Text('✅ بند مالی جدید با موفقیت ثبت شد!'), backgroundColor: Colors.green),
