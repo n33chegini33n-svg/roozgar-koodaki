@@ -68,6 +68,7 @@ class ReportCard {
 class ReportCardService {
   static const String _key = 'report_cards_v1';
   static List<ReportCard>? _cache;
+  static void clearCache() => _cache = null;
 
   static Future<List<ReportCard>> _all() async {
     if (_cache != null) return _cache!;
