@@ -438,26 +438,29 @@ class _RegistrationManagerPageState extends State<RegistrationManagerPage> {
                 children: [
                   const Text('یکی از وضعیت‌های زیر را برای پرونده انتخاب کنید:'),
                   const SizedBox(height: 12),
-                  RadioListTile<String>(
-                    activeColor: const Color(0xFFF57F17),
-                    title: const Text('در انتظار بررسی'),
-                    value: 'submitted',
+                  RadioGroup<String>(
                     groupValue: currentStatus,
-                    onChanged: (val) => setDialogState(() => currentStatus = val!),
-                  ),
-                  RadioListTile<String>(
-                    activeColor: const Color(0xFF2E7D32),
-                    title: const Text('تأیید نهایی پرونده'),
-                    value: 'approved',
-                    groupValue: currentStatus,
-                    onChanged: (val) => setDialogState(() => currentStatus = val!),
-                  ),
-                  RadioListTile<String>(
-                    activeColor: const Color(0xFFC62828),
-                    title: const Text('عدم تأیید / نیاز به اصلاح'),
-                    value: 'rejected',
-                    groupValue: currentStatus,
-                    onChanged: (val) => setDialogState(() => currentStatus = val!),
+                    onChanged: (val) =>
+                        setDialogState(() => currentStatus = val!),
+                    child: Column(
+                      children: [
+                        RadioListTile<String>(
+                          activeColor: const Color(0xFFF57F17),
+                          title: const Text('در انتظار بررسی'),
+                          value: 'submitted',
+                        ),
+                        RadioListTile<String>(
+                          activeColor: const Color(0xFF2E7D32),
+                          title: const Text('تأیید نهایی پرونده'),
+                          value: 'approved',
+                        ),
+                        RadioListTile<String>(
+                          activeColor: const Color(0xFFC62828),
+                          title: const Text('عدم تأیید / نیاز به اصلاح'),
+                          value: 'rejected',
+                        ),
+                      ],
+                    ),
                   ),
                   if (currentStatus == 'rejected') ...[
                     const SizedBox(height: 10),

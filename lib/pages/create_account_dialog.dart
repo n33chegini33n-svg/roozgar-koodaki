@@ -103,7 +103,7 @@ Future<bool> showCreateAccountDialog(BuildContext context) async {
                     ),
                     const SizedBox(height: 10),
                     DropdownButtonFormField<String>(
-                      value: selectedGrade,
+                      initialValue: selectedGrade,
                       decoration: const InputDecoration(labelText: 'دوره / مقطع تحصیلی', border: OutlineInputBorder(), isDense: true),
                       items: [for (final g in grades) DropdownMenuItem(value: g, child: Text(g))],
                       onChanged: (v) {
@@ -140,7 +140,7 @@ Future<bool> showCreateAccountDialog(BuildContext context) async {
                         };
 
                         return DropdownButtonFormField<String>(
-                          value: roles.containsKey(role) ? role : 'parent',
+                          initialValue: roles.containsKey(role) ? role : 'parent',
                           decoration: const InputDecoration(labelText: 'نقش کاربر', border: OutlineInputBorder(), isDense: true),
                           items: [for (final e in roles.entries) DropdownMenuItem(value: e.key, child: Text(e.value))],
                           onChanged: (v) => setD(() => role = v ?? role),
