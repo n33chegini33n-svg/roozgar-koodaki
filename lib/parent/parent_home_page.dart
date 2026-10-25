@@ -8,6 +8,8 @@ import '../models/nutrition_model.dart';
 import '../utils/jalali.dart';
 import '../widgets/nutrition_views.dart';
 import '../widgets/safe_image.dart';
+import '../widgets/sunny_world_background.dart';
+import '../widgets/pop_out_card.dart';
 import '../pages/toolbox_page.dart';
 import '../widgets/live_clock_banner.dart';
 import '../widgets/plans_view.dart';
@@ -98,13 +100,11 @@ class _ParentHomePageState extends State<ParentHomePage> {
     final perms = PermissionService.instance;
     final sections = allSections.where((x) => x.perm == null || perms.can(AppRole.parent, x.perm!)).toList();
 
-    return Container(
-      color: kPageBg,
+    return SunnyWorldBackground(
       child: LayoutBuilder(
         builder: (context, box) {
           final w = box.maxWidth;
           final wide = w >= 800;
-          final cols = w >= 1000 ? 4 : (w >= 700 ? 3 : 2);
 
           return RefreshIndicator(
             onRefresh: _load,
@@ -139,14 +139,16 @@ class _ParentHomePageState extends State<ParentHomePage> {
                       const Text('بخش‌ها',
                           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.navy)),
                       const SizedBox(height: 10),
-                      GridView.count(
-                        crossAxisCount: cols,
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        mainAxisSpacing: 14,
-                        crossAxisSpacing: 14,
-                        childAspectRatio: 0.92,
-                        children: [for (final s in sections) _sectionCard(context, s)],
+                      PopOutGrid(
+                        children: [
+                          for (final s in sections)
+                            PopOutCard(
+                              title: s.title,
+                              image: s.image,
+                              tint: Color.lerp(s.tint, AppColors.navy, 0.35)!,
+                              onTap: () => s.onTap(context),
+                            ),
+                        ],
                       ),
                     ],
                   ),
@@ -164,9 +166,9 @@ class _ParentHomePageState extends State<ParentHomePage> {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Colors.white.withValues(alpha: 0.88),
         borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: AppColors.sky.withValues(alpha: 0.9)),
+        border: Border.all(color: Colors.white, width: 2),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -185,15 +187,17 @@ class _ParentHomePageState extends State<ParentHomePage> {
             ],
           ),
           const SizedBox(height: 12),
-          Row(
-            crossAxisAlignment: stretch ? CrossAxisAlignment.stretch : CrossAxisAlignment.center,
-            children: [
-              _miniStat(Icons.check_circle_rounded, 'امروز', _today, const Color(0xFF2E9E6B)),
-              const SizedBox(width: 8),
-              _miniStat(Icons.restaurant_rounded, 'منوی امروز', _menu, const Color(0xFFF59E0B)),
-              const SizedBox(width: 8),
-              _miniStat(Icons.campaign_rounded, 'اطلاعیه', _announcements, const Color(0xFF1473C9)),
-            ],
+          IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _miniStat(Icons.check_circle_rounded, 'امروز', _today, const Color(0xFF2E9E6B)),
+                const SizedBox(width: 8),
+                _miniStat(Icons.restaurant_rounded, 'منوی امروز', _menu, const Color(0xFFF59E0B)),
+                const SizedBox(width: 8),
+                _miniStat(Icons.campaign_rounded, 'اطلاعیه', _announcements, const Color(0xFF1473C9)),
+              ],
+            ),
           ),
         ],
       ),
@@ -260,41 +264,6 @@ class _ParentHomePageState extends State<ParentHomePage> {
             const SizedBox(height: 4),
             Text(value, textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold, color: c, fontSize: 12)),
             Text(label, textAlign: TextAlign.center, style: const TextStyle(fontSize: 12, color: AppColors.textGrey)),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _sectionCard(BuildContext context, _Section s) {
-    return InkWell(
-      borderRadius: BorderRadius.circular(22),
-      onTap: () => s.onTap(context),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(22),
-          boxShadow: const [BoxShadow(color: Color(0x1A000000), blurRadius: 10, offset: Offset(0, 4))],
-        ),
-        child: Column(
-          children: [
-            Expanded(
-              child: Container(
-                width: double.infinity,
-                margin: const EdgeInsets.all(8),
-                padding: const EdgeInsets.all(6),
-                decoration: BoxDecoration(color: s.tint, borderRadius: BorderRadius.circular(16)),
-                child: SafeAssetImage(s.image, fit: BoxFit.contain),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8, 0, 8, 12),
-              child: Text(
-                s.title,
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.navy, fontSize: 14),
-              ),
-            ),
           ],
         ),
       ),
