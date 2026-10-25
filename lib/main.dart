@@ -259,7 +259,7 @@ class _MainDashboardState extends State<MainDashboard> {
             tooltip: 'خروج',
             onPressed: () async {
               await Backend.signOut();
-              if (!mounted) return;
+              if (!context.mounted) return;
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (_) => buildWelcome()),
