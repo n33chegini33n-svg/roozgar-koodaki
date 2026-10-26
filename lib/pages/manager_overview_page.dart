@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 // مدل‌ها و سرویس‌ها
 import '../models/permissions.dart';
 import '../models/announcement_model.dart';
-import '../models/nutrition_model.dart'; // شامل StudentDirectory
-import '../models/attendance_archive_model.dart';
 import '../models/attendance_edit_request_model.dart';
-import '../utils/jalali.dart';
+import '../services/backend.dart';
+import '../services/payment_receipt_admin_service.dart';
+import '../services/registration_admin_service.dart';
 import '../utils/export_helper.dart';
 import '../widgets/live_clock_banner.dart';
 import '../widgets/safe_image.dart';
@@ -16,6 +16,7 @@ import '../teacher/teacher_sections.dart' show PageHost;
 import 'manager_attendance_archive_page.dart';
 import 'manager_user_management_page.dart';
 import 'manager_financial_page.dart';
+import 'manager/manager_performance_charts.dart';
 import 'manager_payment_receipts_page.dart';
 import 'manager_permissions_page.dart';
 import 'manager_requests_page.dart';
@@ -46,11 +47,9 @@ class ManagerOverviewPage extends StatefulWidget {
 class _ManagerOverviewPageState extends State<ManagerOverviewPage> {
   bool _can(Perm p) => PermissionService.instance.can(widget.role, p);
 
-  // آمار واقعی (به‌جای اعداد ثابت)
-  String _statStudents = '—';
-  String _statTeachers = '—';
-  String _statAttendance = '—';
-  String _statPending = '—';
+  int _pendingReceiptsCount = 0;
+  int _pendingAttendanceCount = 0;
+  int _pendingRegistrationsCount = 0;
 
   @override
   void initState() {
@@ -59,19 +58,16 @@ class _ManagerOverviewPageState extends State<ManagerOverviewPage> {
   }
 
   Future<void> _loadStats() async {
-    final students = await StudentDirectory.load();
-    final teachers = await StudentDirectory.countByRole('teacher');
-    final today = JalaliDate.now().formatted;
-    final all = await AttendanceArchiveService.getRecords();
-    final todays = all.where((r) => r.date == today).toList();
     final reqs = await EditRequestService.getAll();
+    final receipts = Backend.ready
+        ? await PaymentReceiptAdminService.all()
+        : <AdminPaymentReceipt>[];
+    final pendingRegistrations = await RegistrationAdminService.pendingCount();
     if (!mounted) return;
-    final attended = todays.where((r) => !r.status.contains('غایب')).length;
     setState(() {
-      _statStudents = '${faDigits(students.length)} نفر';
-      _statTeachers = teachers == null ? '—' : '${faDigits(teachers)} نفر';
-      _statAttendance = todays.isEmpty ? 'ثبت نشده' : '${faDigits((attended * 100 / todays.length).round())}٪';
-      _statPending = '${faDigits(reqs.where((r) => r.state == 'pending').length)} مورد';
+      _pendingReceiptsCount = receipts.where((r) => r.state == 'pending').length;
+      _pendingAttendanceCount = reqs.where((r) => r.state == 'pending').length;
+      _pendingRegistrationsCount = pendingRegistrations;
     });
   }
 
@@ -241,6 +237,24 @@ class _ManagerOverviewPageState extends State<ManagerOverviewPage> {
                   ],
                 ),
               ),
+              const SizedBox(height: 14),
+              ManagerPendingActionBanner(
+                pendingReceipts: _pendingReceiptsCount,
+                pendingAttendanceEdits: _pendingAttendanceCount,
+                pendingRegistrations: _pendingRegistrationsCount,
+                onOpenReceipts: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const ManagerPaymentReceiptsPage()),
+                ),
+                onOpenRequests: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const ManagerRequestsPage()),
+                ),
+                onOpenRegistrations: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const RegistrationManagerPage()),
+                ),
+              ),
               const SizedBox(height: 20),
 
               // Export Buttons Bar for Manager
@@ -354,62 +368,6 @@ class _ManagerOverviewPageState extends State<ManagerOverviewPage> {
                 ),
               ),
 
-              if (_can(Perm.viewAuditLog)) ...[
-                const SizedBox(height: 12),
-                Card(
-                  elevation: 3,
-                  color: const Color(0xFFE0F2F1),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                  child: ListTile(
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-                    leading: SizedBox(
-                      height: 52,
-                      width: 60,
-                      child: SafeAssetImage('ill_audit_log.png', fit: BoxFit.contain),
-                    ),
-                    title: const Text('گزارش تغییرات', style: TextStyle(fontWeight: FontWeight.bold)),
-                    subtitle: const Text('چه کسی، چه زمانی، چه چیزی را تغییر داد', style: TextStyle(fontSize: 12)),
-                    trailing: const Icon(Icons.arrow_back_ios_new_rounded, size: 16),
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const AuditLogPage()),
-                    ),
-                  ),
-                ),
-              ],
-              const SizedBox(height: 24),
-              Row(
-                children: [
-                  const Expanded(
-                    child: Text(
-                      '📈 آمار کلی و عملکرد مدرسه در یک نگاه:',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF01579B)),
-                    ),
-                  ),
-                  IconButton(
-                    tooltip: 'به‌روزرسانی آمار',
-                    icon: const Icon(Icons.refresh_rounded, color: Color(0xFF01579B)),
-                    onPressed: _loadStats,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              GridView(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 200,
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 12,
-                  childAspectRatio: 1.3,
-                ),
-                children: [
-                  _buildStatCard('کل نوآموزان', _statStudents, Icons.child_care_rounded, Colors.orange),
-                  _buildStatCard('مربیان ثبت‌شده', _statTeachers, Icons.badge_rounded, Colors.purple),
-                  _buildStatCard('حضور امروز', _statAttendance, Icons.how_to_reg_rounded, Colors.green),
-                  _buildStatCard('اصلاح در انتظار', _statPending, Icons.rule_folder_rounded, Colors.amber),
-                ],
-              ),
               const SizedBox(height: 24),
 
               // Comprehensive Management Modules (User requests, Financial, Permissions, Nutrition, etc.)
@@ -428,6 +386,18 @@ class _ManagerOverviewPageState extends State<ManagerOverviewPage> {
                   mainAxisExtent: 196,
                 ),
                 children: [
+                  _buildManagementCard(
+                    'آمار و عملکرد مدرسه',
+                    'نمودارهای رضایت اولیاء، امتیاز مربیان و وضعیت مالی',
+                    Icons.insights_rounded,
+                    Colors.teal,
+                    () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const SchoolPerformanceAnalyticsPage(),
+                      ),
+                    ),
+                  ),
                   if (_can(Perm.manageUsers))
                   _buildManagementCard(
                     'پرونده ثبت‌نام نوآموز',
@@ -599,7 +569,7 @@ class _ManagerOverviewPageState extends State<ManagerOverviewPage> {
                     Colors.teal,
                     () => Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => const AuditLogPage()),
+                      MaterialPageRoute(builder: (_) => AuditLogPage()),
                     ),
                   ),
                 ],
@@ -643,26 +613,6 @@ class _ManagerOverviewPageState extends State<ManagerOverviewPage> {
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildStatCard(String title, String value, IconData icon, Color color) {
-    return Card(
-      elevation: 3,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, color: color, size: 28),
-            const SizedBox(height: 6),
-            Text(value, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-            const SizedBox(height: 2),
-            Text(title, style: const TextStyle(fontSize: 11, color: Colors.black54), textAlign: TextAlign.center),
-          ],
         ),
       ),
     );
