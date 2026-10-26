@@ -16,6 +16,10 @@ class EvaluationFeedback {
   final int schoolEnvironmentScore;
   final String privateNote;
   final DateTime createdAt;
+  final String monthKey;
+  final int editCount;
+
+  bool get isLocked => editCount >= 1;
 
   const EvaluationFeedback({
     this.id,
@@ -35,6 +39,8 @@ class EvaluationFeedback {
     required this.schoolEnvironmentScore,
     this.privateNote = '',
     required this.createdAt,
+    this.monthKey = '',
+    this.editCount = 0,
   });
 
   Map<String, dynamic> toJson() => {
@@ -55,6 +61,8 @@ class EvaluationFeedback {
         'school_environment_score': schoolEnvironmentScore,
         'private_note': privateNote,
         'created_at': createdAt.toUtc().toIso8601String(),
+        'month_key': monthKey,
+        'edit_count': editCount,
       };
 
   factory EvaluationFeedback.fromJson(Map<String, dynamic> json) => EvaluationFeedback(
@@ -75,6 +83,50 @@ class EvaluationFeedback {
         schoolEnvironmentScore: _score(json['school_environment_score']),
         privateNote: json['private_note']?.toString() ?? '',
         createdAt: DateTime.tryParse('${json['created_at'] ?? ''}') ?? DateTime.now(),
+        monthKey: json['month_key']?.toString() ?? '',
+        editCount: json['edit_count'] is num ? (json['edit_count'] as num).toInt() : int.tryParse('${json['edit_count'] ?? ''}') ?? 0,
+      );
+
+  EvaluationFeedback copyWith({
+    String? id,
+    String? parentId,
+    String? studentId,
+    String? studentName,
+    String? className,
+    String? teacherId,
+    String? teacherName,
+    int? teacherTeachingScore,
+    int? teacherCommunicationScore,
+    int? teacherCareScore,
+    int? teacherProgressScore,
+    int? schoolEducationScore,
+    int? schoolStaffScore,
+    int? schoolNutritionScore,
+    int? schoolEnvironmentScore,
+    String? privateNote,
+    DateTime? createdAt,
+    String? monthKey,
+    int? editCount,
+  }) => EvaluationFeedback(
+        id: id ?? this.id,
+        parentId: parentId ?? this.parentId,
+        studentId: studentId ?? this.studentId,
+        studentName: studentName ?? this.studentName,
+        className: className ?? this.className,
+        teacherId: teacherId ?? this.teacherId,
+        teacherName: teacherName ?? this.teacherName,
+        teacherTeachingScore: teacherTeachingScore ?? this.teacherTeachingScore,
+        teacherCommunicationScore: teacherCommunicationScore ?? this.teacherCommunicationScore,
+        teacherCareScore: teacherCareScore ?? this.teacherCareScore,
+        teacherProgressScore: teacherProgressScore ?? this.teacherProgressScore,
+        schoolEducationScore: schoolEducationScore ?? this.schoolEducationScore,
+        schoolStaffScore: schoolStaffScore ?? this.schoolStaffScore,
+        schoolNutritionScore: schoolNutritionScore ?? this.schoolNutritionScore,
+        schoolEnvironmentScore: schoolEnvironmentScore ?? this.schoolEnvironmentScore,
+        privateNote: privateNote ?? this.privateNote,
+        createdAt: createdAt ?? this.createdAt,
+        monthKey: monthKey ?? this.monthKey,
+        editCount: editCount ?? this.editCount,
       );
 
   static int _score(dynamic value) => value is num ? value.toInt() : int.tryParse('$value') ?? 0;

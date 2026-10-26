@@ -38,6 +38,9 @@ class _EvaluationFeedbackPageState extends State<EvaluationFeedbackPage> {
   String? _selectedTeacherId;
   bool _loading = true;
   bool _submitting = false;
+  bool _monthLoading = false;
+  bool _editingMonthlyFeedback = false;
+  EvaluationFeedback? _monthlyFeedback;
   String? _loadError;
 
   _ChildEvaluationTarget? get _target =>
@@ -105,6 +108,7 @@ class _EvaluationFeedbackPageState extends State<EvaluationFeedbackPage> {
             : null;
         _loading = false;
       });
+      await _loadMonthlyFeedback();
     } catch (e) {
       if (!mounted) return;
       setState(() {
@@ -114,13 +118,52 @@ class _EvaluationFeedbackPageState extends State<EvaluationFeedbackPage> {
     }
   }
 
-  void _selectTarget(int? index) {
+  Future<void> _selectTarget(int? index) async {
     if (index == null) return;
     setState(() {
       _selectedTarget = index;
+      _monthlyFeedback = null;
+      _editingMonthlyFeedback = false;
       final teachers = _targets[index].teachers;
       _selectedTeacherId = teachers.isEmpty ? null : teachers.first.id;
+      for (var item = 0; item < 4; item++) {
+        _teacherScores[item] = 0;
+        _schoolScores[item] = 0;
+      }
+      _noteController.clear();
     });
+    await _loadMonthlyFeedback();
+  }
+
+  Future<void> _loadMonthlyFeedback() async {
+    final target = _target;
+    if (target == null || target.id.isEmpty) return;
+    setState(() => _monthLoading = true);
+    try {
+      final feedback = await EvaluationService.getCurrentMonthFeedback(studentId: target.id);
+      if (!mounted) return;
+      setState(() {
+        _monthlyFeedback = feedback;
+        _editingMonthlyFeedback = false;
+        if (feedback != null) {
+          _selectedTeacherId = feedback.teacherId;
+          _teacherScores[0] = feedback.teacherTeachingScore;
+          _teacherScores[1] = feedback.teacherCommunicationScore;
+          _teacherScores[2] = feedback.teacherCareScore;
+          _teacherScores[3] = feedback.teacherProgressScore;
+          _schoolScores[0] = feedback.schoolEducationScore;
+          _schoolScores[1] = feedback.schoolStaffScore;
+          _schoolScores[2] = feedback.schoolNutritionScore;
+          _schoolScores[3] = feedback.schoolEnvironmentScore;
+          _noteController.text = feedback.privateNote;
+        }
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _loadError = '$e');
+    } finally {
+      if (mounted) setState(() => _monthLoading = false);
+    }
   }
 
   Future<void> _submit() async {
@@ -141,7 +184,7 @@ class _EvaluationFeedbackPageState extends State<EvaluationFeedbackPage> {
 
     setState(() => _submitting = true);
     try {
-      final sentToServer = await EvaluationService.submitFeedback(
+      final sentToServer = await EvaluationService.submitOrUpdateFeedback(
         EvaluationFeedback(
           studentId: target.id,
           studentName: target.name,
@@ -159,27 +202,26 @@ class _EvaluationFeedbackPageState extends State<EvaluationFeedbackPage> {
           privateNote: _noteController.text.trim(),
           createdAt: DateTime.now(),
         ),
+        isEditing: _monthlyFeedback != null,
       );
+      final savedFeedback = await EvaluationService.getCurrentMonthFeedback(studentId: target.id);
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
             sentToServer
-                ? 'نظر شما با موفقیت و به‌صورت محرمانه ثبت شد'
-                : 'نظر فقط روی این دستگاه ذخیره شد و به مدیریت ارسال نشد',
+                ? (_monthlyFeedback == null
+                    ? 'نظرسنجی این ماه با موفقیت ثبت شد. تنها ۱ بار فرصت ویرایش دارید.'
+                    : 'ویرایش نهایی نظرسنجی ثبت شد.')
+                : 'نظرسنجی فقط روی این دستگاه ذخیره شد و به مدیریت ارسال نشد',
           ),
           duration: const Duration(seconds: 5),
         ),
       );
-      if (sentToServer) {
-        _noteController.clear();
-        setState(() {
-          for (var index = 0; index < 4; index++) {
-            _teacherScores[index] = 0;
-            _schoolScores[index] = 0;
-          }
-        });
-      }
+      setState(() {
+        _monthlyFeedback = savedFeedback;
+        _editingMonthlyFeedback = false;
+      });
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -212,6 +254,7 @@ class _EvaluationFeedbackPageState extends State<EvaluationFeedbackPage> {
 
   Widget _buildForm() {
     final target = _target;
+    final canEdit = !_monthLoading && (_monthlyFeedback == null || _editingMonthlyFeedback);
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Center(
@@ -220,6 +263,38 @@ class _EvaluationFeedbackPageState extends State<EvaluationFeedbackPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              if (_monthLoading)
+                const Padding(
+                  padding: EdgeInsets.only(bottom: 12),
+                  child: LinearProgressIndicator(),
+                ),
+              if (_monthlyFeedback != null)
+                _FormCard(
+                  child: Row(
+                    children: [
+                      Icon(
+                        _monthlyFeedback!.isLocked ? Icons.lock_rounded : Icons.info_outline_rounded,
+                        color: _monthlyFeedback!.isLocked ? Colors.red : Colors.deepOrange,
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          _monthlyFeedback!.isLocked
+                              ? 'فرصت ویرایش این نظرسنجی استفاده شده است؛ فرم برای این ماه قفل نهایی است.'
+                              : 'نظرسنجی این ماه ثبت شده است؛ تنها ۱ بار فرصت ویرایش نهایی دارید.',
+                        ),
+                      ),
+                      if (!_monthlyFeedback!.isLocked && !_editingMonthlyFeedback)
+                        TextButton(
+                          onPressed: _monthLoading
+                              ? null
+                              : () => setState(() => _editingMonthlyFeedback = true),
+                          child: const Text('ویرایش نهایی'),
+                        ),
+                    ],
+                  ),
+                ),
+              if (_monthlyFeedback != null) const SizedBox(height: 12),
               if (_targets.isEmpty || target == null)
                 const _FormCard(
                   child: Text('برای این حساب، فرزند مرتبطی پیدا نشد.'),
@@ -239,7 +314,7 @@ class _EvaluationFeedbackPageState extends State<EvaluationFeedbackPage> {
                             for (var index = 0; index < _targets.length; index++)
                               DropdownMenuItem(value: index, child: Text(_targets[index].name)),
                           ],
-                          onChanged: _selectTarget,
+                          onChanged: _monthlyFeedback == null && !_monthLoading ? _selectTarget : null,
                         )
                       else
                         Text('${target.name} • ${target.className}'),
@@ -256,7 +331,9 @@ class _EvaluationFeedbackPageState extends State<EvaluationFeedbackPage> {
                             for (final teacher in target.teachers)
                               DropdownMenuItem(value: teacher.id, child: Text(teacher.name)),
                           ],
-                          onChanged: (value) => setState(() => _selectedTeacherId = value),
+                          onChanged: _monthlyFeedback == null && !_monthLoading
+                              ? (value) => setState(() => _selectedTeacherId = value)
+                              : null,
                         ),
                     ],
                   ),
@@ -272,6 +349,7 @@ class _EvaluationFeedbackPageState extends State<EvaluationFeedbackPage> {
                         _StarRating(
                           label: _teacherQuestions[index],
                           value: _teacherScores[index],
+                          enabled: canEdit,
                           onChanged: (value) => setState(() => _teacherScores[index] = value),
                         ),
                     ],
@@ -288,6 +366,7 @@ class _EvaluationFeedbackPageState extends State<EvaluationFeedbackPage> {
                         _StarRating(
                           label: _schoolQuestions[index],
                           value: _schoolScores[index],
+                          enabled: canEdit,
                           onChanged: (value) => setState(() => _schoolScores[index] = value),
                         ),
                     ],
@@ -307,6 +386,7 @@ class _EvaluationFeedbackPageState extends State<EvaluationFeedbackPage> {
                       const SizedBox(height: 10),
                       TextField(
                         controller: _noteController,
+                        enabled: canEdit,
                         maxLines: 5,
                         maxLength: 1000,
                         decoration: const InputDecoration(
@@ -318,13 +398,24 @@ class _EvaluationFeedbackPageState extends State<EvaluationFeedbackPage> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                FilledButton.icon(
-                  onPressed: _submitting || target.teachers.isEmpty ? null : _submit,
-                  icon: _submitting
-                      ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))
-                      : const Icon(Icons.send_rounded),
-                  label: Text(_submitting ? 'در حال ثبت...' : 'ثبت نظرسنجی'),
-                ),
+                if (_monthlyFeedback == null || _editingMonthlyFeedback)
+                  FilledButton.icon(
+                    onPressed: _submitting || _monthLoading || target.teachers.isEmpty ? null : _submit,
+                    icon: _submitting
+                        ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))
+                        : Icon(_editingMonthlyFeedback ? Icons.lock_outline_rounded : Icons.send_rounded),
+                    label: Text(_submitting
+                        ? 'در حال ثبت...'
+                        : _editingMonthlyFeedback
+                            ? 'ثبت ویرایش نهایی'
+                            : 'ثبت نظرسنجی'),
+                  )
+                else
+                  FilledButton.icon(
+                    onPressed: null,
+                    icon: const Icon(Icons.lock_rounded),
+                    label: const Text('قفل نهایی این ماه'),
+                  ),
               ],
             ],
           ),
@@ -352,8 +443,9 @@ class _StarRating extends StatelessWidget {
   final String label;
   final int value;
   final ValueChanged<int> onChanged;
+  final bool enabled;
 
-  const _StarRating({required this.label, required this.value, required this.onChanged});
+  const _StarRating({required this.label, required this.value, required this.onChanged, this.enabled = true});
 
   @override
   Widget build(BuildContext context) => Padding(
@@ -369,7 +461,7 @@ class _StarRating extends StatelessWidget {
                   IconButton(
                     visualDensity: VisualDensity.compact,
                     tooltip: '$star از ۵',
-                    onPressed: () => onChanged(star),
+                    onPressed: enabled ? () => onChanged(star) : null,
                     icon: Icon(
                       star <= value ? Icons.star_rounded : Icons.star_outline_rounded,
                       color: const Color(0xFFFFB300),
