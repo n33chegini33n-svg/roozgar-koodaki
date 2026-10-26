@@ -7,6 +7,7 @@ import '../widgets/live_clock_banner.dart';
 import '../teacher/teacher_sections.dart' show PageHost;
 import 'toolbox_page.dart';
 import 'video_meetings_page.dart';
+import 'evaluation_feedback_page.dart';
 
 // ClassStoryPage هنوز در main.dart است
 import 'class_story_page.dart';
@@ -393,6 +394,59 @@ class _StudentHomeDashboardState extends State<StudentHomeDashboard> {
                     onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => VideoMeetingsPage(role: AppRole.student))),
                   ),
                 ],
+              ),
+              const SizedBox(height: 12),
+              Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(20),
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const EvaluationFeedbackPage()),
+                  ),
+                  child: Ink(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFFFFF8E1), Color(0xFFFFE082)],
+                        begin: Alignment.centerRight,
+                        end: Alignment.centerLeft,
+                      ),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: const Color(0xFFFFCA28), width: 1.2),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.amber.withAlpha(45),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: const Row(
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: Colors.white,
+                          child: Icon(Icons.star_rounded, color: Color(0xFFFFA000)),
+                        ),
+                        SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'نظرسنجی و ستاره به مربی و مدرسه 🌟',
+                                style: TextStyle(fontWeight: FontWeight.w800, color: Color(0xFF6D4C00)),
+                              ),
+                              SizedBox(height: 3),
+                              Text('نظرت را دربارهٔ کلاس و مدرسه بگو', style: TextStyle(fontSize: 12, color: Colors.black54)),
+                            ],
+                          ),
+                        ),
+                        Icon(Icons.chevron_left_rounded, color: Color(0xFF8D6E00)),
+                      ],
+                    ),
+                  ),
+                ),
               ),
               const SizedBox(height: 12),
               Container(
