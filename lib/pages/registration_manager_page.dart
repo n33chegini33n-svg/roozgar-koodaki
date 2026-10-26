@@ -613,8 +613,8 @@ class _RegistrationManagerPageState extends State<RegistrationManagerPage> {
                   await AuditLogService.log(
                     actor: Session.userName,
                     role: Session.role.label,
-                    action: 'ویرایش مشخصات پرونده ثبت‌نام',
-                    details: changedFields.join('؛ '),
+                    action: 'ویرایش پرونده نوآموز',
+                    details: 'نوآموز: $studentName • ${changedFields.join(' • ')}',
                   );
                 }
 

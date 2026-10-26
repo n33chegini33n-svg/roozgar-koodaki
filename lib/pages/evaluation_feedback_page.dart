@@ -41,6 +41,7 @@ class _EvaluationFeedbackPageState extends State<EvaluationFeedbackPage> {
   bool _monthLoading = false;
   bool _editingMonthlyFeedback = false;
   EvaluationFeedback? _monthlyFeedback;
+  String? _monthStatusError;
   String? _loadError;
 
   _ChildEvaluationTarget? get _target =>
@@ -108,7 +109,7 @@ class _EvaluationFeedbackPageState extends State<EvaluationFeedbackPage> {
             : null;
         _loading = false;
       });
-      await _loadMonthlyFeedback();
+      await _checkMonthlyStatus();
     } catch (e) {
       if (!mounted) return;
       setState(() {
@@ -132,18 +133,21 @@ class _EvaluationFeedbackPageState extends State<EvaluationFeedbackPage> {
       }
       _noteController.clear();
     });
-    await _loadMonthlyFeedback();
+    await _checkMonthlyStatus();
   }
 
-  Future<void> _loadMonthlyFeedback() async {
+  Future<void> _checkMonthlyStatus() async {
     final target = _target;
     if (target == null || target.id.isEmpty) return;
     setState(() => _monthLoading = true);
     try {
-      final feedback = await EvaluationService.getCurrentMonthFeedback(studentId: target.id);
+      final feedback = await EvaluationService
+          .getCurrentMonthFeedback(studentId: target.id)
+          .timeout(const Duration(seconds: 3));
       if (!mounted) return;
       setState(() {
         _monthlyFeedback = feedback;
+        _monthStatusError = null;
         _editingMonthlyFeedback = false;
         if (feedback != null) {
           _selectedTeacherId = feedback.teacherId;
@@ -160,9 +164,18 @@ class _EvaluationFeedbackPageState extends State<EvaluationFeedbackPage> {
       });
     } catch (e) {
       if (!mounted) return;
-      setState(() => _loadError = '$e');
+      setState(() {
+        _monthlyFeedback = null;
+        _editingMonthlyFeedback = false;
+        _monthStatusError = 'وضعیت نظرسنجی این ماه بررسی نشد؛ هنگام ثبت، سرور دوباره آن را کنترل می‌کند.';
+      });
     } finally {
-      if (mounted) setState(() => _monthLoading = false);
+      if (mounted) {
+        setState(() {
+          _monthLoading = false;
+          _loading = false;
+        });
+      }
     }
   }
 
@@ -267,6 +280,13 @@ class _EvaluationFeedbackPageState extends State<EvaluationFeedbackPage> {
                 const Padding(
                   padding: EdgeInsets.only(bottom: 12),
                   child: LinearProgressIndicator(),
+                ),
+              if (_monthStatusError != null)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: _FormCard(
+                    child: Text(_monthStatusError!, style: const TextStyle(color: Colors.deepOrange)),
+                  ),
                 ),
               if (_monthlyFeedback != null)
                 _FormCard(
