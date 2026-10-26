@@ -3,6 +3,7 @@ import '../utils/export_helper.dart';
 import '../models/audit_log_model.dart';
 import '../services/backend.dart';
 import '../services/backend_directory.dart';
+import '../services/user_admin_service.dart';
 import 'create_account_dialog.dart';
 import '../models/permissions.dart';
 import '../models/user_directory.dart';
@@ -60,21 +61,16 @@ class _ManagerUserManagementPageState extends State<ManagerUserManagementPage> w
   Future<void> _saveUsers() => UserDirectory.save(_users);
 
   void _showAddUserDialog({UserModel? editUser}) {
+    final pageContext = context;
     if (!PermissionService.instance.can(Session.role, Perm.manageUsers)) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('شما اجازهٔ مدیریت کاربران را ندارید'), backgroundColor: Colors.red),
       );
       return;
     }
-    if (Backend.ready) {
-      // حالت سرور: ساخت حساب واقعی با تابع سمت سرور
-      if (editUser != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('ویرایش حساب‌های موجود فعلاً از داشبورد سرور انجام می‌شود')),
-        );
-        return;
-      }
-      showCreateAccountDialog(context).then((created) {
+    if (Backend.ready && editUser == null) {
+      // ساخت حساب واقعی با تابع سمت سرور
+      showCreateAccountDialog(pageContext).then((created) {
         if (created) {
           UserDirectory.clearCache();
           ServerDirectory.reset();
@@ -108,9 +104,11 @@ class _ManagerUserManagementPageState extends State<ManagerUserManagementPage> w
     String linkedStudent = (editUser != null && studentNames.contains(editUser.linkedStudent))
         ? editUser.linkedStudent
         : (studentNames.isEmpty ? '' : studentNames.first);
+    bool isSaving = false;
+    String? saveError;
 
     showDialog(
-      context: context,
+      context: pageContext,
       builder: (ctx) => StatefulBuilder(
         builder: (context, setDialogState) => Directionality(
           textDirection: TextDirection.rtl,
@@ -171,13 +169,15 @@ class _ManagerUserManagementPageState extends State<ManagerUserManagementPage> w
                               isDense: true,
                               isExpanded: true,
                               items: [
-                                if (isGrade2OrHigher)
+                                if (isGrade2OrHigher || editUser?.role == 'student')
                                   const DropdownMenuItem(value: 'student', child: Text('دانش‌آموز (حساب مستقل) 🎒')),
                                 const DropdownMenuItem(value: 'parent', child: Text('اولیاء / والدین 👨‍👩‍👦')),
                                 const DropdownMenuItem(value: 'teacher', child: Text('مربی / معلم 👩‍🏫')),
                                 const DropdownMenuItem(value: 'deputy', child: Text('معاون / ناظم 🧑‍💼')),
                               ],
-                              onChanged: (val) => setDialogState(() => selectedRole = val!),
+                              onChanged: Backend.ready && editUser?.role == 'student'
+                                  ? null
+                                  : (val) => setDialogState(() => selectedRole = val!),
                             ),
                           ),
                         );
@@ -193,8 +193,10 @@ class _ManagerUserManagementPageState extends State<ManagerUserManagementPage> w
                           isExpanded: true,
                           items: [
                             for (final c in kClassNames) DropdownMenuItem(value: c, child: Text(classLabel(c))),
-                            const DropdownMenuItem(value: 'والدین و اولیاء', child: Text('والدین و اولیاء')),
-                            const DropdownMenuItem(value: 'مدیریت', child: Text('مدیریت')),
+                            if (selectedRole != 'student') ...[
+                              const DropdownMenuItem(value: 'والدین و اولیاء', child: Text('والدین و اولیاء')),
+                              const DropdownMenuItem(value: 'مدیریت', child: Text('مدیریت')),
+                            ],
                           ],
                           onChanged: (val) => setDialogState(() => selectedClass = val!),
                         ),
@@ -206,7 +208,7 @@ class _ManagerUserManagementPageState extends State<ManagerUserManagementPage> w
                       keyboardType: TextInputType.phone,
                       decoration: const InputDecoration(labelText: 'شماره تماس / همراه', border: OutlineInputBorder()),
                     ),
-                    if (selectedRole == 'parent' && studentNames.isNotEmpty) ...[
+                    if (!Backend.ready && selectedRole == 'parent' && studentNames.isNotEmpty) ...[
                       const SizedBox(height: 12),
                       InputDecorator(
                         decoration: const InputDecoration(labelText: 'فرزند این ولی', border: OutlineInputBorder()),
@@ -221,6 +223,10 @@ class _ManagerUserManagementPageState extends State<ManagerUserManagementPage> w
                         ),
                       ),
                     ],
+                    if (saveError != null) ...[
+                      const SizedBox(height: 10),
+                      Text(saveError!, style: const TextStyle(color: Colors.red)),
+                    ],
                   ],
                 ),
               ),
@@ -229,46 +235,88 @@ class _ManagerUserManagementPageState extends State<ManagerUserManagementPage> w
               TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('انصراف')),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF0288D1), foregroundColor: Colors.white),
-                onPressed: () {
-                  if (nameCtrl.text.trim().isNotEmpty) {
-                    final isEdit = editUser != null;
-                    AuditLogService.log(
-                      actor: Session.userName,
-                      role: Session.role.label,
-                      action: isEdit ? 'ویرایش کاربر' : 'افزودن کاربر',
-                      details: '${nameCtrl.text.trim()} • نقش: $selectedRole • $selectedClass',
-                    );
-                    setState(() {
-                      if (editUser == null) {
-                        _users.add(UserModel(
-                          id: 'U-${DateTime.now().millisecondsSinceEpoch}',
-                          name: nameCtrl.text.trim(),
-                          role: selectedRole,
-                          className: selectedClass,
-                          phone: phoneCtrl.text.trim(),
-                          linkedStudent: selectedRole == 'parent' ? linkedStudent : '',
-                        ));
-                      } else {
-                        final idx = _users.indexWhere((u) => u.id == editUser.id);
-                        if (idx != -1) {
-                          _users[idx] = editUser.copyWith(
-                            name: nameCtrl.text.trim(),
-                            role: selectedRole,
-                            className: selectedClass,
-                            phone: phoneCtrl.text.trim(),
-                            linkedStudent: selectedRole == 'parent' ? linkedStudent : '',
-                          );
-                        }
-                      }
+                onPressed: isSaving ? null : () async {
+                  if (nameCtrl.text.trim().isEmpty) return;
+                  final isEdit = editUser != null;
+                  final updatedUser = (editUser ?? UserModel(
+                    id: 'U-${DateTime.now().millisecondsSinceEpoch}',
+                    name: '',
+                    role: selectedRole,
+                    className: selectedClass,
+                    phone: '',
+                  )).copyWith(
+                    name: nameCtrl.text.trim(),
+                    role: selectedRole,
+                    className: selectedClass,
+                    phone: phoneCtrl.text.trim(),
+                    linkedStudent: selectedRole == 'parent' ? linkedStudent : '',
+                  );
+
+                  if (Backend.ready && editUser != null) {
+                    setDialogState(() {
+                      isSaving = true;
+                      saveError = null;
                     });
-                    _saveUsers();
-                    Navigator.pop(ctx);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('✅ اطلاعات کاربر با موفقیت ذخیره شد!'), backgroundColor: Colors.green),
+                    try {
+                      await UserAdminService.updateUser(
+                        previous: editUser,
+                        name: updatedUser.name,
+                        phone: updatedUser.phone,
+                        role: updatedUser.role,
+                        className: updatedUser.className,
+                      );
+                      await AuditLogService.log(
+                        actor: Session.userName,
+                        role: Session.role.label,
+                        action: 'ویرایش کاربر',
+                        details: 'قبلی: ${editUser.name} • ${editUser.role} • ${editUser.phone} • ${editUser.className} '
+                            '← جدید: ${updatedUser.name} • ${updatedUser.role} • ${updatedUser.phone} • ${updatedUser.className}',
+                      );
+                      UserDirectory.clearCache();
+                      ServerDirectory.reset();
+                      await _loadUsers();
+                      if (ctx.mounted) Navigator.pop(ctx);
+                      if (pageContext.mounted) {
+                        ScaffoldMessenger.of(pageContext).showSnackBar(
+                          const SnackBar(content: Text('اطلاعات کاربر در سرور به‌روزرسانی شد.'), backgroundColor: Colors.green),
+                        );
+                      }
+                    } catch (e) {
+                      if (ctx.mounted) {
+                        setDialogState(() {
+                          isSaving = false;
+                          saveError = 'ذخیره‌سازی انجام نشد: $e';
+                        });
+                      }
+                    }
+                    return;
+                  }
+
+                  if (isEdit) {
+                    final idx = _users.indexWhere((u) => u.id == editUser.id);
+                    if (idx != -1) _users[idx] = updatedUser;
+                  } else {
+                    _users.add(updatedUser);
+                  }
+                  await _saveUsers();
+                  await AuditLogService.log(
+                    actor: Session.userName,
+                    role: Session.role.label,
+                    action: isEdit ? 'ویرایش کاربر' : 'افزودن کاربر',
+                    details: isEdit
+                        ? 'قبلی: ${editUser.name} • ${editUser.role} • ${editUser.phone} • ${editUser.className} '
+                            '← جدید: ${updatedUser.name} • ${updatedUser.role} • ${updatedUser.phone} • ${updatedUser.className}'
+                        : '${updatedUser.name} • نقش: ${updatedUser.role} • ${updatedUser.className}',
+                  );
+                  if (mounted) setState(() {});
+                  if (ctx.mounted) Navigator.pop(ctx);
+                  if (pageContext.mounted) {
+                    ScaffoldMessenger.of(pageContext).showSnackBar(
+                      const SnackBar(content: Text('اطلاعات کاربر با موفقیت ذخیره شد.'), backgroundColor: Colors.green),
                     );
                   }
                 },
-                child: const Text('ذخیره و ثبت'),
+                child: Text(isSaving ? 'در حال ذخیره...' : 'ذخیره و ثبت'),
               ),
             ],
           ),
@@ -278,9 +326,11 @@ class _ManagerUserManagementPageState extends State<ManagerUserManagementPage> w
   }
 
 
-  void _deleteUser(String id) {
-    if (Backend.ready || !PermissionService.instance.can(Session.role, Perm.manageUsers)) return;
-    showDialog(
+  Future<void> _deleteUser(String id) async {
+    if (!PermissionService.instance.can(Session.role, Perm.manageUsers)) return;
+    final user = _users.where((item) => item.id == id).firstOrNull;
+    if (user == null) return;
+    final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => Directionality(
         textDirection: TextDirection.rtl,
@@ -288,34 +338,50 @@ class _ManagerUserManagementPageState extends State<ManagerUserManagementPage> w
           title: const Text('⚠️ حذف کاربر'),
           content: const Text('آیا از حذف این کاربر از سیستم اطمینان دارید؟'),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('انصراف')),
+            TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('انصراف')),
             ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
-              onPressed: () {
-                final removed = _users.where((u) => u.id == id).toList();
-                if (removed.isNotEmpty) {
-                  AuditLogService.log(
-                    actor: Session.userName,
-                    role: Session.role.label,
-                    action: 'حذف کاربر',
-                    details: '${removed.first.name} • نقش: ${removed.first.role}',
-                  );
-                }
-                setState(() {
-                  _users.removeWhere((u) => u.id == id);
-                  _saveUsers();
-                });
-                Navigator.pop(ctx);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('🗑️ کاربر با موفقیت حذف شد.'), backgroundColor: Colors.red),
-                );
-              },
+              onPressed: () => Navigator.pop(ctx, true),
               child: const Text('حذف'),
             ),
           ],
         ),
       ),
     );
+    if (confirmed != true || !mounted) return;
+
+    try {
+      if (Backend.ready) {
+        await UserAdminService.deleteUser(user);
+      } else {
+        _users.removeWhere((item) => item.id == id);
+        await _saveUsers();
+      }
+      await AuditLogService.log(
+        actor: Session.userName,
+        role: Session.role.label,
+        action: 'حذف کاربر',
+        details: 'نام: ${user.name} • نقش: ${user.role} • شناسه: ${user.id}',
+      );
+      if (Backend.ready) {
+        UserDirectory.clearCache();
+        ServerDirectory.reset();
+        await _loadUsers();
+      } else if (mounted) {
+        setState(() {});
+      }
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('کاربر از فهرست سامانه حذف شد.'), backgroundColor: Colors.red),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('حذف کاربر انجام نشد: $e'), backgroundColor: Colors.red),
+        );
+      }
+    }
   }
 
   List<UserModel> _filterUserList(List<UserModel> baseList) {
@@ -595,7 +661,7 @@ class _ManagerUserManagementPageState extends State<ManagerUserManagementPage> w
                 IconButton(
                   icon: const Icon(Icons.delete_rounded, color: Colors.red),
                   tooltip: 'حذف کاربر',
-                  onPressed: Backend.ready ? null : () => _deleteUser(u.id),
+                  onPressed: () => _deleteUser(u.id),
                 ),
               ],
             ),
