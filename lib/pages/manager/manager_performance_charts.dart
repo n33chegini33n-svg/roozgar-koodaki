@@ -3,6 +3,8 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../../models/attendance_archive_model.dart';
+import '../../models/evaluation_feedback_model.dart';
+import '../../services/evaluation_service.dart';
 import '../../services/financial_analytics_service.dart';
 
 /// کارت خلاصهٔ مواردی که به پیگیری مدیریت نیاز دارند.
@@ -244,21 +246,11 @@ class _SatisfactionMetric extends StatelessWidget {
 /// بخش شاخص‌های عملکرد مدیر.
 /// نرخ حضور هفتگی اگر داده نشود، از AttendanceArchiveService خوانده می‌شود.
 class SchoolPerformanceAnalyticsPage extends StatefulWidget {
-  final double? educationScore;
-  final double? teachersScore;
-  final double? nutritionScore;
-  final double? environmentScore;
-  final Map<String, double> teacherRatings;
   /// اگر خالی باشد، از آرشیو حضور و غیاب واقعی محاسبه می‌شود.
   final Map<String, double> weeklyAttendanceRates;
 
   const SchoolPerformanceAnalyticsPage({
     super.key,
-    this.educationScore,
-    this.teachersScore,
-    this.nutritionScore,
-    this.environmentScore,
-    this.teacherRatings = const {},
     this.weeklyAttendanceRates = const {},
   });
 
@@ -272,12 +264,41 @@ class _SchoolPerformanceAnalyticsPageState extends State<SchoolPerformanceAnalyt
   FinancialAnalyticsData? _financialAnalytics;
   bool _loadingFinancialAnalytics = true;
   bool _financialAnalyticsFailed = false;
+  EvaluationStats? _evaluationStats;
+  bool _loadingEvaluationStats = true;
+  bool _evaluationStatsFailed = false;
 
   @override
   void initState() {
     super.initState();
     _loadWeeklyAttendance();
     _loadFinancialAnalytics();
+    _loadEvaluationStats();
+  }
+
+  Future<void> _loadEvaluationStats() async {
+    try {
+      final stats = await EvaluationService.loadEvaluationStats();
+      if (!mounted) return;
+      setState(() {
+        _evaluationStats = stats;
+        _loadingEvaluationStats = false;
+      });
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        _evaluationStatsFailed = true;
+        _loadingEvaluationStats = false;
+      });
+    }
+  }
+
+  void _retryEvaluationStats() {
+    setState(() {
+      _loadingEvaluationStats = true;
+      _evaluationStatsFailed = false;
+    });
+    _loadEvaluationStats();
   }
 
   Future<void> _loadFinancialAnalytics() async {
@@ -336,26 +357,76 @@ class _SchoolPerformanceAnalyticsPageState extends State<SchoolPerformanceAnalyt
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    if (widget.educationScore != null &&
-                        widget.teachersScore != null &&
-                        widget.nutritionScore != null &&
-                        widget.environmentScore != null)
+                    if (_loadingEvaluationStats)
+                      const _PerformanceCardShell(
+                        title: 'رضایت اولیا',
+                        subtitle: 'در حال خواندن ارزیابی‌ها...',
+                        icon: Icons.favorite_rounded,
+                        accent: Color(0xFFD81B60),
+                        child: SizedBox(height: 120, child: Center(child: CircularProgressIndicator())),
+                      )
+                    else if (_evaluationStatsFailed)
+                      _PerformanceCardShell(
+                        title: 'رضایت اولیا',
+                        subtitle: 'بارگذاری ارزیابی‌ها انجام نشد',
+                        icon: Icons.favorite_rounded,
+                        accent: const Color(0xFFD81B60),
+                        child: SizedBox(
+                          height: 120,
+                          child: Center(
+                            child: TextButton.icon(
+                              onPressed: _retryEvaluationStats,
+                              icon: const Icon(Icons.refresh_rounded),
+                              label: const Text('تلاش دوباره'),
+                            ),
+                          ),
+                        ),
+                      )
+                    else if (_evaluationStats != null && _evaluationStats!.responseCount > 0)
                       _ParentSatisfactionCard(
-                        educationScore: widget.educationScore!,
-                        teachersScore: widget.teachersScore!,
-                        nutritionScore: widget.nutritionScore!,
-                        environmentScore: widget.environmentScore!,
+                        educationScore: _evaluationStats!.schoolEducationScore!,
+                        teachersScore: _evaluationStats!.schoolStaffScore!,
+                        nutritionScore: _evaluationStats!.schoolNutritionScore!,
+                        environmentScore: _evaluationStats!.schoolEnvironmentScore!,
                       )
                     else
                       const _PerformanceCardShell(
                         title: 'رضایت اولیا',
-                        subtitle: 'میانگین شاخص‌های ارزیابی از ۱ تا ۵',
+                        subtitle: 'هنوز پاسخی ثبت نشده است',
                         icon: Icons.favorite_rounded,
                         accent: Color(0xFFD81B60),
                         child: _EmptyChartMessage(),
                       ),
                     const SizedBox(height: 12),
-                    _TeacherRatingsChartCard(teacherRatings: widget.teacherRatings),
+                    if (_loadingEvaluationStats)
+                      const _PerformanceCardShell(
+                        title: 'ارزیابی اولیا از مربیان',
+                        subtitle: 'در حال خواندن ارزیابی‌ها...',
+                        icon: Icons.stars_rounded,
+                        accent: Color(0xFFFFA000),
+                        child: SizedBox(height: 120, child: Center(child: CircularProgressIndicator())),
+                      )
+                    else if (_evaluationStatsFailed)
+                      _PerformanceCardShell(
+                        title: 'ارزیابی اولیا از مربیان',
+                        subtitle: 'بارگذاری ارزیابی‌ها انجام نشد',
+                        icon: Icons.stars_rounded,
+                        accent: const Color(0xFFFFA000),
+                        child: SizedBox(
+                          height: 120,
+                          child: Center(
+                            child: TextButton.icon(
+                              onPressed: _retryEvaluationStats,
+                              icon: const Icon(Icons.refresh_rounded),
+                              label: const Text('تلاش دوباره'),
+                            ),
+                          ),
+                        ),
+                      )
+                    else
+                      _TeacherRatingsChartCard(
+                        teacherRatings: _evaluationStats?.teacherRatings ?? const {},
+                      ),
                     const SizedBox(height: 12),
                     if (_loadingFinancialAnalytics)
                       const _PerformanceCardShell(

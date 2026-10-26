@@ -8,7 +8,7 @@ import '../models/nutrition_model.dart';
 import '../utils/jalali.dart';
 import '../widgets/nutrition_views.dart';
 import '../widgets/safe_image.dart';
-import '../widgets/sunny_world_background.dart';
+import '../widgets/world3d_background.dart';
 import '../widgets/pop_out_card.dart';
 import '../pages/toolbox_page.dart';
 import '../widgets/live_clock_banner.dart';
@@ -16,6 +16,7 @@ import '../widgets/plans_view.dart';
 import '../pages/private_message_page.dart';
 import '../pages/report_card_pages.dart';
 import '../pages/registration_page.dart';
+import '../pages/evaluation_feedback_page.dart';
 import '../pages/video_meetings_page.dart';
 
 class _Section {
@@ -96,11 +97,12 @@ class _ParentHomePageState extends State<ParentHomePage> {
       _Section('جلسهٔ تصویری', 'scene_messages.png', const Color(0xFFE3F2FD), (c) => _push(c, const VideoMeetingsPage(role: AppRole.parent))),
       _Section('پرداخت و اشتراک', 'scene_payment.png', const Color(0xFFFFF8E1), (c) => _push(c, const PaymentPage()), Perm.viewFinancial),
       _Section('پرونده ثبت‌نام نوآموز', 'ill_students.png', const Color(0xFFE1F5FE), (c) => _push(c, const RegistrationPage())),
+      _Section('نظرسنجی و ارزیابی کیفیت', 'ill_audit_log.png', const Color(0xFFFFF3E0), (c) => _push(c, const EvaluationFeedbackPage())),
     ];
     final perms = PermissionService.instance;
     final sections = allSections.where((x) => x.perm == null || perms.can(AppRole.parent, x.perm!)).toList();
 
-    return SunnyWorldBackground(
+    return WorldBackground(
       child: LayoutBuilder(
         builder: (context, box) {
           final w = box.maxWidth;
