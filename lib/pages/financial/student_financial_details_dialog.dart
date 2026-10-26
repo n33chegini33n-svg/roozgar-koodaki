@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../models/audit_log_model.dart';
+import '../../models/permissions.dart';
 import '../../models/tuition_record_model.dart';
 import '../../utils/export_helper.dart';
 
@@ -378,6 +380,15 @@ class _StudentFinancialDetailsDialogState
                                                     widget.allRecords[idx] = widget.allRecords[idx].copyWith(amount: newAmt);
                                                   });
                                                   await widget.onSaveFinancialData();
+                                                  if (newAmt != rec.amount) {
+                                                    await AuditLogService.log(
+                                                      actor: Session.userName,
+                                                      role: Session.role.label,
+                                                      action: 'ویرایش مبلغ قسط یا فاکتور',
+                                                      details: 'نوآموز: ${widget.studentName} • ${rec.feeTitle} • '
+                                                          'مبلغ: ${rec.amount} تومان ← $newAmt تومان',
+                                                    );
+                                                  }
                                                   setModalState(() {});
                                                 }
                                               }

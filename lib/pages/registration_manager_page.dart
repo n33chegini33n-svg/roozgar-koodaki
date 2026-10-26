@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../models/audit_log_model.dart';
+import '../models/permissions.dart';
 import '../services/backend.dart';
 import '../parent/parent_sections.dart' show kPageBg, softCard;
 import '../theme/app_colors.dart';
@@ -441,6 +443,8 @@ class _RegistrationManagerPageState extends State<RegistrationManagerPage> {
                 onPressed: () async {
                   final messenger = ScaffoldMessenger.of(context);
                   final reason = currentStatus == 'rejected' ? reasonController.text.trim() : null;
+                  final previousStatus = '${record['status'] ?? 'submitted'}';
+                  final previousReason = record['rejection_reason']?.toString() ?? '';
                   Navigator.pop(ctx);
                   try {
                     try {
@@ -454,6 +458,17 @@ class _RegistrationManagerPageState extends State<RegistrationManagerPage> {
                         'status': currentStatus,
                         'updated_at': DateTime.now().toUtc().toIso8601String(),
                       }).eq('parent_id', parentId);
+                    }
+
+                    if (previousStatus != currentStatus || previousReason != (reason ?? '')) {
+                      await AuditLogService.log(
+                        actor: Session.userName,
+                        role: Session.role.label,
+                        action: 'تغییر وضعیت پرونده ثبت‌نام',
+                        details: 'وضعیت: $previousStatus ← $currentStatus • '
+                            'دلیل قبلی: ${previousReason.isEmpty ? 'نداشت' : previousReason} • '
+                            'دلیل جدید: ${(reason ?? '').isEmpty ? 'ندارد' : reason}',
+                      );
                     }
 
                     messenger.showSnackBar(
@@ -580,12 +595,28 @@ class _RegistrationManagerPageState extends State<RegistrationManagerPage> {
               final updatedData = <String, String>{
                 for (final e in controllers.entries) e.key: e.value.text,
               };
+              final changedFields = <String>[];
+              for (final entry in updatedData.entries) {
+                final before = '${data[entry.key] ?? ''}';
+                if (before != entry.value) {
+                  changedFields.add('${entry.key}: $before ← ${entry.value}');
+                }
+              }
               Navigator.pop(dialogCtx);
               try {
                 await Backend.client.from('registration_records').update({
                   'data': updatedData,
                   'updated_at': DateTime.now().toUtc().toIso8601String(),
                 }).eq('parent_id', record['parent_id']);
+
+                if (changedFields.isNotEmpty) {
+                  await AuditLogService.log(
+                    actor: Session.userName,
+                    role: Session.role.label,
+                    action: 'ویرایش مشخصات پرونده ثبت‌نام',
+                    details: changedFields.join('؛ '),
+                  );
+                }
 
                 messenger.showSnackBar(
                   const SnackBar(content: Text('اطلاعات پرونده با موفقیت ذخیره شد.')),
