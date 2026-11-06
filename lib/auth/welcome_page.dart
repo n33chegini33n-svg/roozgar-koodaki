@@ -1,3 +1,5 @@
+﻿import '../services/backend.dart';
+import '../models/user_directory.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../theme/app_colors.dart';
@@ -41,14 +43,29 @@ class _WelcomePageState extends State<WelcomePage> {
     super.dispose();
   }
 
-  void _submit() {
+  Future<void> _submit() async {
     final phone = normalizeDigits(_phoneController.text.trim());
     final valid = RegExp(r'^09\d{9}$').hasMatch(phone);
     if (!valid) {
-      setState(() => _error = 'شمارهٔ موبایل را مثل 09123456789 وارد کنید');
+      setState(() => _error = 'شمارهٔ موبایل باید ۱۱ رقم باشد و با 09 شروع شود');
       return;
     }
     setState(() => _error = null);
+
+    // بررسی سریع وجود شماره در سرور
+    if (Backend.ready) {
+      try {
+        final res = await Backend.client.rpc('check_phone_exists', params: {'p_phone': phone});
+        if (res == false) {
+          if (mounted) {
+            setState(() => _error = 'این شماره تلفن در سامانهٔ مدرسه ثبت نشده است');
+          }
+          return;
+        }
+      } catch (_) {}
+    }
+
+    if (!mounted) return;
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -71,7 +88,7 @@ class _WelcomePageState extends State<WelcomePage> {
       final rb = _cardKey.currentContext?.findRenderObject() as RenderBox?;
       if (rb == null || !rb.attached) return;
       final top = rb.localToGlobal(Offset.zero).dy;
-      final v = (top - 4).clamp(0.0, size.height * 0.62);
+      final v = (top - 4).clamp(0.0, size.height * 0.65);
       if ((v - _areaH.value).abs() > 0.5) _areaH.value = v;
     });
 
@@ -80,16 +97,37 @@ class _WelcomePageState extends State<WelcomePage> {
       backgroundColor: AppColors.sky,
       body: Stack(
         children: [
-          // لوگو و پس‌زمینه در بالای صفحه
+          // لوگو و پس‌زمینه در بالای صفحه (با قابلیت تنظیم موقعیت کلی و فیت ماندن)
           Positioned(
-            top: 0,
+            top: -15, // با تغییر این عدد می‌توانید کل مجموعه را بالا و پایین ببرید
             left: 0,
             right: 0,
-            height: size.height * 0.62,
-            child: const SafeAssetImage(
-              'logo.jpg',
-              fit: BoxFit.cover,
-              alignment: Alignment.topCenter,
+            height: (size.height * 0.62) + 15,
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                // ۱. تصویر زمینه (دایره‌های موجی و قاصدک‌ها) به صورت کاملاً فیت
+                Positioned.fill(
+                  child: const SafeAssetImage(
+                    'logo_no_sun.png',
+                    fit: BoxFit.cover,
+                    alignment: Alignment.center,
+                  ),
+                ),
+                // ۲. خورشید خط‌مشکی با قابلیت تنظیم فاصله از پایین
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: -10, // با تغییر این عدد می‌توانید خورشید را نسبت به خط سفید تنظیم کنید
+                  child: Center(
+                    child: Image.asset(
+                      'assets/images/sun_outline.png',
+                      width: size.width * 0.50,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
           // لوازم تحریر معلق (فقط در ناحیهٔ آبی)
@@ -132,17 +170,17 @@ class _WelcomePageState extends State<WelcomePage> {
                         const Text(
                           'با هم می‌درخشیم',
                           style: TextStyle(
-                            fontSize: 24,
+                            fontSize: 25,
                             fontWeight: FontWeight.bold,
                             color: AppColors.navy,
                           ),
                         ),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: 25),
                         const Text(
                           'شمارهٔ موبایلی که مدرسه برای شما ثبت کرده را وارد کنید',
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontSize: 14,
+                            fontSize: 15,
                             color: AppColors.textGrey,
                           ),
                         ),
@@ -158,7 +196,7 @@ class _WelcomePageState extends State<WelcomePage> {
                               RegExp(r'[0-9۰-۹٠-٩]'),
                             ),
                           ],
-                          style: const TextStyle(fontSize: 20, letterSpacing: 2),
+                          style: const TextStyle(fontSize: 30, letterSpacing: 2),
                           decoration: InputDecoration(
                             counterText: '',
                             hintText: '09123456789',

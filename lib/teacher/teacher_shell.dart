@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 import '../main.dart';
 import '../services/backend.dart';
+import '../widgets/notification_center.dart';
 import 'teacher_home_page.dart';
 
 /// قاب اصلی بخش معلم: نوار پایین + صفحه‌ها
@@ -61,6 +62,7 @@ class _TeacherShellState extends State<TeacherShell> {
           foregroundColor: AppColors.navy,
           elevation: 0,
           actions: [
+            const NotificationBell(),
             IconButton(
               icon: const Icon(Icons.power_settings_new_rounded),
               tooltip: 'خروج',

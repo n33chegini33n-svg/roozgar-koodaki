@@ -78,6 +78,9 @@ class _LiveClockBannerState extends State<LiveClockBanner> {
       case AppRole.student:
         file = 'ill_students.png';
         break;
+      case AppRole.kitchen:
+        file = 'ill_menu.png';
+        break;
     }
     return Container(
       width: 46,
@@ -104,81 +107,90 @@ class _LiveClockBannerState extends State<LiveClockBanner> {
         border: Border.all(color: c.withValues(alpha: 0.18)),
         boxShadow: [BoxShadow(color: c.withValues(alpha: 0.12), blurRadius: 14, offset: const Offset(0, 5))],
       ),
-      child: Row(
-        children: [
-          // ساعت
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [c, Color.lerp(c, const Color(0xFF0B2B4A), 0.45)!],
-                begin: Alignment.topRight,
-                end: Alignment.bottomLeft,
-              ),
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Directionality(
-              textDirection: TextDirection.ltr,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.baseline,
-                textBaseline: TextBaseline.alphabetic,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    '${_two(_now.hour)}:${_two(_now.minute)}',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      fontFeatures: [FontFeature.tabularFigures()],
-                    ),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final compact = constraints.maxWidth < 380;
+          return Row(
+            children: [
+              // ساعت
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: compact ? 9 : 14, vertical: compact ? 8 : 10),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [c, Color.lerp(c, const Color(0xFF0B2B4A), 0.45)!],
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
                   ),
-                  const SizedBox(width: 4),
-                  Text(
-                    _two(_now.second),
-                    style: const TextStyle(
-                      color: Color(0xCCFFFFFF),
-                      fontSize: 14,
-                      fontFeatures: [FontFeature.tabularFigures()],
-                    ),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Directionality(
+                  textDirection: TextDirection.ltr,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    textBaseline: TextBaseline.alphabetic,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        '${_two(_now.hour)}:${_two(_now.minute)}',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: compact ? 23 : 28,
+                          fontWeight: FontWeight.bold,
+                          fontFeatures: const [FontFeature.tabularFigures()],
+                        ),
+                      ),
+                      if (!compact) ...[
+                        const SizedBox(width: 4),
+                        Text(
+                          _two(_now.second),
+                          style: const TextStyle(
+                            color: Color(0xCCFFFFFF),
+                            fontSize: 14,
+                            fontFeatures: [FontFeature.tabularFigures()],
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
-                ],
+                ),
               ),
-            ),
-          ),
-          const SizedBox(width: 14),
-          if (MediaQuery.of(context).size.width >= 390) ...[
-            _avatar(),
-            const SizedBox(width: 12),
-          ],
-          // روز و تاریخ
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
+              SizedBox(width: compact ? 10 : 14),
+              if (!compact && MediaQuery.of(context).size.width >= 390) ...[
+                _avatar(),
+                const SizedBox(width: 12),
+              ],
+              // روز و تاریخ
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(_icon(_now.hour), size: 16, color: c),
-                    const SizedBox(width: 4),
-                    Text(_greeting(_now.hour), style: TextStyle(fontSize: 12, color: c, fontWeight: FontWeight.bold)),
-                    const SizedBox(width: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                      decoration: BoxDecoration(color: c.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(10)),
-                      child: Text(widget.roleLabel ?? Session.role.label, style: TextStyle(fontSize: 11, color: c, fontWeight: FontWeight.bold)),
+                    Row(
+                      children: [
+                        Icon(_icon(_now.hour), size: 16, color: c),
+                        const SizedBox(width: 4),
+                        Text(_greeting(_now.hour), style: TextStyle(fontSize: 12, color: c, fontWeight: FontWeight.bold)),
+                        if (!compact) ...[
+                          const SizedBox(width: 8),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                            decoration: BoxDecoration(color: c.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(10)),
+                            child: Text(widget.roleLabel ?? Session.role.label, style: TextStyle(fontSize: 11, color: c, fontWeight: FontWeight.bold)),
+                          ),
+                        ],
+                      ],
+                    ),
+                    const SizedBox(height: 2),
+                    Text(j.weekdayName, style: const TextStyle(fontSize: 19, fontWeight: FontWeight.bold, color: Color(0xFF244E76))),
+                    Text(
+                      '${faDigits(j.day)} ${j.monthName} ${faDigits(j.year)}',
+                      style: const TextStyle(fontSize: 13, color: Color(0xFF6B7C93)),
                     ),
                   ],
                 ),
-                const SizedBox(height: 2),
-                Text(j.weekdayName, style: const TextStyle(fontSize: 19, fontWeight: FontWeight.bold, color: Color(0xFF244E76))),
-                Text(
-                  '${faDigits(j.day)} ${j.monthName} ${faDigits(j.year)}',
-                  style: const TextStyle(fontSize: 13, color: Color(0xFF6B7C93)),
-                ),
-              ],
-            ),
-          ),
-        ],
+              ),
+            ],
+          );
+        },
       ),
     );
   }

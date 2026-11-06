@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'audit_log_model.dart';
 import 'school_classes.dart';
+import '../services/backend.dart';
 
 /// نقش‌های سیستم. «معاون» در مدرسه همان «ناظم» است.
-enum AppRole { admin, manager, deputy, teacher, parent, student }
+enum AppRole { admin, manager, deputy, teacher, parent, student, kitchen }
 
 extension AppRoleLabel on AppRole {
   String get label {
@@ -22,6 +23,8 @@ extension AppRoleLabel on AppRole {
         return 'ولی';
       case AppRole.student:
         return 'دانش‌آموز';
+      case AppRole.kitchen:
+        return 'آشپز';
     }
   }
 }
@@ -35,9 +38,9 @@ extension ScopeLabel on Scope {
       case Scope.none:
         return 'ندارد';
       case Scope.own:
-      if (role == AppRole.parent) return 'فرزند خودش';
-      if (role == AppRole.student) return 'خودش';
-      return 'کلاس خودش';
+        if (role == AppRole.parent) return 'فرزند خودش';
+        if (role == AppRole.student) return 'خودش';
+        return 'کلاس خودش';
       case Scope.all:
         return 'همه';
     }
@@ -63,6 +66,7 @@ enum Perm {
   sendBroadcast,
   approveRequests,
   manageNutrition,
+  manageAllergies,
   managePlanning,
   manageHomework,
   viewHomework,
@@ -83,7 +87,7 @@ class PermInfo {
   final String description;
   final IconData icon;
   final String group;
-  final List<Scope> scopes; // دامنه‌هایی که برای این دسترسی معنا دارند
+  final List<Scope> scopes;
   const PermInfo(this.title, this.description, this.icon, this.group, this.scopes);
 }
 
@@ -117,7 +121,6 @@ const Map<Perm, PermInfo> kPermInfo = {
 
 /// مقدار پیش‌فرض. دسترسی ثبت‌نشده یعنی Scope.none
 const Map<AppRole, Map<Perm, Scope>> _defaults = {
-  // ادمین سیستم: صاحب نرم‌افزار؛ همه چیز + تنظیمات برنامه و اشتراک (ثابت)
   AppRole.admin: {
     Perm.recordAttendance: Scope.all,
     Perm.requestAttendanceEdit: Scope.all,
@@ -133,6 +136,7 @@ const Map<AppRole, Map<Perm, Scope>> _defaults = {
     Perm.sendBroadcast: Scope.all,
     Perm.approveRequests: Scope.all,
     Perm.manageNutrition: Scope.all,
+    Perm.manageAllergies: Scope.all,
     Perm.managePlanning: Scope.all,
     Perm.manageHomework: Scope.all,
     Perm.viewHomework: Scope.all,
@@ -158,6 +162,7 @@ const Map<AppRole, Map<Perm, Scope>> _defaults = {
     Perm.sendBroadcast: Scope.all,
     Perm.approveRequests: Scope.all,
     Perm.manageNutrition: Scope.all,
+    Perm.manageAllergies: Scope.all,
     Perm.managePlanning: Scope.all,
     Perm.manageHomework: Scope.all,
     Perm.viewHomework: Scope.all,
@@ -178,6 +183,7 @@ const Map<AppRole, Map<Perm, Scope>> _defaults = {
     Perm.sendBroadcast: Scope.all,
     Perm.approveRequests: Scope.all,
     Perm.manageNutrition: Scope.all,
+    Perm.manageAllergies: Scope.all,
     Perm.managePlanning: Scope.all,
     Perm.manageHomework: Scope.all,
     Perm.viewHomework: Scope.all,
@@ -198,7 +204,12 @@ const Map<AppRole, Map<Perm, Scope>> _defaults = {
     Perm.viewReportCard: Scope.own,
     Perm.manageReportCard: Scope.own,
   },
-  // ولی: فقط فرزند خودش؛ ثابت و قابل تغییر نیست
+  // آشپز: منو را تنظیم می‌کند و حساسیت‌ها را فقط می‌بیند
+  AppRole.kitchen: {
+    Perm.manageNutrition: Scope.all,
+    Perm.viewHealthRecords: Scope.all,
+    Perm.manageAllergies: Scope.all,
+  },
   AppRole.parent: {
     Perm.viewAttendance: Scope.own,
     Perm.viewHealthRecords: Scope.own,
@@ -208,26 +219,27 @@ const Map<AppRole, Map<Perm, Scope>> _defaults = {
     Perm.sendPrivateMessage: Scope.own,
     Perm.viewReportCard: Scope.own,
   },
-  // دانش‌آموز ورود مستقل دارد، اما مجوز داده‌ای از سمت کلاینت نمی‌گیرد.
   AppRole.student: {},
 };
 
 /// نقش‌هایی که مدیر می‌تواند دسترسی‌شان را تغییر دهد
 const List<AppRole> kConfigurableRoles = [AppRole.deputy, AppRole.teacher];
 
-/// هویت کاربر واردشده (تا زمان اتصال به سرور، نمونه است)
+/// هویت کاربر واردشده
 class Session {
   static AppRole role = AppRole.parent;
   static String userName = '';
   static String className = '';
+  // همهٔ کلاس‌های کادر (مربی ممکن است چند کلاس داشته باشد)
+  static List<String> classNames = [];
   static String childName = '';
   static List<String> childStudentIds = [];
 
-  /// پاک‌کردن هویت فعال
   static void reset() {
     role = AppRole.parent;
     userName = '';
     className = '';
+    classNames = [];
     childName = '';
     childStudentIds = [];
   }
@@ -253,35 +265,84 @@ class Session {
       case AppRole.student:
         userName = 'دانش‌آموز';
         break;
+      case AppRole.kitchen:
+        userName = 'آشپز';
+        break;
     }
   }
 }
 
-/// مدیریت مرکزی دسترسی‌ها؛ روی دستگاه ذخیره می‌شود.
+/// مدیریت مرکزی دسترسی‌ها؛ با سرور (role_permissions) یا در صورت نیاز محلی.
 class PermissionService extends ChangeNotifier {
   PermissionService._();
   static final PermissionService instance = PermissionService._();
-
   static const String _key = 'role_permissions_v2';
+
   bool _allowLocalOverrides = false;
 
-  bool get allowsLocalOverrides => _allowLocalOverrides;
+  /// در حالت سرور یا دموی محلی می‌توان ویرایش کرد
+  bool get canEdit => Backend.ready || _allowLocalOverrides;
+
+  /// سازگاری با UI قدیمی
+  bool get allowsLocalOverrides => canEdit;
+
   final Map<AppRole, Map<Perm, Scope>> _matrix = {
     for (final e in _defaults.entries) e.key: {...e.value},
   };
 
+  void _resetMatrixToDefaults() {
+    for (final e in _defaults.entries) {
+      _matrix[e.key] = {...e.value};
+    }
+  }
+
+  AppRole? _parseRole(String name) {
+    for (final r in AppRole.values) {
+      if (r.name == name) return r;
+    }
+    return null;
+  }
+
+  Perm? _parsePerm(String name) {
+    for (final p in Perm.values) {
+      if (p.name == name) return p;
+    }
+    return null;
+  }
+
+  Scope? _parseScope(String name) {
+    for (final s in Scope.values) {
+      if (s.name == name) return s;
+    }
+    return null;
+  }
+
   Future<void> load({bool allowLocalOverrides = false}) async {
     _allowLocalOverrides = allowLocalOverrides;
-    if (!allowLocalOverrides) {
-      for (final role in kConfigurableRoles) {
-        _matrix[role] = {..._defaults[role]!};
+    _resetMatrixToDefaults();
+
+    if (Backend.ready) {
+      try {
+        await _loadFromServer();
+      } catch (_) {
+        // اگر سرور خطا داد، پیش‌فرض‌ها می‌مانند
       }
+      notifyListeners();
       return;
     }
+
+    if (!allowLocalOverrides) {
+      notifyListeners();
+      return;
+    }
+
     try {
       final prefs = await SharedPreferences.getInstance();
       final raw = prefs.getString(_key);
-      if (raw == null) return;
+      if (raw == null) {
+        notifyListeners();
+        return;
+      }
       final map = jsonDecode(raw) as Map<String, dynamic>;
       for (final role in kConfigurableRoles) {
         final inner = map[role.name];
@@ -290,9 +351,8 @@ class PermissionService extends ChangeNotifier {
         for (final p in Perm.values) {
           final v = inner[p.name];
           if (v is String) {
-            for (final s in Scope.values) {
-              if (s.name == v) parsed[p] = s;
-            }
+            final s = _parseScope(v);
+            if (s != null) parsed[p] = s;
           }
         }
         _matrix[role] = parsed;
@@ -300,13 +360,34 @@ class PermissionService extends ChangeNotifier {
     } catch (_) {
       // داده خراب: مقادیر پیش‌فرض می‌مانند
     }
+    notifyListeners();
+  }
+
+  Future<void> _loadFromServer() async {
+    final rows = await Backend.client.from('role_permissions').select('role, perm, scope');
+    final byRole = <AppRole, Map<Perm, Scope>>{
+      for (final role in kConfigurableRoles) role: {...?_defaults[role]},
+    };
+
+    for (final raw in rows as List) {
+      final row = Map<String, dynamic>.from(raw as Map);
+      final role = _parseRole('${row['role']}');
+      final perm = _parsePerm('${row['perm']}');
+      final scope = _parseScope('${row['scope']}');
+      if (role == null || perm == null || scope == null) continue;
+      if (!kConfigurableRoles.contains(role)) continue;
+      byRole.putIfAbsent(role, () => {})[perm] = scope;
+    }
+
+    for (final e in byRole.entries) {
+      _matrix[e.key] = e.value;
+    }
   }
 
   Scope scopeOf(AppRole role, Perm perm) => _matrix[role]?[perm] ?? Scope.none;
 
   bool can(AppRole role, Perm perm) => scopeOf(role, perm) != Scope.none;
 
-  /// بررسی دسترسی روی یک کلاس مشخص (برای دامنهٔ «کلاس خودش»)
   bool allows(AppRole role, Perm perm, {String? className}) {
     final s = scopeOf(role, perm);
     if (s == Scope.all) return true;
@@ -315,12 +396,33 @@ class PermissionService extends ChangeNotifier {
   }
 
   Future<void> setScope(AppRole role, Perm perm, Scope scope) async {
-    if (!_allowLocalOverrides || !kConfigurableRoles.contains(role)) return;
+    if (!canEdit || !kConfigurableRoles.contains(role)) return;
     final before = scopeOf(role, perm);
     if (before == scope) return;
+
     _matrix.putIfAbsent(role, () => {})[perm] = scope;
     notifyListeners();
-    await _save();
+
+    if (Backend.ready) {
+      try {
+        await Backend.client.from('role_permissions').upsert(
+          {
+            'role': role.name,
+            'perm': perm.name,
+            'scope': scope.name,
+          },
+          onConflict: 'role,perm',
+        );
+      } catch (_) {
+        // برگرداندن مقدار قبلی در صورت خطای سرور
+        _matrix[role]![perm] = before;
+        notifyListeners();
+        rethrow;
+      }
+    } else {
+      await _saveLocal();
+    }
+
     await AuditLogService.log(
       actor: Session.userName,
       role: Session.role.label,
@@ -330,12 +432,36 @@ class PermissionService extends ChangeNotifier {
   }
 
   Future<void> resetToDefaults() async {
-    if (!_allowLocalOverrides) return;
+    if (!canEdit) return;
+
     for (final role in kConfigurableRoles) {
       _matrix[role] = {..._defaults[role]!};
     }
     notifyListeners();
-    await _save();
+
+    if (Backend.ready) {
+      try {
+        for (final role in kConfigurableRoles) {
+          await Backend.client.from('role_permissions').delete().eq('role', role.name);
+          final rows = <Map<String, String>>[];
+          for (final e in (_defaults[role] ?? {}).entries) {
+            rows.add({
+              'role': role.name,
+              'perm': e.key.name,
+              'scope': e.value.name,
+            });
+          }
+          if (rows.isNotEmpty) {
+            await Backend.client.from('role_permissions').insert(rows);
+          }
+        }
+      } catch (_) {
+        rethrow;
+      }
+    } else {
+      await _saveLocal();
+    }
+
     await AuditLogService.log(
       actor: Session.userName,
       role: Session.role.label,
@@ -344,7 +470,7 @@ class PermissionService extends ChangeNotifier {
     );
   }
 
-  Future<void> _save() async {
+  Future<void> _saveLocal() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(
       _key,

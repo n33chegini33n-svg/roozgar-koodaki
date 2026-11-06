@@ -77,6 +77,7 @@ class AnnouncementService {
       case AppRole.teacher: return all.where((a) => a.audience == Audience.all || a.audience == Audience.staff || (a.audience == Audience.classOnly && sameClass(a.className, className))).toList();
       case AppRole.parent: return all.where((a) => a.audience == Audience.all || a.audience == Audience.parents || (a.audience == Audience.classOnly && sameClass(a.className, className))).toList();
       case AppRole.student: return all.where((a) => a.audience == Audience.classOnly && sameClass(a.className, className)).toList();
+      case AppRole.kitchen: return all.where((a) => a.audience == Audience.all || a.audience == Audience.staff).toList();
     }
   }
 }

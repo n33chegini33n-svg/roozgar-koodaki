@@ -13,6 +13,7 @@ class UserAdminService {
     required String phone,
     required String role,
     required String className,
+    List<String> classIds = const [],
   }) async {
     if (!Backend.ready) throw StateError('اتصال سرور آماده نیست.');
     if (!PermissionService.instance.can(Session.role, Perm.manageUsers)) {
@@ -21,9 +22,9 @@ class UserAdminService {
     if (name.trim().isEmpty) throw ArgumentError('نام کاربر نمی‌تواند خالی باشد.');
 
     await ServerDirectory.ensureLoaded(force: true);
-    if (previous.role == 'student') {
+    if (previous.isStudentRecord) {
       if (role != 'student') {
-        throw StateError('تغییر نوع حساب دانش‌آموز به حساب پرسنل یا والد از این فرم پشتیبانی نمی‌شود.');
+        throw StateError('تغییر نقش دانش‌آموز از این فرم پشتیبانی نمی‌شود.');
       }
       final classId = ServerDirectory.classId(className);
       if (classId == null) throw StateError('کلاس انتخاب‌شده در سرور پیدا نشد.');
@@ -32,40 +33,105 @@ class UserAdminService {
           .update({'full_name': name.trim(), 'class_id': classId})
           .eq('id', previous.id)
           .select('id');
-      if (rows.isEmpty) throw StateError('رکورد دانش‌آموز پیدا نشد یا اجازهٔ ویرایش وجود ندارد.');
+      if (rows.isEmpty) throw StateError('رکورد دانش‌آموز پیدا نشد یا اجازهٔ ویرایش ندارید.');
       return;
     }
 
-    if (role == 'student') {
-      throw StateError('تبدیل حساب والد یا پرسنل به دانش‌آموز از این فرم پشتیبانی نمی‌شود.');
+    if (role == 'admin') {
+      throw StateError('نقش ادمین سیستم از این فرم قابل تعیین نیست.');
     }
+    if (role == 'manager' && Session.role != AppRole.admin) {
+      throw StateError('فقط ادمین سیستم می‌تواند نقش مدیر را تعیین کند.');
+    }
+
     final payload = <String, dynamic>{
       'full_name': name.trim(),
       'phone': phone.trim(),
       'role': role,
     };
     if (role == 'teacher' || role == 'deputy') {
+      if (classIds.isEmpty) throw StateError('حداقل یک کلاس انتخاب کنید.');
+      payload['class_id'] = classIds.first;
+    } else if (role == 'student') {
       final classId = ServerDirectory.classId(className);
       if (classId == null) throw StateError('کلاس انتخاب‌شده در سرور پیدا نشد.');
       payload['class_id'] = classId;
     } else {
       payload['class_id'] = null;
     }
+
     final rows = await Backend.client
         .from('profiles')
         .update(payload)
-        .eq('id', previous.id)
+        .eq('id', previous.profileId ?? previous.id)
         .select('id');
-    if (rows.isEmpty) throw StateError('پروفایل پیدا نشد یا اجازهٔ ویرایش وجود ندارد.');
+    if (rows.isEmpty) throw StateError('پروفایل پیدا نشد یا اجازهٔ ویرایش ندارید.');
+    final profileKey = previous.profileId ?? previous.id;
+    if (role == 'teacher' || role == 'deputy') {
+      // همهٔ کلاس‌های کادر را یکجا جایگزین می‌کنیم
+      await Backend.client.from('teacher_classes').delete().eq('profile_id', profileKey);
+      await Backend.client.from('teacher_classes').insert([
+        for (final id in classIds) {'profile_id': profileKey, 'class_id': id},
+      ]);
+    } else {
+      await Backend.client.from('teacher_classes').delete().eq('profile_id', profileKey);
+    }
   }
 
+  /// حذف نرم: رکورد از بین نمی‌رود، فقط علامت حذف و غیرفعال می‌شود.
   static Future<void> deleteUser(UserModel user) async {
     if (!Backend.ready) throw StateError('اتصال سرور آماده نیست.');
     if (!PermissionService.instance.can(Session.role, Perm.manageUsers)) {
       throw StateError('شما اجازهٔ مدیریت کاربران را ندارید.');
     }
-    final table = user.role == 'student' ? 'students' : 'profiles';
-    final rows = await Backend.client.from(table).delete().eq('id', user.id).select('id');
-    if (rows.isEmpty) throw StateError('رکورد کاربر پیدا نشد یا اجازهٔ حذف وجود ندارد.');
+
+    final now = DateTime.now().toUtc().toIso8601String();
+
+    if (user.isStudentRecord) {
+      final rows = await Backend.client
+          .from('students')
+          .update({'is_deleted': true, 'deleted_at': now})
+          .eq('id', user.id)
+          .select('id');
+      if (rows.isEmpty) throw StateError('رکورد دانش‌آموز پیدا نشد یا اجازهٔ حذف ندارید.');
+      // حساب ورود متصل به این نوآموز هم غیرفعال شود
+      await Backend.client
+          .from('profiles')
+          .update({'is_deleted': true, 'deleted_at': now, 'active': false})
+          .eq('student_id', user.id);
+      return;
+    }
+
+    final profileId = user.profileId ?? user.id;
+    if (profileId == Backend.client.auth.currentUser?.id) {
+      throw StateError('نمی‌توانید حساب خودتان را حذف کنید.');
+    }
+    final rows = await Backend.client
+        .from('profiles')
+        .update({'is_deleted': true, 'deleted_at': now, 'active': false})
+        .eq('id', profileId)
+        .select('id');
+    if (rows.isEmpty) throw StateError('رکورد کاربر پیدا نشد یا اجازهٔ حذف ندارید.');
+  }
+
+  static Future<void> setActive(UserModel user, bool active) async {
+    if (!Backend.ready) throw StateError('اتصال سرور آماده نیست.');
+    if (!PermissionService.instance.can(Session.role, Perm.manageUsers)) {
+      throw StateError('شما اجازهٔ مدیریت کاربران را ندارید.');
+    }
+    final profileId = user.profileId;
+    if (profileId == null || profileId.isEmpty) {
+      throw StateError('برای این رکورد، حسابی در profiles پیدا نشد.');
+    }
+    final currentUserId = Backend.client.auth.currentUser?.id;
+    if (!active && profileId == currentUserId) {
+      throw StateError('نمی‌توانید حساب فعالی را که با آن وارد شده‌اید غیرفعال کنید.');
+    }
+    final rows = await Backend.client
+        .from('profiles')
+        .update({'active': active})
+        .eq('id', profileId)
+        .select('id');
+    if (rows.isEmpty) throw StateError('وضعیت حساب تغییر نکرد؛ مجوز سرور یا شناسه را بررسی کنید.');
   }
 }

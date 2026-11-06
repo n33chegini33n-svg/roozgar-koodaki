@@ -1,0 +1,91 @@
+﻿
+> lib\models\user_directory.dart:89:  static Future<List<UserModel>> _loadServer() async {
+  lib\models\user_directory.dart:90:    if (_cache != null) return _cache!;
+  lib\models\user_directory.dart:91:    await ServerDirectory.ensureLoaded();
+  lib\models\user_directory.dart:92:    final list = <UserModel>[];
+  lib\models\user_directory.dart:93:
+  lib\models\user_directory.dart:94:    // ۱. لیست نوآموزان ثبت‌شده در جدول students
+  lib\models\user_directory.dart:95:    for (final s in ServerDirectory.students) {
+  lib\models\user_directory.dart:96:      list.add(UserModel(id: s.id, name: s.name, role: 'student', className: 
+s.className, phone: ''));
+  lib\models\user_directory.dart:97:    }
+  lib\models\user_directory.dart:98:
+  lib\models\user_directory.dart:99:    try {
+  lib\models\user_directory.dart:100:      // ۲. لیست تمام کاربران ثبت‌شده در جدول profiles
+  lib\models\user_directory.dart:101:      final profiles = await Backend.client.from('profiles').select('id, 
+full_name, role, phone, grade, classes(name)');
+  lib\models\user_directory.dart:102:      final existingStudentNames = list.map((u) => u.name).toSet();
+  lib\models\user_directory.dart:103:
+  lib\models\user_directory.dart:104:      for (final p in profiles) {
+  lib\models\user_directory.dart:105:        final role = (p['role'] ?? 'parent').toString();
+  lib\models\user_directory.dart:106:        final name = (p['full_name'] ?? '').toString();
+  lib\models\user_directory.dart:107:        final phone = (p['phone'] ?? '').toString();
+  lib\models\user_directory.dart:108:        final c = p['classes'];
+  lib\models\user_directory.dart:109:        final className = normalizeClassName(c is Map && c['name'] is String ? 
+c['name'] as String : (p['grade'] ?? ''));
+  lib\models\user_directory.dart:110:
+  lib\models\user_directory.dart:111:        // اگر کاربر دانش‌آموز است و قبلاً از جدول students اضافه نشده، اضافه 
+می‌شود
+  lib\models\user_directory.dart:112:        if (role == 'student') {
+  lib\models\user_directory.dart:113:          if (!existingStudentNames.contains(name) && name.isNotEmpty) {
+  lib\models\user_directory.dart:114:            list.add(UserModel(id: p['id'] as String, name: name, role: 
+'student', className: className, phone: phone));
+  lib\models\user_directory.dart:115:          }
+  lib\models\user_directory.dart:116:        } else {
+  lib\models\user_directory.dart:117:          list.add(UserModel(id: p['id'] as String, name: name, role: role, 
+className: className, phone: phone));
+  lib\models\user_directory.dart:118:        }
+  lib\models\user_directory.dart:119:      }
+  lib\models\user_directory.dart:120:    } catch (_) {}
+  lib\models\user_directory.dart:121:    return _cache = list;
+  lib\models\user_directory.dart:122:  }
+  lib\models\user_directory.dart:123:
+  lib\models\user_directory.dart:124:  static Future<List<UserModel>> load() async {
+> lib\models\user_directory.dart:125:    if (Backend.ready) return _loadServer();
+  lib\models\user_directory.dart:126:    if (_cache != null) return _cache!;
+  lib\models\user_directory.dart:127:    final prefs = await SharedPreferences.getInstance();
+  lib\models\user_directory.dart:128:    final raw = prefs.getString(_key);
+  lib\models\user_directory.dart:129:    List<UserModel> list;
+  lib\models\user_directory.dart:130:    if (raw == null) {
+  lib\models\user_directory.dart:131:      list = _defaults();
+  lib\models\user_directory.dart:132:    } else {
+  lib\models\user_directory.dart:133:      try {
+  lib\models\user_directory.dart:134:        list = [
+  lib\models\user_directory.dart:135:          for (final e in jsonDecode(raw) as List) UserModel.fromJson(Map<String, 
+dynamic>.from(e as Map)),
+  lib\models\user_directory.dart:136:        ];
+  lib\models\user_directory.dart:137:      } catch (_) {
+  lib\models\user_directory.dart:138:        list = _defaults();
+  lib\models\user_directory.dart:139:      }
+  lib\models\user_directory.dart:140:      list = _merge(list);
+  lib\models\user_directory.dart:141:    }
+  lib\models\user_directory.dart:142:    _cache = list;
+  lib\models\user_directory.dart:143:    await _persist();
+  lib\models\user_directory.dart:144:    return list;
+  lib\models\user_directory.dart:145:  }
+  lib\models\user_directory.dart:146:
+  lib\models\user_directory.dart:147:  /// نسخه‌های قدیمی را کامل می‌کند: همهٔ نوآموزان نمونه باشند
+  lib\models\user_directory.dart:148:  static List<UserModel> _merge(List<UserModel> loaded) {
+  lib\models\user_directory.dart:149:    final result = List<UserModel>.from(loaded);
+  lib\models\user_directory.dart:150:    final names = result.where((u) => u.role == 'student').map((u) => 
+u.name).toSet();
+  lib\models\user_directory.dart:151:    for (final d in _defaults()) {
+  lib\models\user_directory.dart:152:      if (d.role == 'student' && !names.contains(d.name)) {
+  lib\models\user_directory.dart:153:        result.add(UserModel(id: 'S-${d.name.hashCode}', name: d.name, role: 
+d.role, className: d.className, phone: d.phone));
+  lib\models\user_directory.dart:154:      }
+  lib\models\user_directory.dart:155:    }
+  lib\models\user_directory.dart:156:    return result;
+  lib\models\user_directory.dart:157:  }
+  lib\models\user_directory.dart:158:
+  lib\models\user_directory.dart:159:  static Future<void> _persist() async {
+  lib\models\user_directory.dart:160:    final prefs = await SharedPreferences.getInstance();
+  lib\models\user_directory.dart:161:    await prefs.setString(_key, jsonEncode([for (final u in _cache ?? 
+<UserModel>[]) u.toJson()]));
+  lib\models\user_directory.dart:162:  }
+  lib\models\user_directory.dart:163:
+  lib\models\user_directory.dart:164:  static Future<void> save(List<UserModel> users) async {
+  lib\models\user_directory.dart:165:    if (Backend.ready) return; // در حالت سرور، تغییر کاربران از داشبورد Supabase 
+انجام می‌شود
+
+

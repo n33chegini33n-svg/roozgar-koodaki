@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/class_switcher.dart';
 import '../theme/app_colors.dart';
 import '../parent/parent_sections.dart' show SectionScaffold, softCard;
 import '../models/attendance_archive_model.dart';
@@ -258,6 +259,7 @@ class _TeacherAttendancePageState extends State<TeacherAttendancePage> {
           ? const Padding(padding: EdgeInsets.all(40), child: Center(child: CircularProgressIndicator()))
           : Column(
               children: [
+                ClassSwitcher(onChanged: _loadToday),
                 if (_recordedCount > 0)
                   Container(
                     width: double.infinity,

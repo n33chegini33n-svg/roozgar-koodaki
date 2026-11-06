@@ -5,6 +5,8 @@ import '../services/backend.dart';
 import '../services/backend_directory.dart';
 import '../services/user_admin_service.dart';
 import 'create_account_dialog.dart';
+import 'transfer_account_dialog.dart';
+import 'manager_archive_page.dart';
 import '../models/permissions.dart';
 import '../models/user_directory.dart';
 import '../models/school_classes.dart';
@@ -21,6 +23,8 @@ class _ManagerUserManagementPageState extends State<ManagerUserManagementPage> w
   late TabController _tabController;
   bool _isLoading = true;
   bool _hasAccess = true;
+  String? _loadError;
+  final Set<String> _activeBusyIds = {};
   List<UserModel> _users = [];
   String _searchQuery = '';
   String _selectedClassFilter = 'همه کلاس‌ها';
@@ -50,12 +54,21 @@ class _ManagerUserManagementPageState extends State<ManagerUserManagementPage> w
       });
       return;
     }
-    final list = await UserDirectory.load();
-    if (!mounted) return;
-    setState(() {
-      _users = List<UserModel>.from(list);
-      _isLoading = false;
-    });
+    try {
+      final list = await UserDirectory.load();
+      if (!mounted) return;
+      setState(() {
+        _users = List<UserModel>.from(list);
+        _loadError = null;
+        _isLoading = false;
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _loadError = 'بارگذاری کاربران انجام نشد: $e';
+        _isLoading = false;
+      });
+    }
   }
 
   Future<void> _saveUsers() => UserDirectory.save(_users);
@@ -66,6 +79,10 @@ class _ManagerUserManagementPageState extends State<ManagerUserManagementPage> w
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('شما اجازهٔ مدیریت کاربران را ندارید'), backgroundColor: Colors.red),
       );
+      return;
+    }
+    if (Backend.ready && editUser != null) {
+      _showServerEditDialog(editUser);
       return;
     }
     if (Backend.ready && editUser == null) {
@@ -96,10 +113,13 @@ class _ManagerUserManagementPageState extends State<ManagerUserManagementPage> w
 
     String selectedRole = editUser?.role ?? 'parent';
 
-    const validClasses = [...kClassNames, 'والدین و اولیاء', 'مدیریت'];
+    final availableClasses = Backend.ready && ServerDirectory.classList.isNotEmpty
+        ? ServerDirectory.classList.map((entry) => entry.key).toList()
+        : kClassNames;
+    final validClasses = [...availableClasses, 'والدین و اولیاء', 'مدیریت'];
     String selectedClass = (editUser != null && validClasses.contains(normalizeClassName(editUser.className)))
         ? normalizeClassName(editUser.className)
-        : kClassNames.first;
+        : availableClasses.first;
     final studentNames = _users.where((u) => u.role == 'student').map((u) => u.name).toList();
     String linkedStudent = (editUser != null && studentNames.contains(editUser.linkedStudent))
         ? editUser.linkedStudent
@@ -139,14 +159,6 @@ class _ManagerUserManagementPageState extends State<ManagerUserManagementPage> w
                           onChanged: (val) {
                             setDialogState(() {
                               selectedGrade = val!;
-                              final isGrade2OrHigher = selectedGrade.contains('دوم') ||
-                                  selectedGrade.contains('سوم') ||
-                                  selectedGrade.contains('چهارم') ||
-                                  selectedGrade.contains('پنجم') ||
-                                  selectedGrade.contains('ششم');
-                              if (!isGrade2OrHigher && selectedRole == 'student') {
-                                selectedRole = 'parent';
-                              }
                             });
                           },
                         ),
@@ -155,12 +167,6 @@ class _ManagerUserManagementPageState extends State<ManagerUserManagementPage> w
                     const SizedBox(height: 12),
                     Builder(
                       builder: (context) {
-                        final isGrade2OrHigher = selectedGrade.contains('دوم') ||
-                            selectedGrade.contains('سوم') ||
-                            selectedGrade.contains('چهارم') ||
-                            selectedGrade.contains('پنجم') ||
-                            selectedGrade.contains('ششم');
-
                         return InputDecorator(
                           decoration: const InputDecoration(labelText: 'نقش کاربر', border: OutlineInputBorder()),
                           child: DropdownButtonHideUnderline(
@@ -169,13 +175,16 @@ class _ManagerUserManagementPageState extends State<ManagerUserManagementPage> w
                               isDense: true,
                               isExpanded: true,
                               items: [
-                                if (isGrade2OrHigher || editUser?.role == 'student')
-                                  const DropdownMenuItem(value: 'student', child: Text('دانش‌آموز (حساب مستقل) 🎒')),
+                                const DropdownMenuItem(value: 'student', child: Text('دانش‌آموز (حساب مستقل) 🎒')),
                                 const DropdownMenuItem(value: 'parent', child: Text('اولیاء / والدین 👨‍👩‍👦')),
                                 const DropdownMenuItem(value: 'teacher', child: Text('مربی / معلم 👩‍🏫')),
                                 const DropdownMenuItem(value: 'deputy', child: Text('معاون / ناظم 🧑‍💼')),
+                                if (editUser?.role == 'manager' || Session.role == AppRole.admin)
+                                  const DropdownMenuItem(value: 'manager', child: Text('مدیر')),
+                                if (editUser?.role == 'admin')
+                                  const DropdownMenuItem(value: 'admin', child: Text('ادمین سیستم')),
                               ],
-                              onChanged: Backend.ready && editUser?.role == 'student'
+                                  onChanged: Backend.ready && editUser?.isStudentRecord == true
                                   ? null
                                   : (val) => setDialogState(() => selectedRole = val!),
                             ),
@@ -192,7 +201,7 @@ class _ManagerUserManagementPageState extends State<ManagerUserManagementPage> w
                           isDense: true,
                           isExpanded: true,
                           items: [
-                            for (final c in kClassNames) DropdownMenuItem(value: c, child: Text(classLabel(c))),
+                            for (final c in availableClasses) DropdownMenuItem(value: c, child: Text(classLabel(c))),
                             if (selectedRole != 'student') ...[
                               const DropdownMenuItem(value: 'والدین و اولیاء', child: Text('والدین و اولیاء')),
                               const DropdownMenuItem(value: 'مدیریت', child: Text('مدیریت')),
@@ -326,6 +335,175 @@ class _ManagerUserManagementPageState extends State<ManagerUserManagementPage> w
   }
 
 
+  void _showServerEditDialog(UserModel user) {
+    final nameCtrl = TextEditingController(text: user.name);
+    final phoneCtrl = TextEditingController(text: user.phone);
+    final classes = ServerDirectory.classList;
+    final isStudentRecord = user.isStudentRecord;
+    String role = user.role;
+    String? className = classes.any((c) => c.key == user.className) ? user.className : null;
+    final selectedIds = <String>{...user.classIds};
+    bool busy = false;
+    String? error;
+
+    final roles = <String, String>{
+      if (Session.role == AppRole.admin) 'manager': 'مدیر',
+      'deputy': 'معاون / ناظم',
+      'teacher': 'مربی / معلم',
+      'parent': 'ولی',
+      'student': 'دانش‌آموز',
+    };
+
+    showDialog<void>(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setD) {
+          Future<void> save() async {
+            setD(() {
+              busy = true;
+              error = null;
+            });
+            try {
+              await UserAdminService.updateUser(
+                previous: user,
+                name: nameCtrl.text,
+                phone: phoneCtrl.text,
+                role: role,
+                className: className ?? '',
+                classIds: selectedIds.toList(),
+              );
+              UserDirectory.clearCache();
+              ServerDirectory.reset();
+              if (ctx.mounted) Navigator.pop(ctx);
+              await _loadUsers();
+              if (mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('✅ اطلاعات کاربر ذخیره شد'), backgroundColor: Colors.green),
+                );
+              }
+            } catch (e) {
+              setD(() {
+                busy = false;
+                error = '$e'.replaceFirst('Bad state: ', '');
+              });
+            }
+          }
+
+          return Directionality(
+            textDirection: TextDirection.rtl,
+            child: AlertDialog(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              title: const Text('ویرایش مشخصات کاربر'),
+              content: SizedBox(
+                width: 420,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      TextField(
+                        controller: nameCtrl,
+                        decoration: const InputDecoration(
+                          labelText: 'نام و نام خانوادگی',
+                          border: OutlineInputBorder(),
+                          isDense: true,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      TextField(
+                        controller: phoneCtrl,
+                        keyboardType: TextInputType.phone,
+                        textDirection: TextDirection.ltr,
+                        decoration: const InputDecoration(
+                          labelText: 'شمارهٔ همراه',
+                          border: OutlineInputBorder(),
+                          isDense: true,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      DropdownButtonFormField<String>(
+                        initialValue: roles.containsKey(role) ? role : null,
+                        decoration: const InputDecoration(
+                          labelText: 'نقش کاربر',
+                          border: OutlineInputBorder(),
+                          isDense: true,
+                        ),
+                        items: [
+                          for (final e in roles.entries) DropdownMenuItem(value: e.key, child: Text(e.value)),
+                        ],
+                        onChanged: (isStudentRecord || busy) ? null : (v) => setD(() => role = v ?? role),
+                      ),
+                      const SizedBox(height: 10),
+                      if (role == 'teacher' || role == 'deputy') ...[
+                        const Align(
+                          alignment: Alignment.centerRight,
+                          child: Text('کلاس‌های این کادر (می‌توانید چند کلاس انتخاب کنید):',
+                              style: TextStyle(fontWeight: FontWeight.bold)),
+                        ),
+                        ConstrainedBox(
+                          constraints: const BoxConstraints(maxHeight: 220),
+                          child: ListView(
+                            shrinkWrap: true,
+                            children: [
+                              for (final c in classes)
+                                CheckboxListTile(
+                                  dense: true,
+                                  value: selectedIds.contains(c.value),
+                                  title: Text(c.key, style: const TextStyle(fontSize: 13)),
+                                  onChanged: busy
+                                      ? null
+                                      : (v) => setD(() => v == true ? selectedIds.add(c.value) : selectedIds.remove(c.value)),
+                                ),
+                            ],
+                          ),
+                        ),
+                      ],
+                      if (role != 'teacher' && role != 'deputy')
+                      DropdownButtonFormField<String>(
+                        initialValue: className,
+                        isExpanded: true,
+                        decoration: const InputDecoration(
+                          labelText: 'کلاس / بخش',
+                          border: OutlineInputBorder(),
+                          isDense: true,
+                        ),
+                        items: [
+                          for (final c in classes)
+                            DropdownMenuItem(value: c.key, child: Text(c.key, overflow: TextOverflow.ellipsis)),
+                        ],
+                        onChanged: busy ? null : (v) => setD(() => className = v),
+                      ),
+                      if (error != null) ...[
+                        const SizedBox(height: 8),
+                        Text(error!, style: const TextStyle(color: Color(0xFFB71C1C), fontSize: 12)),
+                      ],
+                    ],
+                  ),
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: busy ? null : () => Navigator.pop(ctx),
+                  child: const Text('انصراف'),
+                ),
+                FilledButton(
+                  onPressed: busy ? null : save,
+                  child: busy
+                      ? const SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                        )
+                      : const Text('ذخیره'),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+
   Future<void> _deleteUser(String id) async {
     if (!PermissionService.instance.can(Session.role, Perm.manageUsers)) return;
     final user = _users.where((item) => item.id == id).firstOrNull;
@@ -384,6 +562,36 @@ class _ManagerUserManagementPageState extends State<ManagerUserManagementPage> w
     }
   }
 
+  Future<void> _setUserActive(UserModel user, bool active) async {
+    final busyKey = user.profileId ?? user.id;
+    if (_activeBusyIds.contains(busyKey)) return;
+    setState(() => _activeBusyIds.add(busyKey));
+    var updated = false;
+    try {
+      await UserAdminService.setActive(user, active);
+      updated = true;
+      UserDirectory.clearCache();
+      await _loadUsers();
+      await AuditLogService.log(
+        actor: Session.userName,
+        role: Session.role.label,
+        action: active ? 'فعال‌سازی حساب کاربر' : 'غیرفعال‌سازی حساب کاربر',
+        details: 'شناسهٔ پروفایل: $busyKey',
+      );
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(updated ? 'وضعیت حساب تغییر کرد، اما ثبت گزارش انجام نشد: $e' : 'تغییر وضعیت حساب انجام نشد: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _activeBusyIds.remove(busyKey));
+    }
+  }
+
   List<UserModel> _filterUserList(List<UserModel> baseList) {
     return baseList.where((u) {
       if (_selectedClassFilter != 'همه کلاس‌ها' && u.className != _selectedClassFilter) {
@@ -430,6 +638,18 @@ class _ManagerUserManagementPageState extends State<ManagerUserManagementPage> w
           ],
         ),
         actions: [
+          IconButton(
+            tooltip: 'بایگانی',
+            icon: const Icon(Icons.archive_rounded),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const ManagerArchivePage()),
+            ).then((_) {
+              UserDirectory.clearCache();
+              ServerDirectory.reset();
+              _loadUsers();
+            }),
+          ),
           IconButton(
             icon: const Icon(Icons.table_chart_rounded),
             tooltip: 'خروجی اکسل',
@@ -481,6 +701,8 @@ class _ManagerUserManagementPageState extends State<ManagerUserManagementPage> w
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
+          : _loadError != null
+              ? Center(child: Padding(padding: const EdgeInsets.all(24), child: Text(_loadError!, textAlign: TextAlign.center)))
           : Column(
               children: [
                 _buildStatsAndSearchHeader(
@@ -647,12 +869,47 @@ class _ManagerUserManagementPageState extends State<ManagerUserManagementPage> w
               children: [
                 const SizedBox(height: 4),
                 Text(u.role == 'parent' && u.linkedStudent.isNotEmpty ? 'ولی ${u.linkedStudent}' : 'بخش/کلاس: ${u.className}'),
-                Text('تلفن: ${u.phone}', style: const TextStyle(fontSize: 12, color: Colors.black54)),
+                if (u.phone.isNotEmpty) Text('تلفن: ${u.phone}', style: const TextStyle(fontSize: 12, color: Colors.black54)),
+                if (u.profileId != null)
+                  Text(u.active == true ? 'حساب فعال' : 'حساب غیرفعال',
+                      style: TextStyle(fontSize: 11, color: u.active == true ? Colors.green.shade700 : Colors.red.shade700)),
+                if (u.relatedNames.isNotEmpty)
+                  Text(
+                    u.role == 'parent' ? 'فرزند: ${u.relatedNames.join('، ')}' : 'ولی: ${u.relatedNames.join('، ')}',
+                    style: const TextStyle(fontSize: 11, color: Colors.black38),
+                  ),
+                if (u.role == 'student' && u.profileId == null)
+                  const Text('حساب ورود متصل نیست', style: TextStyle(fontSize: 11, color: Colors.black45)),
               ],
             ),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
+                if (u.profileId != null)
+                  SizedBox(
+                    width: 54,
+                    child: _activeBusyIds.contains(u.profileId)
+                        ? const Padding(
+                            padding: EdgeInsets.all(16),
+                            child: SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2)),
+                          )
+                        : Switch.adaptive(
+                            value: u.active == true,
+                            onChanged: (value) => _setUserActive(u, value),
+                          ),
+                  ),
+                if (u.profileId != null && u.active == true)
+                  IconButton(
+                    icon: const Icon(Icons.swap_horiz_rounded, color: Colors.orange),
+                    tooltip: 'انتقال حساب',
+                    onPressed: () => showTransferAccountDialog(context, u).then((changed) {
+                      if (changed) {
+                        UserDirectory.clearCache();
+                        ServerDirectory.reset();
+                        _loadUsers();
+                      }
+                    }),
+                  ),
                 IconButton(
                   icon: const Icon(Icons.edit_rounded, color: Colors.blue),
                   tooltip: 'ویرایش مشخصات',

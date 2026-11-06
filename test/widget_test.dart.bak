@@ -1,0 +1,25 @@
+import 'package:flutter_test/flutter_test.dart';
+import 'package:rooozgarkooodaki/main.dart';
+
+void main() {
+<<<<<<< HEAD
+  testWidgets('Welcome screen renders the real app entry point', (WidgetTester tester) async {
+    await tester.pumpWidget(const RoozgarKoodakiApp());
+
+    expect(find.text('با هم می‌درخشیم'), findsOneWidget);
+    expect(
+      find.text('شمارهٔ موبایلی که مدرسه برای شما ثبت کرده را وارد کنید'),
+      findsOneWidget,
+    );
+    expect(find.text('ادامه'), findsOneWidget);
+=======
+  testWidgets('RoozgarKoodakiApp smoke test', (WidgetTester tester) async {
+    // Build our app and trigger a frame.
+    await tester.pumpWidget(const RoozgarKoodakiApp());
+
+    // Verify that MaterialApp renders with welcome page text.
+    expect(find.byType(MaterialApp), findsOneWidget);
+    expect(find.text('با هم می‌درخشیم'), findsOneWidget);
+>>>>>>> 0bdab13a7265096d3006e8f41bd1aa84039fd7e3
+  });
+}

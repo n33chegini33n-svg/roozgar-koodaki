@@ -1,0 +1,72 @@
+[1mdiff --git a/AGENTS.md b/AGENTS.md[m
+[1mindex 20933b2..c6f97e3 100644[m
+[1m--- a/AGENTS.md[m
+[1m+++ b/AGENTS.md[m
+[36m@@ -12,4 +12,8 @@[m
+ ## قوانین کدنویسی[m
+ 1. تمامی ارتباطات با سوپابیس باید در لایه سرویس (Service Layer) بمانند و مستقیم در UI فراخوانی نشوند.[m
+ 2. کلیدهای حساس (Supabase URL و Anon Key) باید از طریق فایل `.env` خوانده شوند و هرگز در کد Hardcode نشوند.[m
+[31m-3. تمامی مدل‌های داده (Data Models) باید متدهای `fromJson` و `toJson` داشته باشند.[m
+\ No newline at end of file[m
+[32m+[m[32m3. تمامی مدل‌های داده (Data Models) باید متدهای `fromJson` و `toJson` داشته باشند.[m
+[32m+[m[32m4. ## Supabase Database Workflow[m
+[32m+[m[32m- Never alter the Supabase database manually via the web dashboard SQL Editor.[m
+[32m+[m[32m- Always create database schema changes, tables, and policies as migration files inside `supabase/migrations/`.[m
+[32m+[m[32m- Apply changes using the terminal command: `supabase db push`.[m
+\ No newline at end of file[m
+[1mdiff --git a/pubspec.lock b/pubspec.lock[m
+[1mindex 19a4db2..7aa66e5 100644[m
+[1m--- a/pubspec.lock[m
+[1m+++ b/pubspec.lock[m
+[36m@@ -396,10 +396,10 @@[m [mpackages:[m
+     dependency: transitive[m
+     description:[m
+       name: matcher[m
+[31m-      sha256: "12956d0ad8390bbcc63ca2e1469c0619946ccb52809807067a7020d57e647aa6"[m
+[32m+[m[32m      sha256: "31bd099b47c10cd1aeb55146a2d46ce0277630ecef3f7dae54ad7873f36696cd"[m
+       url: "https://pub.dev"[m
+     source: hosted[m
+[31m-    version: "0.12.18"[m
+[32m+[m[32m    version: "0.12.20"[m
+   material_color_utilities:[m
+     dependency: transitive[m
+     description:[m
+[36m@@ -412,10 +412,10 @@[m [mpackages:[m
+     dependency: transitive[m
+     description:[m
+       name: meta[m
+[31m-      sha256: "23f08335362185a5ea2ad3a4e597f1375e78bce8a040df5c600c8d3552ef2394"[m
+[32m+[m[32m      sha256: "307249ce4ff29d58a18e97f6345f539382eb9c9c29ecda628900f31de0443dd9"[m
+       url: "https://pub.dev"[m
+     source: hosted[m
+[31m-    version: "1.17.0"[m
+[32m+[m[32m    version: "1.19.0"[m
+   mime:[m
+     dependency: transitive[m
+     description:[m
+[36m@@ -697,10 +697,10 @@[m [mpackages:[m
+     dependency: transitive[m
+     description:[m
+       name: test_api[m
+[31m-      sha256: "93167629bfc610f71560ab9312acdda4959de4df6fac7492c89ff0d3886f6636"[m
+[32m+[m[32m      sha256: "2a122cbe059f8b610d3a5415f42e255b6c17b1f21eee1d960f31080237fb4f11"[m
+       url: "https://pub.dev"[m
+     source: hosted[m
+[31m-    version: "0.7.9"[m
+[32m+[m[32m    version: "0.7.12"[m
+   typed_data:[m
+     dependency: transitive[m
+     description:[m
+[36m@@ -777,10 +777,10 @@[m [mpackages:[m
+     dependency: transitive[m
+     description:[m
+       name: vector_math[m
+[31m-      sha256: d530bd74fea330e6e364cda7a85019c434070188383e1cd8d9777ee586914c5b[m
+[32m+[m[32m      sha256: "92b9910f66ed1057fd4da7b040ae7c74cafacf885bdc81be496928d5049b032d"[m
+       url: "https://pub.dev"[m
+     source: hosted[m
+[31m-    version: "2.2.0"[m
+[32m+[m[32m    version: "2.4.3"[m
+   vm_service:[m
+     dependency: transitive[m
+     description:[m

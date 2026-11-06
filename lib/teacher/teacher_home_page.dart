@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/class_switcher.dart';
 import '../theme/app_colors.dart';
 import '../parent/parent_sections.dart';
 import 'teacher_sections.dart';
@@ -17,7 +18,7 @@ import '../widgets/plans_view.dart';
 import '../models/school_classes.dart';
 import '../pages/private_message_page.dart';
 import '../pages/report_card_pages.dart';
-import '../pages/video_meetings_page.dart';
+import '../pages/purchase_form_page.dart';
 
 class _TSection {
   final String title;
@@ -73,6 +74,12 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
     Navigator.push(context, MaterialPageRoute(builder: (_) => page)).then((_) => _load());
   }
 
+  /// نام همهٔ کلاس‌های مربی؛ اگر فهرست خالی بود (حالت نمایشی)، کلاس اصلی نشان داده می‌شود
+  String _classesLabel() {
+    if (Session.classNames.isEmpty) return Session.className;
+    return Session.classNames.join('، ');
+  }
+
   @override
   Widget build(BuildContext context) {
     final allSections = <_TSection>[
@@ -87,10 +94,10 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
       _TSection('گزارش کلاس', 'scene_report.png', const Color(0xFFFFE8E0), (c) => _push(c, const ClassReportPage())),
       _TSection('جعبه ابزار', 'ill_toolbox.png', const Color(0xFFEDE7F6),
           (c) => _push(c, ToolboxPage(classTools: widget.toolkitBuilder))),
-      _TSection('کلاس تصویری', 'scene_messages.png', const Color(0xFFE3F2FD),
-          (c) => _push(c, const VideoMeetingsPage(role: AppRole.teacher))),
       _TSection('بخشنامه‌ها', 'ill_circular_rules.png', const Color(0xFFFFF3CD), (c) => _push(c, const BulletinPage(role: AppRole.teacher))),
       _TSection('منو و حساسیت‌ها', 'ill_nutrition_health.png', const Color(0xFFE8F5E9), (c) => _push(c, const TeacherNutritionPage())),
+      _TSection('فرم درخواست کالا و خدمات', 'ill_requests.png', const Color(0xFFE3F2FD), (c) => _push(c, const PurchaseFormPage())),
+      _TSection('خریدهای من', 'ill_requests.png', const Color(0xFFE8F5E9), (c) => _push(c, const PurchaseBuyingPage(managerView: false))),
       _TSection('برنامه‌های آموزشی', 'ill_educational_planning.png', const Color(0xFFEDE7F6), (c) => _push(c, const PlansPage(role: AppRole.teacher)), Perm.viewPlans),
     ];
     final perms = PermissionService.instance;
@@ -116,6 +123,7 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const LiveClockBanner(accent: Color(0xFF2BB38E)),
+                      ClassSwitcher(onChanged: _load),
                       // برخلاف صفحهٔ اولیا: اول آمار، بعد کارت معلم (در حالت عریض جای دو بخش عوض است)
                       if (wide)
                         IntrinsicHeight(
@@ -204,7 +212,7 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
               children: [
                 Text(_teacherName(), style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 4),
-                Text('مربی ${Session.className}', style: const TextStyle(color: Color(0xFFE3F7F0))),
+                Text('مربی ${_classesLabel()}', style: const TextStyle(color: Color(0xFFE3F7F0))),
               ],
             ),
           ),

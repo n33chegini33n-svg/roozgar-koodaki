@@ -63,8 +63,8 @@ class _FloatingStationeryState extends State<FloatingStationery> with SingleTick
 
   /// ناحیهٔ خورشید: وسط افقی، از حدود نیمهٔ ارتفاع به پایین
   Rect _sunRect(double w, double h) {
-    final half = math.max(w * 0.2, h * 0.4);
-    return Rect.fromLTRB(w / 2 - half, h * 0.42, w / 2 + half, h + 200);
+    final half = math.max(w * 0.22, h * 0.3); // عرض ناحیهٔ خورشید
+    return Rect.fromLTRB(w / 2 - half, h * 0.45, w / 2 + half, h + 200);
   }
 
   void _init(double w, double h) {

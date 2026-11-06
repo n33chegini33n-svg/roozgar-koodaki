@@ -8,7 +8,7 @@ import '../services/backend.dart';
 import '../services/backend_directory.dart';
 
 const List<String> kMenuDays = ['شنبه', 'یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنجشنبه'];
-const List<String> kMeals = ['صبحانه', 'میان‌وعده', 'ناهار'];
+const List<String> kMeals = ['میان‌وعده', 'ناهار'];
 const List<String> kSeverities = ['خفیف', 'متوسط', 'شدید'];
 
 /// حساسیت یا محدودیت غذایی یک نوآموز (اطلاعات سلامت: فقط برای افراد مجاز)

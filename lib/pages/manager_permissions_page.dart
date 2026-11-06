@@ -5,7 +5,6 @@ import '../models/permissions.dart';
 /// صفحهٔ تنظیم سطح دسترسی نقش‌ها (فقط مدیر)
 class ManagerPermissionsPage extends StatelessWidget {
   const ManagerPermissionsPage({super.key});
-
   static const Color _navy = Color(0xFF01579B);
 
   Widget _scopeDropdown(PermissionService service, AppRole role, Perm perm, List<Scope> options) {
@@ -26,9 +25,16 @@ class ManagerPermissionsPage extends StatelessWidget {
             for (final s in options)
               DropdownMenuItem(value: s, child: Text(s.labelFor(role), style: const TextStyle(fontSize: 13))),
           ],
-          onChanged: service.allowsLocalOverrides ? (v) {
-            if (v != null) service.setScope(role, perm, v);
-          } : null,
+          onChanged: service.canEdit
+              ? (v) async {
+                  if (v == null) return;
+                  try {
+                    await service.setScope(role, perm, v);
+                  } catch (e) {
+                    // خطا در ذخیرهٔ سرور
+                  }
+                }
+              : null,
         ),
       ),
     );
@@ -38,7 +44,6 @@ class ManagerPermissionsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final service = PermissionService.instance;
     const groups = ['آموزشی', 'نظارت', 'مدیریتی'];
-
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
@@ -51,23 +56,40 @@ class ManagerPermissionsPage extends StatelessWidget {
             IconButton(
               tooltip: 'بازگشت به پیش‌فرض',
               icon: const Icon(Icons.restore_rounded),
-              onPressed: service.allowsLocalOverrides ? () async {
-                final ok = await showDialog<bool>(
-                  context: context,
-                  builder: (ctx) => Directionality(
-                    textDirection: TextDirection.rtl,
-                    child: AlertDialog(
-                      title: const Text('بازگشت به پیش‌فرض؟'),
-                      content: const Text('همهٔ تغییرات دسترسی معاون و مربی به حالت اولیه برمی‌گردد.'),
-                      actions: [
-                        TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('انصراف')),
-                        FilledButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('بازگردانی')),
-                      ],
-                    ),
-                  ),
-                );
-                if (ok == true) await service.resetToDefaults();
-              } : null,
+              onPressed: service.canEdit
+                  ? () async {
+                      final ok = await showDialog<bool>(
+                        context: context,
+                        builder: (ctx) => Directionality(
+                          textDirection: TextDirection.rtl,
+                          child: AlertDialog(
+                            title: const Text('بازگشت به پیش‌فرض؟'),
+                            content: const Text('همهٔ تغییرات دسترسی معاون و مربی به حالت اولیه برمی‌گردد.'),
+                            actions: [
+                              TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('انصراف')),
+                              FilledButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('بازگردانی')),
+                            ],
+                          ),
+                        ),
+                      );
+                      if (ok == true) {
+                        try {
+                          await service.resetToDefaults();
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('دسترسی‌ها به پیش‌فرض برگشت'), backgroundColor: Colors.green),
+                            );
+                          }
+                        } catch (e) {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('ذخیره روی سرور انجام نشد: $e'), backgroundColor: Colors.red),
+                            );
+                          }
+                        }
+                      }
+                    }
+                  : null,
             ),
           ],
         ),
@@ -82,6 +104,19 @@ class ManagerPermissionsPage extends StatelessWidget {
                   title: 'سطح دسترسی‌ها',
                   subtitle: 'تعیین کنید هر نقش چه کارهایی را و روی چه دامنه‌ای انجام دهد.',
                 ),
+                if (!service.canEdit)
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 12),
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFFF3E0),
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    child: const Text(
+                      'در این حالت فقط مشاهده ممکن است. برای ویرایش، به سرور وصل شوید یا حالت دمو فعال باشد.',
+                      style: TextStyle(fontSize: 13),
+                    ),
+                  ),
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
@@ -97,7 +132,7 @@ class ManagerPermissionsPage extends StatelessWidget {
                         child: Text(
                           'مدیر همیشه دسترسی کامل دارد. ولی فقط به اطلاعات فرزند خودش دسترسی دارد و قابل تغییر نیست. '
                           'برای هر مورد، «دامنه» را تعیین کنید: ندارد، کلاس خودش، یا همه. '
-                          'هر تغییر در «گزارش تغییرات» ثبت می‌شود.',
+                          'در حالت سرور تغییرات روی جدول role_permissions ذخیره می‌شود و در گزارش تغییرات هم ثبت می‌گردد.',
                           style: TextStyle(fontSize: 13),
                         ),
                       ),
