@@ -53,3 +53,4 @@ app.*.map.json
 
 supabase/.temp/
 .aider*
+graphify-out/cache/
