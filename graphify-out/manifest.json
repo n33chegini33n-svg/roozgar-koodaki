@@ -1,0 +1,4499 @@
+{
+  "analysis_options.yaml": {
+    "mtime": 1791018213.6936836,
+    "seen": 1793193311.0620303,
+    "ast_hash": "8aed3c6ace615bda5088b9f5ba918e76",
+    "semantic_hash": "8aed3c6ace615bda5088b9f5ba918e76"
+  },
+  "android/app/build.gradle.kts": {
+    "mtime": 1791018213.723638,
+    "seen": 1793193311.0630302,
+    "ast_hash": "1fc02ffa1f6dfcf4523213967cee7943",
+    "semantic_hash": "1fc02ffa1f6dfcf4523213967cee7943"
+  },
+  "android/app/src/main/kotlin/com/example/rooozgarkooodaki/MainActivity.kt": {
+    "mtime": 1791018213.7406285,
+    "seen": 1793193311.0630302,
+    "ast_hash": "931294eb10f530a6e6def6ba98d1e640",
+    "semantic_hash": "931294eb10f530a6e6def6ba98d1e640"
+  },
+  "android/build.gradle.kts": {
+    "mtime": 1791018213.7545118,
+    "seen": 1793193311.0641413,
+    "ast_hash": "803fe22651fbe96ed401eb0b66a492d1",
+    "semantic_hash": "803fe22651fbe96ed401eb0b66a492d1"
+  },
+  "android/settings.gradle.kts": {
+    "mtime": 1791018213.9443948,
+    "seen": 1793193311.0641687,
+    "ast_hash": "a34513cd87cef855195771f6a457a218",
+    "semantic_hash": "a34513cd87cef855195771f6a457a218"
+  },
+  "apply_cleanup.ps1": {
+    "mtime": 1792869091.7918756,
+    "seen": 1793193311.0651462,
+    "ast_hash": "5959261499389a50bbdce6c0d48b43c1",
+    "semantic_hash": "5959261499389a50bbdce6c0d48b43c1"
+  },
+  "apply_fix.py": {
+    "mtime": 1793186794.949412,
+    "seen": 1793193311.0651462,
+    "ast_hash": "53824bb1f9b4ab3d66bdfef873721581",
+    "semantic_hash": "53824bb1f9b4ab3d66bdfef873721581"
+  },
+  "apply_fix2.py": {
+    "mtime": 1793188635.1066363,
+    "seen": 1793193311.0661445,
+    "ast_hash": "3072d7d582370855c9d2dc73642ce4d4",
+    "semantic_hash": "3072d7d582370855c9d2dc73642ce4d4"
+  },
+  "apply_macos.ps1": {
+    "mtime": 1792869292.9580092,
+    "seen": 1793193311.0661445,
+    "ast_hash": "9b3648b9fc30e569d8dc0412f1a10827",
+    "semantic_hash": "9b3648b9fc30e569d8dc0412f1a10827"
+  },
+  "apply_padding.ps1": {
+    "mtime": 1793031556.0,
+    "seen": 1793193311.0671437,
+    "ast_hash": "234803cfc464db65daeae6f2a145628a",
+    "semantic_hash": "234803cfc464db65daeae6f2a145628a"
+  },
+  "apply_undo_system.py": {
+    "mtime": 1793191312.445464,
+    "seen": 1793193311.0671437,
+    "ast_hash": "3fe1e9569cca06d193a0cb366392eabf",
+    "semantic_hash": "3fe1e9569cca06d193a0cb366392eabf"
+  },
+  "apply_welcome.ps1": {
+    "mtime": 1792980836.0,
+    "seen": 1793193311.0681436,
+    "ast_hash": "cc90023138fa164fc184089411c9a5c1",
+    "semantic_hash": "cc90023138fa164fc184089411c9a5c1"
+  },
+  "fix_backend/fix_backend.ps1": {
+    "mtime": 1792559726.0,
+    "seen": 1793193311.0681436,
+    "ast_hash": "e28488bfc2cf2be96bc681612698d776",
+    "semantic_hash": "e28488bfc2cf2be96bc681612698d776"
+  },
+  "fix_grade.ps1": {
+    "mtime": 1793135336.180218,
+    "seen": 1793193311.0691426,
+    "ast_hash": "5d39188b06de92fd980ddecf5985e5b6",
+    "semantic_hash": "5d39188b06de92fd980ddecf5985e5b6"
+  },
+  "fix_otp.ps1": {
+    "mtime": 1792560296.9935267,
+    "seen": 1793193311.0691426,
+    "ast_hash": "d1e6a0c32f42d19b272900731cd37220",
+    "semantic_hash": "d1e6a0c32f42d19b272900731cd37220"
+  },
+  "fix_permissions/fix_permissions.ps1": {
+    "mtime": 1792558744.0,
+    "seen": 1793193311.0701444,
+    "ast_hash": "f8fbf9cb161c2fe4b2e38cd2eacf8ec2",
+    "semantic_hash": "f8fbf9cb161c2fe4b2e38cd2eacf8ec2"
+  },
+  "fix_recycle_bin.ps1": {
+    "mtime": 1793192690.8744736,
+    "seen": 1793193311.0701444,
+    "ast_hash": "2929850169ee7ecb9bf1d18002d040a0",
+    "semantic_hash": "2929850169ee7ecb9bf1d18002d040a0"
+  },
+  "fix_reg_undo.py": {
+    "mtime": 1793192557.3397675,
+    "seen": 1793193311.0711415,
+    "ast_hash": "6f22d9a039186e9b4c123e9e321a9601",
+    "semantic_hash": "6f22d9a039186e9b4c123e9e321a9601"
+  },
+  "fix_widget_test.ps1": {
+    "mtime": 1792559250.0,
+    "seen": 1793193311.0711415,
+    "ast_hash": "5023fbee29c016dcefd6d24b78355377",
+    "semantic_hash": "5023fbee29c016dcefd6d24b78355377"
+  },
+  "ios/RunnerTests/RunnerTests.swift": {
+    "mtime": 1791018214.2932842,
+    "seen": 1793193311.0721407,
+    "ast_hash": "24e5d095048eb86c30423f4e04b6e57b",
+    "semantic_hash": "24e5d095048eb86c30423f4e04b6e57b"
+  },
+  "ios/Runner/AppDelegate.swift": {
+    "mtime": 1789762033.8362515,
+    "seen": 1793193311.0721407,
+    "ast_hash": "9e1de9c329a3fe4931876063de95132b",
+    "semantic_hash": "9e1de9c329a3fe4931876063de95132b"
+  },
+  "ios/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json": {
+    "mtime": 1789762033.8377125,
+    "seen": 1793193311.0731401,
+    "ast_hash": "31a08e429403e265cabfb31b3d65f049",
+    "semantic_hash": "31a08e429403e265cabfb31b3d65f049",
+    "ast_empty": true
+  },
+  "ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json": {
+    "mtime": 1789762033.845057,
+    "seen": 1793193311.0731401,
+    "ast_hash": "b9e927ac17345f2d5f052fe68a3487f9",
+    "semantic_hash": "b9e927ac17345f2d5f052fe68a3487f9",
+    "ast_empty": true
+  },
+  "ios/Runner/Runner-Bridging-Header.h": {
+    "mtime": 1789762033.849437,
+    "seen": 1793193311.0731401,
+    "ast_hash": "7ad7b5cea096132de13ba526b2b9efbe",
+    "semantic_hash": "7ad7b5cea096132de13ba526b2b9efbe"
+  },
+  "ios/Runner/SceneDelegate.swift": {
+    "mtime": 1789762033.849437,
+    "seen": 1793193311.0731401,
+    "ast_hash": "0c3e86af131f6a9e547c80b5ed058914",
+    "semantic_hash": "0c3e86af131f6a9e547c80b5ed058914"
+  },
+  "lib/auth/auth_types.dart": {
+    "mtime": 1791974467.0,
+    "seen": 1793193311.0741394,
+    "ast_hash": "23905c9b151581df68f4014699c6f738",
+    "semantic_hash": "23905c9b151581df68f4014699c6f738"
+  },
+  "lib/auth/otp_page.dart": {
+    "mtime": 1792716347.8786654,
+    "seen": 1793193311.0741394,
+    "ast_hash": "bc9b972ffae9fff284f3423b51f3c4a1",
+    "semantic_hash": "bc9b972ffae9fff284f3423b51f3c4a1"
+  },
+  "lib/auth/welcome_page.dart": {
+    "mtime": 1793190056.234658,
+    "seen": 1793193311.0751386,
+    "ast_hash": "89393bc6e8702ace50873706c5c6a82b",
+    "semantic_hash": "89393bc6e8702ace50873706c5c6a82b"
+  },
+  "lib/main.dart": {
+    "mtime": 1793181833.174144,
+    "seen": 1793193311.0751386,
+    "ast_hash": "255af12c95ae504d562570a260cfda33",
+    "semantic_hash": "255af12c95ae504d562570a260cfda33"
+  },
+  "lib/models/announcement_model.dart": {
+    "mtime": 1792782269.7918136,
+    "seen": 1793193311.076138,
+    "ast_hash": "f86524ce00b55c185c3fa27b7d75a9a1",
+    "semantic_hash": "f86524ce00b55c185c3fa27b7d75a9a1"
+  },
+  "lib/models/app_settings_model.dart": {
+    "mtime": 1791974467.0,
+    "seen": 1793193311.076138,
+    "ast_hash": "db625c04f771bb390d6ba3c52b235096",
+    "semantic_hash": "db625c04f771bb390d6ba3c52b235096"
+  },
+  "lib/models/attendance_archive_model.dart": {
+    "mtime": 1793009399.2537167,
+    "seen": 1793193311.0771372,
+    "ast_hash": "f1a24670a24ffe12a078da61a34a4215",
+    "semantic_hash": "f1a24670a24ffe12a078da61a34a4215"
+  },
+  "lib/models/attendance_edit_request_model.dart": {
+    "mtime": 1791974467.0,
+    "seen": 1793193311.0771372,
+    "ast_hash": "92ac2506c2c09a3cd8dfd726a8a14566",
+    "semantic_hash": "92ac2506c2c09a3cd8dfd726a8a14566"
+  },
+  "lib/models/audit_log_model.dart": {
+    "mtime": 1791974467.0,
+    "seen": 1793193311.0781372,
+    "ast_hash": "dc4bc6708e73441ebc836caaad3b00b4",
+    "semantic_hash": "dc4bc6708e73441ebc836caaad3b00b4"
+  },
+  "lib/models/educational_plan_model.dart": {
+    "mtime": 1791974467.0,
+    "seen": 1793193311.0781372,
+    "ast_hash": "399544110f1dae8fbdb47efa39e4d671",
+    "semantic_hash": "399544110f1dae8fbdb47efa39e4d671"
+  },
+  "lib/models/evaluation_feedback_model.dart": {
+    "mtime": 1793015106.4821823,
+    "seen": 1793193311.0791366,
+    "ast_hash": "3d18167bdd190683088751aad65d6e63",
+    "semantic_hash": "3d18167bdd190683088751aad65d6e63"
+  },
+  "lib/models/homework_model.dart": {
+    "mtime": 1791974467.0,
+    "seen": 1793193311.0801363,
+    "ast_hash": "0872e43b467e1af6f6b442e31522f49f",
+    "semantic_hash": "0872e43b467e1af6f6b442e31522f49f"
+  },
+  "lib/models/nutrition_model.dart": {
+    "mtime": 1792760845.0726209,
+    "seen": 1793193311.0811362,
+    "ast_hash": "15faf9cd5a1517eff2b1203bf84b0128",
+    "semantic_hash": "15faf9cd5a1517eff2b1203bf84b0128"
+  },
+  "lib/models/permissions.dart": {
+    "mtime": 1793116552.0,
+    "seen": 1793193311.0811362,
+    "ast_hash": "f602cb2c3227139829de0332ef28d32d",
+    "semantic_hash": "f602cb2c3227139829de0332ef28d32d"
+  },
+  "lib/models/points_model.dart": {
+    "mtime": 1791974467.0,
+    "seen": 1793193311.0821345,
+    "ast_hash": "8f09fd555595d0cd6f795a3c42123cc7",
+    "semantic_hash": "8f09fd555595d0cd6f795a3c42123cc7"
+  },
+  "lib/models/private_message_model.dart": {
+    "mtime": 1792877094.3775523,
+    "seen": 1793193311.0821345,
+    "ast_hash": "4bd8cf00d8424544236bf6851604c4c5",
+    "semantic_hash": "4bd8cf00d8424544236bf6851604c4c5"
+  },
+  "lib/models/registration_model.dart": {
+    "mtime": 1793181848.1690953,
+    "seen": 1793193311.0831356,
+    "ast_hash": "34e3546f1bb440941a04f3a1361084f0",
+    "semantic_hash": "34e3546f1bb440941a04f3a1361084f0"
+  },
+  "lib/models/report_card_model.dart": {
+    "mtime": 1792877094.451418,
+    "seen": 1793193311.0831356,
+    "ast_hash": "c20ab166f8f67e526ba69e95b585901b",
+    "semantic_hash": "c20ab166f8f67e526ba69e95b585901b"
+  },
+  "lib/models/school_classes.dart": {
+    "mtime": 1791974467.0,
+    "seen": 1793193311.0841334,
+    "ast_hash": "02733c2091a30653fb30867d467bb19c",
+    "semantic_hash": "02733c2091a30653fb30867d467bb19c"
+  },
+  "lib/models/tuition_record_model.dart": {
+    "mtime": 1792906039.9202857,
+    "seen": 1793193311.0841334,
+    "ast_hash": "f8571504186a443c0e0881f63245d221",
+    "semantic_hash": "f8571504186a443c0e0881f63245d221"
+  },
+  "lib/models/user_directory.dart": {
+    "mtime": 1793135342.426765,
+    "seen": 1793193311.0851328,
+    "ast_hash": "475ad6eb38080503d598935e5884cdd1",
+    "semantic_hash": "475ad6eb38080503d598935e5884cdd1"
+  },
+  "lib/pages/admin_settings_page.dart": {
+    "mtime": 1791974467.0,
+    "seen": 1793193311.0851328,
+    "ast_hash": "8e7a4d07d4f7ef8426df95f6d6ec25a8",
+    "semantic_hash": "8e7a4d07d4f7ef8426df95f6d6ec25a8"
+  },
+  "lib/pages/ai_assistant_page.dart": {
+    "mtime": 1792763181.7018898,
+    "seen": 1793193311.0861323,
+    "ast_hash": "00321abd17c75403cba19dddb61ef43c",
+    "semantic_hash": "00321abd17c75403cba19dddb61ef43c"
+  },
+  "lib/pages/audit_log_page.dart": {
+    "mtime": 1792921413.8379567,
+    "seen": 1793193311.0871315,
+    "ast_hash": "7c6b76e2c36930d2ec6b7077f284b08c",
+    "semantic_hash": "7c6b76e2c36930d2ec6b7077f284b08c"
+  },
+  "lib/pages/chat_page.dart": {
+    "mtime": 1792905217.943802,
+    "seen": 1793193311.0871315,
+    "ast_hash": "986089c2b19b67167f8adbb7bdfec63e",
+    "semantic_hash": "986089c2b19b67167f8adbb7bdfec63e"
+  },
+  "lib/pages/class_story_page.dart": {
+    "mtime": 1792905217.9594333,
+    "seen": 1793193311.0881312,
+    "ast_hash": "a73760761cf38b195fdc2b0dc7a54312",
+    "semantic_hash": "a73760761cf38b195fdc2b0dc7a54312"
+  },
+  "lib/pages/class_timer_dialog.dart": {
+    "mtime": 1792905217.9594333,
+    "seen": 1793193311.0881312,
+    "ast_hash": "791e9010d5b673232398188a788bfa17",
+    "semantic_hash": "791e9010d5b673232398188a788bfa17"
+  },
+  "lib/pages/create_account_dialog.dart": {
+    "mtime": 1793099855.756629,
+    "seen": 1793193311.0891304,
+    "ast_hash": "64268d97f18de83722cbc5d2467e3493",
+    "semantic_hash": "64268d97f18de83722cbc5d2467e3493"
+  },
+  "lib/pages/educational_planning_page.dart": {
+    "mtime": 1791974467.0,
+    "seen": 1793193311.0891304,
+    "ast_hash": "ded54a51e5619bc3ab191392087d469a",
+    "semantic_hash": "ded54a51e5619bc3ab191392087d469a"
+  },
+  "lib/pages/evaluation_feedback_page.dart": {
+    "mtime": 1793019304.6107554,
+    "seen": 1793193311.0901303,
+    "ast_hash": "a605c48e32d248918e0e8645fb754e23",
+    "semantic_hash": "a605c48e32d248918e0e8645fb754e23"
+  },
+  "lib/pages/financial/student_financial_details_dialog.dart": {
+    "mtime": 1793018202.6277292,
+    "seen": 1793193311.0901303,
+    "ast_hash": "1ec22cff6eadb5e5c7937d64df872f1d",
+    "semantic_hash": "1ec22cff6eadb5e5c7937d64df872f1d"
+  },
+  "lib/pages/manager/manager_performance_charts.dart": {
+    "mtime": 1793093922.6521597,
+    "seen": 1793193311.091131,
+    "ast_hash": "e15aed17e0f829658e63e56ef0b8326b",
+    "semantic_hash": "e15aed17e0f829658e63e56ef0b8326b"
+  },
+  "lib/pages/manager_attendance_archive_page.dart": {
+    "mtime": 1791974467.0,
+    "seen": 1793193311.091131,
+    "ast_hash": "983984f02045441aa6d0b9e5c43d0696",
+    "semantic_hash": "983984f02045441aa6d0b9e5c43d0696"
+  },
+  "lib/pages/manager_financial_page.dart": {
+    "mtime": 1792911609.270423,
+    "seen": 1793193311.0921307,
+    "ast_hash": "f1101b3d1eca17af1ed2c31dd19d5cf5",
+    "semantic_hash": "f1101b3d1eca17af1ed2c31dd19d5cf5"
+  },
+  "lib/pages/manager_nutrition_page.dart": {
+    "mtime": 1792760845.0746253,
+    "seen": 1793193311.0921307,
+    "ast_hash": "539fcd6b1b159b7f2789c3e0f1c4f75f",
+    "semantic_hash": "539fcd6b1b159b7f2789c3e0f1c4f75f"
+  },
+  "lib/pages/manager_overview_page.dart": {
+    "mtime": 1793181822.0833125,
+    "seen": 1793193311.0931282,
+    "ast_hash": "1c78005ca727fda8acd67dc6040f55dd",
+    "semantic_hash": "1c78005ca727fda8acd67dc6040f55dd"
+  },
+  "lib/pages/manager_payment_receipts_page.dart": {
+    "mtime": 1792877094.4764009,
+    "seen": 1793193311.0941274,
+    "ast_hash": "77df9d2090dfaa3322b4230dea87eddf",
+    "semantic_hash": "77df9d2090dfaa3322b4230dea87eddf"
+  },
+  "lib/pages/manager_permissions_page.dart": {
+    "mtime": 1793116552.0,
+    "seen": 1793193311.0941274,
+    "ast_hash": "f2a5dde9e85c6ed05772b3eaa2f75c90",
+    "semantic_hash": "f2a5dde9e85c6ed05772b3eaa2f75c90"
+  },
+  "lib/pages/manager_requests_page.dart": {
+    "mtime": 1791974467.0,
+    "seen": 1793193311.0951266,
+    "ast_hash": "33bf9204e52e79c4edd8a7cec7ad4b5e",
+    "semantic_hash": "33bf9204e52e79c4edd8a7cec7ad4b5e"
+  },
+  "lib/pages/manager_user_management_page.dart": {
+    "mtime": 1793191326.835716,
+    "seen": 1793193311.0951266,
+    "ast_hash": "a77495b3fd22079d09a3887134c5745a",
+    "semantic_hash": "a77495b3fd22079d09a3887134c5745a"
+  },
+  "lib/pages/private_message_page.dart": {
+    "mtime": 1791974467.0,
+    "seen": 1793193311.0961275,
+    "ast_hash": "7dea93493c3cc9169077166793f69258",
+    "semantic_hash": "7dea93493c3cc9169077166793f69258"
+  },
+  "lib/pages/registration/health_card_dialog.dart": {
+    "mtime": 1792913512.1351292,
+    "seen": 1793193311.0971265,
+    "ast_hash": "68387c59eeb5d2e1632d4007954df5d3",
+    "semantic_hash": "68387c59eeb5d2e1632d4007954df5d3"
+  },
+  "lib/pages/registration_manager_page.dart": {
+    "mtime": 1793192571.487051,
+    "seen": 1793193311.0971265,
+    "ast_hash": "727be75ae2cfa572c651bdb5778b2d49",
+    "semantic_hash": "727be75ae2cfa572c651bdb5778b2d49"
+  },
+  "lib/pages/registration_page.dart": {
+    "mtime": 1793188647.9755895,
+    "seen": 1793193311.098126,
+    "ast_hash": "b00035dba951a9731a7a43ed2695c4f8",
+    "semantic_hash": "b00035dba951a9731a7a43ed2695c4f8"
+  },
+  "lib/pages/report_card_pages.dart": {
+    "mtime": 1791974467.0,
+    "seen": 1793193311.0991251,
+    "ast_hash": "7b7a5f115ae085f8fe734d7b8f2e809d",
+    "semantic_hash": "7b7a5f115ae085f8fe734d7b8f2e809d"
+  },
+  "lib/pages/student_home_dashboard.dart": {
+    "mtime": 1793019314.425694,
+    "seen": 1793193311.0991251,
+    "ast_hash": "754a64983a2d60adc73fe2fc6ec3710f",
+    "semantic_hash": "754a64983a2d60adc73fe2fc6ec3710f"
+  },
+  "lib/pages/teacher_behavior_system_page.dart": {
+    "mtime": 1792905217.9594333,
+    "seen": 1793193311.1001241,
+    "ast_hash": "777e5c69312b405655613818c233eb02",
+    "semantic_hash": "777e5c69312b405655613818c233eb02"
+  },
+  "lib/pages/teacher_toolkit_page.dart": {
+    "mtime": 1792905217.975057,
+    "seen": 1793193311.101123,
+    "ast_hash": "ec574affacc9774fcb9306ec1dc273f0",
+    "semantic_hash": "ec574affacc9774fcb9306ec1dc273f0"
+  },
+  "lib/pages/toolbox_page.dart": {
+    "mtime": 1792782269.7948134,
+    "seen": 1793193311.101123,
+    "ast_hash": "70ec6ffc053719b25d038a51c804a88c",
+    "semantic_hash": "70ec6ffc053719b25d038a51c804a88c"
+  },
+  "lib/pages/video_meetings_page.dart": {
+    "mtime": 1792782269.7958117,
+    "seen": 1793193311.1021225,
+    "ast_hash": "d787b71692a95b3d85b2480dcaad7be0",
+    "semantic_hash": "d787b71692a95b3d85b2480dcaad7be0"
+  },
+  "lib/parent/announcements_page.dart": {
+    "mtime": 1792906818.2870784,
+    "seen": 1793193311.1021225,
+    "ast_hash": "aff9b31d18ba2e8cb13069b7767e5b3c",
+    "semantic_hash": "aff9b31d18ba2e8cb13069b7767e5b3c"
+  },
+  "lib/parent/attendance_page.dart": {
+    "mtime": 1792906818.2870784,
+    "seen": 1793193311.1031222,
+    "ast_hash": "6d676dc06207afc1572932f6ea93745c",
+    "semantic_hash": "6d676dc06207afc1572932f6ea93745c"
+  },
+  "lib/parent/homework_page.dart": {
+    "mtime": 1792906818.2880778,
+    "seen": 1793193311.1031222,
+    "ast_hash": "082816a93a0f6ce89845e03e99f4c588",
+    "semantic_hash": "082816a93a0f6ce89845e03e99f4c588"
+  },
+  "lib/parent/parent_home_page.dart": {
+    "mtime": 1793181811.6926446,
+    "seen": 1793193311.1041224,
+    "ast_hash": "ed83d4f53d49b3b20f3355cc4c4f2298",
+    "semantic_hash": "ed83d4f53d49b3b20f3355cc4c4f2298"
+  },
+  "lib/parent/parent_sections.dart": {
+    "mtime": 1792906818.2890763,
+    "seen": 1793193311.1051214,
+    "ast_hash": "ca50000f864e10b7d759ee9b39f5f138",
+    "semantic_hash": "ca50000f864e10b7d759ee9b39f5f138"
+  },
+  "lib/parent/parent_shell.dart": {
+    "mtime": 1791974467.0,
+    "seen": 1793193311.1051214,
+    "ast_hash": "c29183eb280b5b0562cce3e84f1ff7b1",
+    "semantic_hash": "c29183eb280b5b0562cce3e84f1ff7b1"
+  },
+  "lib/parent/payment_page.dart": {
+    "mtime": 1792906818.2900763,
+    "seen": 1793193311.1051214,
+    "ast_hash": "3d1fc7571bf50618a0f4bfac9d068d60",
+    "semantic_hash": "3d1fc7571bf50618a0f4bfac9d068d60"
+  },
+  "lib/parent/schedule_page.dart": {
+    "mtime": 1792906818.2910745,
+    "seen": 1793193311.10612,
+    "ast_hash": "77dd75b7a5dfc1a9a02b4c0fd0e7b107",
+    "semantic_hash": "77dd75b7a5dfc1a9a02b4c0fd0e7b107"
+  },
+  "lib/services/backend.dart": {
+    "mtime": 1792877094.4814308,
+    "seen": 1793193311.10612,
+    "ast_hash": "85d7c9fb5ffb221e7e86634754bd0949",
+    "semantic_hash": "85d7c9fb5ffb221e7e86634754bd0949"
+  },
+  "lib/services/backend_directory.dart": {
+    "mtime": 1791974467.0,
+    "seen": 1793193311.107119,
+    "ast_hash": "e22b61fa5f521b161f10afdec0072ba4",
+    "semantic_hash": "e22b61fa5f521b161f10afdec0072ba4"
+  },
+  "lib/services/demo_auth_policy.dart": {
+    "mtime": 1792711021.9508886,
+    "seen": 1793193311.107119,
+    "ast_hash": "d22c2901c3f8c05692266370d275610f",
+    "semantic_hash": "d22c2901c3f8c05692266370d275610f"
+  },
+  "lib/services/evaluation_service.dart": {
+    "mtime": 1793015412.742867,
+    "seen": 1793193311.1081188,
+    "ast_hash": "d3ddbaf6749d6b73883b081c30363c5a",
+    "semantic_hash": "d3ddbaf6749d6b73883b081c30363c5a"
+  },
+  "lib/services/financial_access_policy.dart": {
+    "mtime": 1792709798.7032547,
+    "seen": 1793193311.1081188,
+    "ast_hash": "088c5b833e60dd94e7f9de23d27e70be",
+    "semantic_hash": "088c5b833e60dd94e7f9de23d27e70be"
+  },
+  "lib/services/financial_analytics_service.dart": {
+    "mtime": 1793010668.5552864,
+    "seen": 1793193311.1091182,
+    "ast_hash": "5798c9219c5c75b3b0027038249802ab",
+    "semantic_hash": "5798c9219c5c75b3b0027038249802ab"
+  },
+  "lib/services/gemini_service.dart": {
+    "mtime": 1791974467.0,
+    "seen": 1793193311.1091182,
+    "ast_hash": "12252ea675a0dbbbb08ea90ed5435eef",
+    "semantic_hash": "12252ea675a0dbbbb08ea90ed5435eef"
+  },
+  "lib/services/payment_receipt_admin_service.dart": {
+    "mtime": 1792877094.4893942,
+    "seen": 1793193311.110118,
+    "ast_hash": "209f972d96009c3e8c06c5a934280446",
+    "semantic_hash": "209f972d96009c3e8c06c5a934280446"
+  },
+  "lib/services/payment_receipt_service.dart": {
+    "mtime": 1792877094.4974554,
+    "seen": 1793193311.110118,
+    "ast_hash": "a617ffed44dbc886bf569cff6144a710",
+    "semantic_hash": "a617ffed44dbc886bf569cff6144a710"
+  },
+  "lib/services/registration_admin_service.dart": {
+    "mtime": 1793181754.120507,
+    "seen": 1793193311.1111171,
+    "ast_hash": "bec70a379bcc2b029c843a0df8b440ec",
+    "semantic_hash": "bec70a379bcc2b029c843a0df8b440ec"
+  },
+  "lib/services/registration_storage_service.dart": {
+    "mtime": 1793011944.7173479,
+    "seen": 1793193311.1121168,
+    "ast_hash": "7f8d409f9e7b9c22b100a8ac8dc77c98",
+    "semantic_hash": "7f8d409f9e7b9c22b100a8ac8dc77c98"
+  },
+  "lib/services/user_admin_service.dart": {
+    "mtime": 1793099825.4806812,
+    "seen": 1793193311.1121168,
+    "ast_hash": "c3b7925dc43ce825054952bdcebf4a33",
+    "semantic_hash": "c3b7925dc43ce825054952bdcebf4a33"
+  },
+  "lib/teacher/class_report_page.dart": {
+    "mtime": 1792907937.2132652,
+    "seen": 1793193311.1131155,
+    "ast_hash": "b62862cc55ef7def72609974cf131c2d",
+    "semantic_hash": "b62862cc55ef7def72609974cf131c2d"
+  },
+  "lib/teacher/teacher_announce_page.dart": {
+    "mtime": 1792907937.2142634,
+    "seen": 1793193311.1131155,
+    "ast_hash": "d1e272166db884a06510efa03599bcd2",
+    "semantic_hash": "d1e272166db884a06510efa03599bcd2"
+  },
+  "lib/teacher/teacher_attendance_page.dart": {
+    "mtime": 1792907937.2152627,
+    "seen": 1793193311.1141152,
+    "ast_hash": "d48aa6c3dd08f4c3d0e31e377f008818",
+    "semantic_hash": "d48aa6c3dd08f4c3d0e31e377f008818"
+  },
+  "lib/teacher/teacher_home_page.dart": {
+    "mtime": 1793042523.0,
+    "seen": 1793193311.1141152,
+    "ast_hash": "64426905bbfbe4b07fd7d3868f11cdf2",
+    "semantic_hash": "64426905bbfbe4b07fd7d3868f11cdf2"
+  },
+  "lib/teacher/teacher_homework_page.dart": {
+    "mtime": 1792907937.2172625,
+    "seen": 1793193311.1151145,
+    "ast_hash": "61155ecac006fd2fc390a2752ec4c8ad",
+    "semantic_hash": "61155ecac006fd2fc390a2752ec4c8ad"
+  },
+  "lib/teacher/teacher_sections.dart": {
+    "mtime": 1792907937.218263,
+    "seen": 1793193311.1151145,
+    "ast_hash": "501100bc736c3960221693b49ec22195",
+    "semantic_hash": "501100bc736c3960221693b49ec22195"
+  },
+  "lib/teacher/teacher_shell.dart": {
+    "mtime": 1791974467.0,
+    "seen": 1793193311.1151145,
+    "ast_hash": "6e1745e0ee94bf7991f962aaabe6514b",
+    "semantic_hash": "6e1745e0ee94bf7991f962aaabe6514b"
+  },
+  "lib/theme/app_colors.dart": {
+    "mtime": 1791974467.0,
+    "seen": 1793193311.1161137,
+    "ast_hash": "65b896439b4d1ffcba05b02fa455907e",
+    "semantic_hash": "65b896439b4d1ffcba05b02fa455907e"
+  },
+  "lib/utils/export_helper.dart": {
+    "mtime": 1792215008.7804952,
+    "seen": 1793193311.1161137,
+    "ast_hash": "d390786cd641a74e1ab7a968d29c9336",
+    "semantic_hash": "d390786cd641a74e1ab7a968d29c9336"
+  },
+  "lib/utils/jalali.dart": {
+    "mtime": 1791974467.0,
+    "seen": 1793193311.117113,
+    "ast_hash": "6df96a849d5fee63517ac0359ba5cbdd",
+    "semantic_hash": "6df96a849d5fee63517ac0359ba5cbdd"
+  },
+  "lib/widgets/announcements_feed.dart": {
+    "mtime": 1791974467.0,
+    "seen": 1793193311.117113,
+    "ast_hash": "717317b86581072e1f077acf7bb1972d",
+    "semantic_hash": "717317b86581072e1f077acf7bb1972d"
+  },
+  "lib/widgets/floating_stationery.dart": {
+    "mtime": 1792526744.838,
+    "seen": 1793193311.1181128,
+    "ast_hash": "fb2952fad30664b3ac8700eaa003848c",
+    "semantic_hash": "fb2952fad30664b3ac8700eaa003848c"
+  },
+  "lib/widgets/illustration_banner.dart": {
+    "mtime": 1791974467.0,
+    "seen": 1793193311.1181128,
+    "ast_hash": "b383bb30f29e659a57dafd5310bc7dae",
+    "semantic_hash": "b383bb30f29e659a57dafd5310bc7dae"
+  },
+  "lib/widgets/live_clock_banner.dart": {
+    "mtime": 1792762745.5513847,
+    "seen": 1793193311.1191123,
+    "ast_hash": "72f59ab488ddb8647c45ef216a245855",
+    "semantic_hash": "72f59ab488ddb8647c45ef216a245855"
+  },
+  "lib/widgets/nutrition_views.dart": {
+    "mtime": 1791974467.0,
+    "seen": 1793193311.1191123,
+    "ast_hash": "062057df4c892bd5626d58f3691da6d4",
+    "semantic_hash": "062057df4c892bd5626d58f3691da6d4"
+  },
+  "lib/widgets/plans_view.dart": {
+    "mtime": 1791974467.0,
+    "seen": 1793193311.120111,
+    "ast_hash": "b6ac739b552a85690516554b96def362",
+    "semantic_hash": "b6ac739b552a85690516554b96def362"
+  },
+  "lib/widgets/pop_out_card.dart": {
+    "mtime": 1793181806.7752514,
+    "seen": 1793193311.120111,
+    "ast_hash": "da48fceb26b8355ce446aaf926392437",
+    "semantic_hash": "da48fceb26b8355ce446aaf926392437"
+  },
+  "lib/widgets/safe_image.dart": {
+    "mtime": 1791974467.0,
+    "seen": 1793193311.120111,
+    "ast_hash": "961ef939512cac65a2c14be4f09820cc",
+    "semantic_hash": "961ef939512cac65a2c14be4f09820cc"
+  },
+  "lib/widgets/sunny_world_background.dart": {
+    "mtime": 1792922805.0,
+    "seen": 1793193311.1211114,
+    "ast_hash": "8876cce35440bbd035289f89d4e1dcbc",
+    "semantic_hash": "8876cce35440bbd035289f89d4e1dcbc"
+  },
+  "lib/widgets/world3d_background.dart": {
+    "mtime": 1793067216.0,
+    "seen": 1793193311.1211114,
+    "ast_hash": "c8f55c8ad87541b1558489bd2031157b",
+    "semantic_hash": "c8f55c8ad87541b1558489bd2031157b"
+  },
+  "macos/Flutter/GeneratedPluginRegistrant.swift": {
+    "mtime": 1791927007.3845298,
+    "seen": 1793193311.1221097,
+    "ast_hash": "2be81d9a48789a7927ec38e2a81f8d40",
+    "semantic_hash": "2be81d9a48789a7927ec38e2a81f8d40"
+  },
+  "macos/RunnerTests/RunnerTests.swift": {
+    "mtime": 1791018214.5716643,
+    "seen": 1793193311.1221097,
+    "ast_hash": "8059f5d27a19c556eeafb49b3f9b7bdd",
+    "semantic_hash": "8059f5d27a19c556eeafb49b3f9b7bdd"
+  },
+  "macos/Runner/AppDelegate.swift": {
+    "mtime": 1789762033.8684886,
+    "seen": 1793193311.1231093,
+    "ast_hash": "4b52e0b89ebfef9baf45b04548c463d6",
+    "semantic_hash": "4b52e0b89ebfef9baf45b04548c463d6"
+  },
+  "macos/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json": {
+    "mtime": 1789762033.8699408,
+    "seen": 1793193311.1231093,
+    "ast_hash": "1d48e925145d4b573a3b5d7960a1c585",
+    "semantic_hash": "1d48e925145d4b573a3b5d7960a1c585",
+    "ast_empty": true
+  },
+  "macos/Runner/MainFlutterWindow.swift": {
+    "mtime": 1789762033.8800676,
+    "seen": 1793193311.1231093,
+    "ast_hash": "93c22dae2d93f3dc1402e121901f582b",
+    "semantic_hash": "93c22dae2d93f3dc1402e121901f582b"
+  },
+  "pubspec.yaml": {
+    "mtime": 1792782269.8038068,
+    "seen": 1793193311.124109,
+    "ast_hash": "17360253e37f954a612a8137a8b5ef4c",
+    "semantic_hash": "17360253e37f954a612a8137a8b5ef4c"
+  },
+  "test/demo_auth_policy_test.dart": {
+    "mtime": 1792711021.9598815,
+    "seen": 1793193311.124109,
+    "ast_hash": "79a4df8926ee02862ad014a5e6b3cf85",
+    "semantic_hash": "79a4df8926ee02862ad014a5e6b3cf85"
+  },
+  "test/financial_access_policy_test.dart": {
+    "mtime": 1792709798.7457702,
+    "seen": 1793193311.1251085,
+    "ast_hash": "690e91af4e85adba609cb3bcd5a959ef",
+    "semantic_hash": "690e91af4e85adba609cb3bcd5a959ef"
+  },
+  "test/nutrition_security_test.dart": {
+    "mtime": 1792760845.0766234,
+    "seen": 1793193311.1251085,
+    "ast_hash": "61b5b3270a798aa262913ba489b725fb",
+    "semantic_hash": "61b5b3270a798aa262913ba489b725fb"
+  },
+  "test/parent_home_page_test.dart": {
+    "mtime": 1792782269.8058052,
+    "seen": 1793193311.1261077,
+    "ast_hash": "ddc58b3145155949e0d25840dc7bf13f",
+    "semantic_hash": "ddc58b3145155949e0d25840dc7bf13f"
+  },
+  "test/student_management_permissions_test.dart": {
+    "mtime": 1792713256.7510962,
+    "seen": 1793193311.1261077,
+    "ast_hash": "917a20b882978d1880f5ad43b5f0fdc9",
+    "semantic_hash": "917a20b882978d1880f5ad43b5f0fdc9"
+  },
+  "test/toolbox_access_test.dart": {
+    "mtime": 1792782269.806805,
+    "seen": 1793193311.1271071,
+    "ast_hash": "718e59bf3f16efa858cd25842d6faff0",
+    "semantic_hash": "718e59bf3f16efa858cd25842d6faff0"
+  },
+  "test/widget_test.dart": {
+    "mtime": 1792559250.0,
+    "seen": 1793193311.1271071,
+    "ast_hash": "c1b4bb2682783ae15abaeeba351ffc95",
+    "semantic_hash": "c1b4bb2682783ae15abaeeba351ffc95"
+  },
+  "web/manifest.json": {
+    "mtime": 1791018214.6996386,
+    "seen": 1793193311.1281068,
+    "ast_hash": "f795450ca53bc32ac15b9d9f77867050",
+    "semantic_hash": "f795450ca53bc32ac15b9d9f77867050"
+  },
+  "widget_test.dart": {
+    "mtime": 1792559250.0,
+    "seen": 1793193311.1291065,
+    "ast_hash": "c1b4bb2682783ae15abaeeba351ffc95",
+    "semantic_hash": "c1b4bb2682783ae15abaeeba351ffc95"
+  },
+  "windows/flutter/generated_plugin_registrant.cc": {
+    "mtime": 1791927007.34001,
+    "seen": 1793193311.1291065,
+    "ast_hash": "391696797b6b984a631492388a29dee0",
+    "semantic_hash": "391696797b6b984a631492388a29dee0"
+  },
+  "windows/flutter/generated_plugin_registrant.h": {
+    "mtime": 1791018311.1472404,
+    "seen": 1793193311.1301067,
+    "ast_hash": "0ea33875f9f8e118f9c2ded03e2e2835",
+    "semantic_hash": "0ea33875f9f8e118f9c2ded03e2e2835"
+  },
+  "windows/runner/flutter_window.cpp": {
+    "mtime": 1789762033.891914,
+    "seen": 1793193311.1311052,
+    "ast_hash": "2f463f9b7da67a2d692a012f9ea85e0c",
+    "semantic_hash": "2f463f9b7da67a2d692a012f9ea85e0c"
+  },
+  "windows/runner/flutter_window.h": {
+    "mtime": 1789762033.8934715,
+    "seen": 1793193311.1311052,
+    "ast_hash": "7defcc89d4a26d56e801241d624d48fb",
+    "semantic_hash": "7defcc89d4a26d56e801241d624d48fb"
+  },
+  "windows/runner/main.cpp": {
+    "mtime": 1791018214.790344,
+    "seen": 1793193311.1321044,
+    "ast_hash": "e40c9d2ecc3762c17221f2a2ddccf103",
+    "semantic_hash": "e40c9d2ecc3762c17221f2a2ddccf103"
+  },
+  "windows/runner/resource.h": {
+    "mtime": 1789762033.8948526,
+    "seen": 1793193311.1331038,
+    "ast_hash": "1ade5dd15e613479a15e8832ed276f2b",
+    "semantic_hash": "1ade5dd15e613479a15e8832ed276f2b"
+  },
+  "windows/runner/utils.cpp": {
+    "mtime": 1789762033.8971,
+    "seen": 1793193311.1331038,
+    "ast_hash": "e18900a4c2c2962ad732d3b83f0396b9",
+    "semantic_hash": "e18900a4c2c2962ad732d3b83f0396b9"
+  },
+  "windows/runner/utils.h": {
+    "mtime": 1789762033.8976035,
+    "seen": 1793193311.1341038,
+    "ast_hash": "fd81e143f5614eb6fd75efe539002853",
+    "semantic_hash": "fd81e143f5614eb6fd75efe539002853"
+  },
+  "windows/runner/win32_window.cpp": {
+    "mtime": 1789762033.8988245,
+    "seen": 1793193311.1341038,
+    "ast_hash": "571eb8234dbc2661be03aa5f2a4d2fca",
+    "semantic_hash": "571eb8234dbc2661be03aa5f2a4d2fca"
+  },
+  "windows/runner/win32_window.h": {
+    "mtime": 1789762033.899131,
+    "seen": 1793193311.1351032,
+    "ast_hash": "7569387d58711ab975940f4df3b4bcda",
+    "semantic_hash": "7569387d58711ab975940f4df3b4bcda"
+  },
+  "world3d_v2/lib/widgets/world3d_background.dart": {
+    "mtime": 1793172471.027566,
+    "seen": 1793193311.136102,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "AGENTS.md": {
+    "mtime": 1792859043.0,
+    "seen": 1793193311.136102,
+    "ast_hash": "df7737782eaba5e21658216475a51960",
+    "semantic_hash": "df7737782eaba5e21658216475a51960"
+  },
+  "PROJECT_MEMORY.md": {
+    "mtime": 1792915352.5842767,
+    "seen": 1793193311.137102,
+    "ast_hash": "249a6e00f8688dfceab00e9983bf47f1",
+    "semantic_hash": "249a6e00f8688dfceab00e9983bf47f1"
+  },
+  "README.md": {
+    "mtime": 1791018214.5986478,
+    "seen": 1793193311.137102,
+    "ast_hash": "c258a179f113281baac1d4e7a19857ea",
+    "semantic_hash": "c258a179f113281baac1d4e7a19857ea"
+  },
+  "demo_auth_out.txt": {
+    "mtime": 1792869560.8971653,
+    "seen": 1793193311.1381001,
+    "ast_hash": "991f4b8c38e878582da927bb8e75bbb6",
+    "semantic_hash": "991f4b8c38e878582da927bb8e75bbb6"
+  },
+  "fix_backend/backend_block.txt": {
+    "mtime": 1792559726.0,
+    "seen": 1793193311.1381001,
+    "ast_hash": "5c27807072dc743983b24195131bdee7",
+    "semantic_hash": "5c27807072dc743983b24195131bdee7"
+  },
+  "fix_permissions/README.txt": {
+    "mtime": 1792558744.0,
+    "seen": 1793193311.1391,
+    "ast_hash": "5d3dd49293e8a3d65bc3766e03f8c7ce",
+    "semantic_hash": "5d3dd49293e8a3d65bc3766e03f8c7ce"
+  },
+  "flutter_run_log.txt": {
+    "mtime": 1793133606.3300934,
+    "seen": 1793193311.1391,
+    "ast_hash": "bc020829eb5dc7f5349da2f7c6e5f88b",
+    "semantic_hash": "bc020829eb5dc7f5349da2f7c6e5f88b"
+  },
+  "ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md": {
+    "mtime": 1789762033.8465035,
+    "seen": 1793193311.1401002,
+    "ast_hash": "f7ee1b402881509d197f34963e569927",
+    "semantic_hash": "f7ee1b402881509d197f34963e569927"
+  },
+  "parent_home_upload.txt": {
+    "mtime": 1792924023.0,
+    "seen": 1793193311.1410992,
+    "ast_hash": "5405d217ba48dafce74cc40915a3b868",
+    "semantic_hash": "5405d217ba48dafce74cc40915a3b868"
+  },
+  "parent_sections_upload.txt": {
+    "mtime": 1792877094.479401,
+    "seen": 1793193311.1440973,
+    "ast_hash": "3f7fa1bb065763f5a50b5cdacd04d9e7",
+    "semantic_hash": "3f7fa1bb065763f5a50b5cdacd04d9e7"
+  },
+  "pop_upload.txt": {
+    "mtime": 1792922815.0,
+    "seen": 1793193311.1450975,
+    "ast_hash": "b1e1d733a7d0cc14fde8f1cfd6bfbfc2",
+    "semantic_hash": "b1e1d733a7d0cc14fde8f1cfd6bfbfc2"
+  },
+  "sunny_upload.txt": {
+    "mtime": 1792922805.0,
+    "seen": 1793193311.1460967,
+    "ast_hash": "8876cce35440bbd035289f89d4e1dcbc",
+    "semantic_hash": "8876cce35440bbd035289f89d4e1dcbc"
+  },
+  "teacher_sections_upload.txt": {
+    "mtime": 1791974467.0,
+    "seen": 1793193311.1460967,
+    "ast_hash": "4763dfe96275f2d5251f2f5289a4419a",
+    "semantic_hash": "4763dfe96275f2d5251f2f5289a4419a"
+  },
+  "ud_upload.txt": {
+    "mtime": 1793099813.4094884,
+    "seen": 1793193311.1470952,
+    "ast_hash": "391ac697826966cf644e7744ceffa42a",
+    "semantic_hash": "391ac697826966cf644e7744ceffa42a"
+  },
+  "um_upload.txt": {
+    "mtime": 1793099906.550272,
+    "seen": 1793193311.1470952,
+    "ast_hash": "a77495b3fd22079d09a3887134c5745a",
+    "semantic_hash": "a77495b3fd22079d09a3887134c5745a"
+  },
+  "web/index.html": {
+    "mtime": 1791018214.6866467,
+    "seen": 1793193311.1480958,
+    "ast_hash": "6921583a356860cf92de4d976f4c66b3",
+    "semantic_hash": "6921583a356860cf92de4d976f4c66b3"
+  },
+  "windows/CMakeLists.txt": {
+    "mtime": 1791018214.732202,
+    "seen": 1793193311.1490955,
+    "ast_hash": "ebefe715c929c51630ff5a679f3d269e",
+    "semantic_hash": "ebefe715c929c51630ff5a679f3d269e"
+  },
+  "windows/flutter/CMakeLists.txt": {
+    "mtime": 1789762033.8890264,
+    "seen": 1793193311.1490955,
+    "ast_hash": "bbf66fed5180bd9ae8198b8d7c4a0001",
+    "semantic_hash": "bbf66fed5180bd9ae8198b8d7c4a0001"
+  },
+  "windows/runner/CMakeLists.txt": {
+    "mtime": 1789762033.890443,
+    "seen": 1793193311.150094,
+    "ast_hash": "028602ab9754bffe716659ada7590d29",
+    "semantic_hash": "028602ab9754bffe716659ada7590d29"
+  },
+  "android/app/src/main/res/mipmap-hdpi/ic_launcher.png": {
+    "mtime": 1789762033.8088279,
+    "seen": 1793193311.151093,
+    "ast_hash": "13e9c72ec37fac220397aa819fa1ef2d",
+    "semantic_hash": "13e9c72ec37fac220397aa819fa1ef2d"
+  },
+  "android/app/src/main/res/mipmap-mdpi/ic_launcher.png": {
+    "mtime": 1789762033.815969,
+    "seen": 1793193311.151093,
+    "ast_hash": "6270344430679711b81476e29878caa7",
+    "semantic_hash": "6270344430679711b81476e29878caa7"
+  },
+  "assets/images/01_girl_brown_hair_yellow_top.png": {
+    "mtime": 1791903072.0,
+    "seen": 1793193311.1520927,
+    "ast_hash": "2ecbc18c193ada3208cd091196c84b5e",
+    "semantic_hash": "2ecbc18c193ada3208cd091196c84b5e"
+  },
+  "assets/images/08_woman_hijab_pink_coat.png": {
+    "mtime": 1791903072.0,
+    "seen": 1793193311.1530924,
+    "ast_hash": "901cc24689c7f51d3d9a152717bfa921",
+    "semantic_hash": "901cc24689c7f51d3d9a152717bfa921"
+  },
+  "assets/images/09_girl_braid_with_books.png": {
+    "mtime": 1791903072.0,
+    "seen": 1793193311.1530924,
+    "ast_hash": "b21af6037db77b74085a9640b810bc6d",
+    "semantic_hash": "b21af6037db77b74085a9640b810bc6d"
+  },
+  "assets/images/10_boy_at_desk_red_hoodie.png": {
+    "mtime": 1791903072.0,
+    "seen": 1793193311.1540911,
+    "ast_hash": "c08f5e6318f576c350aacfbb6f1877cf",
+    "semantic_hash": "c08f5e6318f576c350aacfbb6f1877cf"
+  },
+  "assets/images/11_teacher_woman_curly_pointer.png": {
+    "mtime": 1791903072.0,
+    "seen": 1793193311.1550903,
+    "ast_hash": "84dc914abada0b2e8ed00ed96a8f7f5e",
+    "semantic_hash": "84dc914abada0b2e8ed00ed96a8f7f5e"
+  },
+  "assets/images/12_girl_ponytail_purple_hoodie.png": {
+    "mtime": 1791903072.0,
+    "seen": 1793193311.15609,
+    "ast_hash": "e7213d2485fad7406b34d1dabe544ccd",
+    "semantic_hash": "e7213d2485fad7406b34d1dabe544ccd"
+  },
+  "assets/images/13_boy_curly_waving_yellow.png": {
+    "mtime": 1791903072.0,
+    "seen": 1793193311.1570897,
+    "ast_hash": "980f29ee0a287cf1c0a4f8b2e1c21458",
+    "semantic_hash": "980f29ee0a287cf1c0a4f8b2e1c21458"
+  },
+  "assets/images/14_girl_blonde_long_skirt.png": {
+    "mtime": 1791903072.0,
+    "seen": 1793193311.1587067,
+    "ast_hash": "201dfd8c8fd3ba8037cb13bdc28c4259",
+    "semantic_hash": "201dfd8c8fd3ba8037cb13bdc28c4259"
+  },
+  "assets/images/15_teacher_man_beard.png": {
+    "mtime": 1791903072.0,
+    "seen": 1793193311.1587067,
+    "ast_hash": "e50633a02fda047e1543b1a4dbc5fd71",
+    "semantic_hash": "e50633a02fda047e1543b1a4dbc5fd71"
+  },
+  "assets/images/16_girl_at_desk_laptop.png": {
+    "mtime": 1791903072.0,
+    "seen": 1793193311.160701,
+    "ast_hash": "da6b90688e79eb50d8cbed7509338957",
+    "semantic_hash": "da6b90688e79eb50d8cbed7509338957"
+  },
+  "assets/images/17_girl_bob_waving_pink.png": {
+    "mtime": 1791903072.0,
+    "seen": 1793193311.160701,
+    "ast_hash": "07b5f846f4f19b81788725017f056f12",
+    "semantic_hash": "07b5f846f4f19b81788725017f056f12"
+  },
+  "assets/images/18_boy_ginger_glasses_blue_hoodie.png": {
+    "mtime": 1791903072.0,
+    "seen": 1793193311.1617002,
+    "ast_hash": "7142e9cf3cdb11477d5aa29e15cfa904",
+    "semantic_hash": "7142e9cf3cdb11477d5aa29e15cfa904"
+  },
+  "assets/images/19_girl_braids_purple_pants.png": {
+    "mtime": 1791903072.0,
+    "seen": 1793193311.1626997,
+    "ast_hash": "aefa83fceba2533f0ef031d7c14b68aa",
+    "semantic_hash": "aefa83fceba2533f0ef031d7c14b68aa"
+  },
+  "assets/images/20_teacher_woman_bun_green.png": {
+    "mtime": 1791903072.0,
+    "seen": 1793193311.163826,
+    "ast_hash": "5b3bda1e6ac377e502b9fe99ffcf9bdc",
+    "semantic_hash": "5b3bda1e6ac377e502b9fe99ffcf9bdc"
+  },
+  "assets/images/announcement.png": {
+    "mtime": 1791903072.0,
+    "seen": 1793193311.1643453,
+    "ast_hash": "e242df07cb6b3a03ac94c3cfd6912b13",
+    "semantic_hash": "e242df07cb6b3a03ac94c3cfd6912b13"
+  },
+  "assets/images/attendance.png": {
+    "mtime": 1791903072.0,
+    "seen": 1793193311.1648755,
+    "ast_hash": "993c0c000eb6b19382a37ca4a447e0fb",
+    "semantic_hash": "993c0c000eb6b19382a37ca4a447e0fb"
+  },
+  "assets/images/background.jpg": {
+    "mtime": 1791903072.0,
+    "seen": 1793193311.165854,
+    "ast_hash": "a3b1a8b94d5a8cfc0327daf16990da14",
+    "semantic_hash": "a3b1a8b94d5a8cfc0327daf16990da14"
+  },
+  "assets/images/char_01.png": {
+    "mtime": 1791903072.0,
+    "seen": 1793193311.165854,
+    "ast_hash": "2fe98e0dde953de27a80a113cc7b3ac9",
+    "semantic_hash": "2fe98e0dde953de27a80a113cc7b3ac9"
+  },
+  "assets/images/char_02.png": {
+    "mtime": 1791903072.0,
+    "seen": 1793193311.1668522,
+    "ast_hash": "f233fa5cb617991090e7c7ad2cae57c8",
+    "semantic_hash": "f233fa5cb617991090e7c7ad2cae57c8"
+  },
+  "assets/images/char_03.png": {
+    "mtime": 1791903072.0,
+    "seen": 1793193311.167852,
+    "ast_hash": "4f7a5a491cdbf797bfdde501f38bc225",
+    "semantic_hash": "4f7a5a491cdbf797bfdde501f38bc225"
+  },
+  "assets/images/char_04.png": {
+    "mtime": 1791903072.0,
+    "seen": 1793193311.167852,
+    "ast_hash": "900da9738730a316c7288945b0680169",
+    "semantic_hash": "900da9738730a316c7288945b0680169"
+  },
+  "assets/images/char_05.png": {
+    "mtime": 1791903072.0,
+    "seen": 1793193311.1688514,
+    "ast_hash": "3d5a53f63c5178bf74e2d8efde42f340",
+    "semantic_hash": "3d5a53f63c5178bf74e2d8efde42f340"
+  },
+  "assets/images/char_06.png": {
+    "mtime": 1791903072.0,
+    "seen": 1793193311.1708508,
+    "ast_hash": "3d193642eecb67f8593a87737e36ed82",
+    "semantic_hash": "3d193642eecb67f8593a87737e36ed82"
+  },
+  "assets/images/char_07.png": {
+    "mtime": 1791903072.0,
+    "seen": 1793193311.172109,
+    "ast_hash": "4ae8e53e077b6720409a66aa3fe45f9b",
+    "semantic_hash": "4ae8e53e077b6720409a66aa3fe45f9b"
+  },
+  "assets/images/char_08.png": {
+    "mtime": 1791903072.0,
+    "seen": 1793193311.1726243,
+    "ast_hash": "80c1db699c6c202ee014823cd35f8889",
+    "semantic_hash": "80c1db699c6c202ee014823cd35f8889"
+  },
+  "assets/images/char_09.png": {
+    "mtime": 1791903072.0,
+    "seen": 1793193311.1731284,
+    "ast_hash": "7d53f43e8d216c80fbfa4377850f8768",
+    "semantic_hash": "7d53f43e8d216c80fbfa4377850f8768"
+  },
+  "assets/images/char_10.png": {
+    "mtime": 1791903072.0,
+    "seen": 1793193311.1731555,
+    "ast_hash": "892bd6ad3b07dcb32995a64bc7221f31",
+    "semantic_hash": "892bd6ad3b07dcb32995a64bc7221f31"
+  },
+  "assets/images/char_11.png": {
+    "mtime": 1791903072.0,
+    "seen": 1793193311.1731555,
+    "ast_hash": "6d7c953ae145078135de9ec8c9e214b9",
+    "semantic_hash": "6d7c953ae145078135de9ec8c9e214b9"
+  },
+  "assets/images/char_12.png": {
+    "mtime": 1791903072.0,
+    "seen": 1793193311.1741316,
+    "ast_hash": "9d4236acd7bee3647485f2c603cede99",
+    "semantic_hash": "9d4236acd7bee3647485f2c603cede99"
+  },
+  "assets/images/char_13.png": {
+    "mtime": 1791903072.0,
+    "seen": 1793193311.1741316,
+    "ast_hash": "d987b79f874c591201b048c1bb2e1fc6",
+    "semantic_hash": "d987b79f874c591201b048c1bb2e1fc6"
+  },
+  "assets/images/char_14.png": {
+    "mtime": 1791903072.0,
+    "seen": 1793193311.1751313,
+    "ast_hash": "4a9b1099ff60f27dca458bb28c6194e2",
+    "semantic_hash": "4a9b1099ff60f27dca458bb28c6194e2"
+  },
+  "assets/images/char_15.png": {
+    "mtime": 1791903072.0,
+    "seen": 1793193311.1751313,
+    "ast_hash": "ae999a1f78eb41e2fe5707d2f8447846",
+    "semantic_hash": "ae999a1f78eb41e2fe5707d2f8447846"
+  },
+  "assets/images/char_16.png": {
+    "mtime": 1791903072.0,
+    "seen": 1793193311.1761308,
+    "ast_hash": "f144162d6856b02163c158b1a7fe2f0a",
+    "semantic_hash": "f144162d6856b02163c158b1a7fe2f0a"
+  },
+  "assets/images/char_17.png": {
+    "mtime": 1791903072.0,
+    "seen": 1793193311.1761308,
+    "ast_hash": "cca2c1663335abfd2a60d85111823c4c",
+    "semantic_hash": "cca2c1663335abfd2a60d85111823c4c"
+  },
+  "assets/images/char_18.png": {
+    "mtime": 1791903072.0,
+    "seen": 1793193311.1771305,
+    "ast_hash": "61b7380629add7260fe2275f1e30dda6",
+    "semantic_hash": "61b7380629add7260fe2275f1e30dda6"
+  },
+  "assets/images/char_19.png": {
+    "mtime": 1791903072.0,
+    "seen": 1793193311.1771305,
+    "ast_hash": "6bde4b5448fd28a7646cfb55a31ac5ec",
+    "semantic_hash": "6bde4b5448fd28a7646cfb55a31ac5ec"
+  },
+  "assets/images/char_20.png": {
+    "mtime": 1791903072.0,
+    "seen": 1793193311.1771305,
+    "ast_hash": "1dd98f133b0dab1e28a7ff0f16a1805f",
+    "semantic_hash": "1dd98f133b0dab1e28a7ff0f16a1805f"
+  },
+  "assets/images/character_01.png": {
+    "mtime": 1791903072.0,
+    "seen": 1793193311.1781292,
+    "ast_hash": "630630db32aa0caea2469b2897e9888d",
+    "semantic_hash": "630630db32aa0caea2469b2897e9888d"
+  },
+  "assets/images/character_02.png": {
+    "mtime": 1791903072.0,
+    "seen": 1793193311.1781292,
+    "ast_hash": "53092c1f27a05db9b0a3a5c07d48fe7e",
+    "semantic_hash": "53092c1f27a05db9b0a3a5c07d48fe7e"
+  },
+  "assets/images/character_03.png": {
+    "mtime": 1791903072.0,
+    "seen": 1793193311.179129,
+    "ast_hash": "117a16188c61a2b6bf4a7b65955e2a60",
+    "semantic_hash": "117a16188c61a2b6bf4a7b65955e2a60"
+  },
+  "assets/images/character_04.png": {
+    "mtime": 1791903072.0,
+    "seen": 1793193311.179129,
+    "ast_hash": "90d3323a2dfbdc5db852748be6be7a5b",
+    "semantic_hash": "90d3323a2dfbdc5db852748be6be7a5b"
+  },
+  "assets/images/character_05.png": {
+    "mtime": 1791903072.0,
+    "seen": 1793193311.180128,
+    "ast_hash": "ec2ce8c37a87fc005235a8aa228d100a",
+    "semantic_hash": "ec2ce8c37a87fc005235a8aa228d100a"
+  },
+  "assets/images/character_06.png": {
+    "mtime": 1791903072.0,
+    "seen": 1793193311.1811273,
+    "ast_hash": "bbbc4d4b55f1ab14d0e3dd9476402b99",
+    "semantic_hash": "bbbc4d4b55f1ab14d0e3dd9476402b99"
+  },
+  "assets/images/character_07.png": {
+    "mtime": 1791903072.0,
+    "seen": 1793193311.1811273,
+    "ast_hash": "6a59d87c78a00f6d8a2bb8f2e6daf3ba",
+    "semantic_hash": "6a59d87c78a00f6d8a2bb8f2e6daf3ba"
+  },
+  "assets/images/character_08.png": {
+    "mtime": 1791903072.0,
+    "seen": 1793193311.1811273,
+    "ast_hash": "59793a9c17a31ea9d8181dbf3307eae1",
+    "semantic_hash": "59793a9c17a31ea9d8181dbf3307eae1"
+  },
+  "assets/images/character_09.png": {
+    "mtime": 1791903072.0,
+    "seen": 1793193311.1821263,
+    "ast_hash": "6a0c5b705ed8e4adc362fe68f1b72c8c",
+    "semantic_hash": "6a0c5b705ed8e4adc362fe68f1b72c8c"
+  },
+  "assets/images/character_10.png": {
+    "mtime": 1791903072.0,
+    "seen": 1793193311.1821263,
+    "ast_hash": "12f9451aa553a652eadb89f2cc99dd5a",
+    "semantic_hash": "12f9451aa553a652eadb89f2cc99dd5a"
+  },
+  "assets/images/dashboard_bg.jpg": {
+    "mtime": 1792968664.0,
+    "seen": 1793193311.1831264,
+    "ast_hash": "736deb5e03cb952b0a2e4f031678e783",
+    "semantic_hash": "736deb5e03cb952b0a2e4f031678e783"
+  },
+  "assets/images/gallery.png": {
+    "mtime": 1791903072.0,
+    "seen": 1793193311.1831264,
+    "ast_hash": "e07d309025c78fad43167f765af5285d",
+    "semantic_hash": "e07d309025c78fad43167f765af5285d"
+  },
+  "assets/images/homework.png": {
+    "mtime": 1791903072.0,
+    "seen": 1793193311.1841257,
+    "ast_hash": "60b76d8e815374cbc73600f440bee5c9",
+    "semantic_hash": "60b76d8e815374cbc73600f440bee5c9"
+  },
+  "assets/images/icons/03_refresh.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.1841257,
+    "ast_hash": "2b0f082b016c7f9f2ad500b8d0c7188a",
+    "semantic_hash": "2b0f082b016c7f9f2ad500b8d0c7188a"
+  },
+  "assets/images/icons/04_close.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.1851246,
+    "ast_hash": "3424627d5e48f16f5a50cdc311e8ef76",
+    "semantic_hash": "3424627d5e48f16f5a50cdc311e8ef76"
+  },
+  "assets/images/icons/05_check.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.1851246,
+    "ast_hash": "2a09cb97face69efc5ae360106711f64",
+    "semantic_hash": "2a09cb97face69efc5ae360106711f64"
+  },
+  "assets/images/icons/06_folder_open.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.1861267,
+    "ast_hash": "c4405ba3ae8ba44f24f9744b050d1397",
+    "semantic_hash": "c4405ba3ae8ba44f24f9744b050d1397"
+  },
+  "assets/images/icons/07_folders.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.187125,
+    "ast_hash": "3218853be6abf30cad3d2ca0799bd418",
+    "semantic_hash": "3218853be6abf30cad3d2ca0799bd418"
+  },
+  "assets/images/icons/08_folder_blue.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.187125,
+    "ast_hash": "ecedc4eac13b3b1e3e6a0e8641c939a4",
+    "semantic_hash": "ecedc4eac13b3b1e3e6a0e8641c939a4"
+  },
+  "assets/images/icons/09_folder_add.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.1881225,
+    "ast_hash": "7de69ea57e7cb2decbcdf0b18edf2da8",
+    "semantic_hash": "7de69ea57e7cb2decbcdf0b18edf2da8"
+  },
+  "assets/images/icons/10_folder_remove.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.1881225,
+    "ast_hash": "6b388e110d7273b04057ee90efc76681",
+    "semantic_hash": "6b388e110d7273b04057ee90efc76681"
+  },
+  "assets/images/icons/11_folder_download.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.1891227,
+    "ast_hash": "3971ce0ded88621fff05bd663c3df68d",
+    "semantic_hash": "3971ce0ded88621fff05bd663c3df68d"
+  },
+  "assets/images/icons/12_folder_upload.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.1891227,
+    "ast_hash": "3f816ee2c0bc53fd28c3804a67359e5f",
+    "semantic_hash": "3f816ee2c0bc53fd28c3804a67359e5f"
+  },
+  "assets/images/icons/13_document_text.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.1901221,
+    "ast_hash": "d9f92eefceecdac644a0a556094e22ad",
+    "semantic_hash": "d9f92eefceecdac644a0a556094e22ad"
+  },
+  "assets/images/icons/14_image_file.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.1901221,
+    "ast_hash": "54ea511d87ddadd2472563d4f2365303",
+    "semantic_hash": "54ea511d87ddadd2472563d4f2365303"
+  },
+  "assets/images/icons/15_audio_file.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.1911213,
+    "ast_hash": "fab730f8ee1d45a33d6e3ce410b26bba",
+    "semantic_hash": "fab730f8ee1d45a33d6e3ce410b26bba"
+  },
+  "assets/images/icons/16_video_file.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.1921208,
+    "ast_hash": "1bbc781046484b3f6dbd0b507b33aabd",
+    "semantic_hash": "1bbc781046484b3f6dbd0b507b33aabd"
+  },
+  "assets/images/icons/17_pdf_file.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.1921208,
+    "ast_hash": "b8d85a8d944e84c821165eb836e95c59",
+    "semantic_hash": "b8d85a8d944e84c821165eb836e95c59"
+  },
+  "assets/images/icons/18_word_file.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.1931207,
+    "ast_hash": "3b63fad8cdbb51445fe072ce50c276be",
+    "semantic_hash": "3b63fad8cdbb51445fe072ce50c276be"
+  },
+  "assets/images/icons/19_excel_file.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.1931207,
+    "ast_hash": "8299a0f31fd830fe4388a6f8a6be158b",
+    "semantic_hash": "8299a0f31fd830fe4388a6f8a6be158b"
+  },
+  "assets/images/icons/20_powerpoint_file.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.1941195,
+    "ast_hash": "fed799a65bb62bcd3dd4c8c1f63a3572",
+    "semantic_hash": "fed799a65bb62bcd3dd4c8c1f63a3572"
+  },
+  "assets/images/icons/21_photos.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.1941195,
+    "ast_hash": "44382117b8099c477bcf9be4f64e279e",
+    "semantic_hash": "44382117b8099c477bcf9be4f64e279e"
+  },
+  "assets/images/icons/22_camera.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.1941195,
+    "ast_hash": "963c87263a2a4cb06f3e1745d46fdf67",
+    "semantic_hash": "963c87263a2a4cb06f3e1745d46fdf67"
+  },
+  "assets/images/icons/23_video_camera.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.1951187,
+    "ast_hash": "1d710a92bda35eddc80771e25b3c256f",
+    "semantic_hash": "1d710a92bda35eddc80771e25b3c256f"
+  },
+  "assets/images/icons/24_microphone.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.1951187,
+    "ast_hash": "8d290b051f82b207be11c68473f0e9be",
+    "semantic_hash": "8d290b051f82b207be11c68473f0e9be"
+  },
+  "assets/images/icons/25_volume.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.1961186,
+    "ast_hash": "d5f1f6431a29084ebc8944794e289a0a",
+    "semantic_hash": "d5f1f6431a29084ebc8944794e289a0a"
+  },
+  "assets/images/icons/26_headphones.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.1961186,
+    "ast_hash": "9496ae0c0b878b6ffa88cf5905db93cf",
+    "semantic_hash": "9496ae0c0b878b6ffa88cf5905db93cf"
+  },
+  "assets/images/icons/27_printer.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.1971178,
+    "ast_hash": "019aef88587df8245ea0b1a52328621b",
+    "semantic_hash": "019aef88587df8245ea0b1a52328621b"
+  },
+  "assets/images/icons/28_laptop.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.1971178,
+    "ast_hash": "f5f7e4df883871a5d89935e504029960",
+    "semantic_hash": "f5f7e4df883871a5d89935e504029960"
+  },
+  "assets/images/icons/29_monitor.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.1981168,
+    "ast_hash": "cbcb762852c55473752bace5c44d6a93",
+    "semantic_hash": "cbcb762852c55473752bace5c44d6a93"
+  },
+  "assets/images/icons/30_desktop_pc.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.1981168,
+    "ast_hash": "7d25c76bc88f1c452f01ea3367610172",
+    "semantic_hash": "7d25c76bc88f1c452f01ea3367610172"
+  },
+  "assets/images/icons/31_hard_drive.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.1981168,
+    "ast_hash": "c77151316c332263f789840e203ede56",
+    "semantic_hash": "c77151316c332263f789840e203ede56"
+  },
+  "assets/images/icons/32_usb_drive.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.1991158,
+    "ast_hash": "8f7d48a82ee375cec8ffa16481fc314e",
+    "semantic_hash": "8f7d48a82ee375cec8ffa16481fc314e"
+  },
+  "assets/images/icons/33_external_drive.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.200116,
+    "ast_hash": "355d339b7ad90913b96c593bf295ab05",
+    "semantic_hash": "355d339b7ad90913b96c593bf295ab05"
+  },
+  "assets/images/icons/34_internet.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.200116,
+    "ast_hash": "c6b2e5639c79584dad5d58ee6fb069e3",
+    "semantic_hash": "c6b2e5639c79584dad5d58ee6fb069e3"
+  },
+  "assets/images/icons/35_wifi.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2011158,
+    "ast_hash": "c6e0b4404e743387458ebceccae9b450",
+    "semantic_hash": "c6e0b4404e743387458ebceccae9b450"
+  },
+  "assets/images/icons/36_bluetooth.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2011158,
+    "ast_hash": "505a9b1fbc79678f62141a539b61cb38",
+    "semantic_hash": "505a9b1fbc79678f62141a539b61cb38"
+  },
+  "assets/images/icons/37_settings.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2022176,
+    "ast_hash": "3e6b1cb55e7a7debb26bb4a1e7ef758b",
+    "semantic_hash": "3e6b1cb55e7a7debb26bb4a1e7ef758b"
+  },
+  "assets/images/icons/38_warning.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2027295,
+    "ast_hash": "e4669d02e2eb90d4b18d1fe460bb6e21",
+    "semantic_hash": "e4669d02e2eb90d4b18d1fe460bb6e21"
+  },
+  "assets/images/icons/39_information.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2032695,
+    "ast_hash": "5c01760a0501f2d679ed80e62d286096",
+    "semantic_hash": "5c01760a0501f2d679ed80e62d286096"
+  },
+  "assets/images/icons/40_security_shield.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2037811,
+    "ast_hash": "31080ef222a70723afc3304d2ce0f395",
+    "semantic_hash": "31080ef222a70723afc3304d2ce0f395"
+  },
+  "assets/images/icons/41_user.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2037811,
+    "ast_hash": "f1f8a5a88013836014486bf135d7cadb",
+    "semantic_hash": "f1f8a5a88013836014486bf135d7cadb"
+  },
+  "assets/images/icons/42_users.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.204776,
+    "ast_hash": "47fc3c1647270a84361365ed735f31f4",
+    "semantic_hash": "47fc3c1647270a84361365ed735f31f4"
+  },
+  "assets/images/icons/43_recycle_bin.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.204776,
+    "ast_hash": "e95c5ff9f7a197ffa53263a3f099d129",
+    "semantic_hash": "e95c5ff9f7a197ffa53263a3f099d129"
+  },
+  "assets/images/icons/44_calendar.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.205776,
+    "ast_hash": "d37ff5139b891d65249d9d42a5f20b76",
+    "semantic_hash": "d37ff5139b891d65249d9d42a5f20b76"
+  },
+  "assets/images/icons/45_clock.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.205776,
+    "ast_hash": "61cff847475bf87c12a3b67c206f3042",
+    "semantic_hash": "61cff847475bf87c12a3b67c206f3042"
+  },
+  "assets/images/icons/46_search.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.205776,
+    "ast_hash": "4acb6e0182f39257a6964ec4c5482735",
+    "semantic_hash": "4acb6e0182f39257a6964ec4c5482735"
+  },
+  "assets/images/icons/47_favorite_star.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2067752,
+    "ast_hash": "0b0f4d7707b330ed9d0ca8edc3f4614a",
+    "semantic_hash": "0b0f4d7707b330ed9d0ca8edc3f4614a"
+  },
+  "assets/images/icons/48_like_heart.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2067752,
+    "ast_hash": "4d7e7120a01c43558636196b3adbffcd",
+    "semantic_hash": "4d7e7120a01c43558636196b3adbffcd"
+  },
+  "assets/images/icons/49_notes.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2077749,
+    "ast_hash": "5826faca01244f1e09adfefdc4b66b4a",
+    "semantic_hash": "5826faca01244f1e09adfefdc4b66b4a"
+  },
+  "assets/images/icons/50_paint_palette.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2077749,
+    "ast_hash": "bec68126af7810b313742b09ea77fef8",
+    "semantic_hash": "bec68126af7810b313742b09ea77fef8"
+  },
+  "assets/images/icons/51_download.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2087743,
+    "ast_hash": "8f55c36e2f8fc8b44d07d7a1e1f984c3",
+    "semantic_hash": "8f55c36e2f8fc8b44d07d7a1e1f984c3"
+  },
+  "assets/images/icons/52_documents_photos.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2087743,
+    "ast_hash": "c2d8e862eec4dda324d6e40eca995f11",
+    "semantic_hash": "c2d8e862eec4dda324d6e40eca995f11"
+  },
+  "assets/images/icons/53_binoculars.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2087743,
+    "ast_hash": "05a6d6b993986058cfa164376d902a5c",
+    "semantic_hash": "05a6d6b993986058cfa164376d902a5c"
+  },
+  "assets/images/icons/54_power.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.209773,
+    "ast_hash": "2525c0d8397e7d1245d7c5a9e4486bc3",
+    "semantic_hash": "2525c0d8397e7d1245d7c5a9e4486bc3"
+  },
+  "assets/images/icons/AuthFWGP.dll_I0065_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.210774,
+    "ast_hash": "9544e5f6a9982808c44f80285534ddfc",
+    "semantic_hash": "9544e5f6a9982808c44f80285534ddfc"
+  },
+  "assets/images/icons/AuxiliaryDisplayClassInstaller.dll_I0064_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.210774,
+    "ast_hash": "6be1068c4e29179e49b42788dd6a7129",
+    "semantic_hash": "6be1068c4e29179e49b42788dd6a7129"
+  },
+  "assets/images/icons/AuxiliaryDisplayCpl.dll_I0001_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.211772,
+    "ast_hash": "5fd8f44502e5a604cd7818e249cfdca6",
+    "semantic_hash": "5fd8f44502e5a604cd7818e249cfdca6"
+  },
+  "assets/images/icons/AuxiliaryDisplayCpl.dll_I000a_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.211772,
+    "ast_hash": "ba7df6624c02e5097582515a45149c3e",
+    "semantic_hash": "ba7df6624c02e5097582515a45149c3e"
+  },
+  "assets/images/icons/CaptureWizard.exe_I0080_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2127717,
+    "ast_hash": "bf4d7927bfed3b925c430863b9ee3467",
+    "semantic_hash": "bf4d7927bfed3b925c430863b9ee3467"
+  },
+  "assets/images/icons/Chess.exe_I0080_0409.png": {
+    "mtime": 1791833906.9144104,
+    "seen": 1793193311.2127717,
+    "ast_hash": "d1486e9494a56e8a70fbd685ea9fbed4",
+    "semantic_hash": "d1486e9494a56e8a70fbd685ea9fbed4"
+  },
+  "assets/images/icons/CompatUI.dll_I00d2_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2137723,
+    "ast_hash": "973bc69f34ce0feeee028f890843419d",
+    "semantic_hash": "973bc69f34ce0feeee028f890843419d"
+  },
+  "assets/images/icons/DVDMaker.exe_I01b8_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2147698,
+    "ast_hash": "74328d4d8ed495a44ae2828f6091d53f",
+    "semantic_hash": "74328d4d8ed495a44ae2828f6091d53f"
+  },
+  "assets/images/icons/Defrag.exe_I0064_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2147698,
+    "ast_hash": "bf523e2da6fde4b33e0b06b24f683a6c",
+    "semantic_hash": "bf523e2da6fde4b33e0b06b24f683a6c"
+  },
+  "assets/images/icons/DpiScaling.exe_I0064_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2157693,
+    "ast_hash": "ad2c2ce66b4dd8054c02dc251c6dfd08",
+    "semantic_hash": "ad2c2ce66b4dd8054c02dc251c6dfd08"
+  },
+  "assets/images/icons/FXSRES.DLL_I0cdd_0409.png": {
+    "mtime": 1791833908.687801,
+    "seen": 1793193311.2157693,
+    "ast_hash": "248281bbe9d7946e54b4f8606c611f4b",
+    "semantic_hash": "248281bbe9d7946e54b4f8606c611f4b"
+  },
+  "assets/images/icons/FXSRES.DLL_I0ce7_0409.png": {
+    "mtime": 1791833908.7117853,
+    "seen": 1793193311.2167692,
+    "ast_hash": "f24dd8b5672c23248961cd08be048360",
+    "semantic_hash": "f24dd8b5672c23248961cd08be048360"
+  },
+  "assets/images/icons/FXSRES.DLL_I0cf5_0409.png": {
+    "mtime": 1791833908.7357726,
+    "seen": 1793193311.2167692,
+    "ast_hash": "15cf30831be9d49c2c0aa23eecd7fc13",
+    "semantic_hash": "15cf30831be9d49c2c0aa23eecd7fc13"
+  },
+  "assets/images/icons/FXSRES.DLL_I13ad_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.217768,
+    "ast_hash": "5a7e6779ea9ca1c45bbe20b60bddc274",
+    "semantic_hash": "5a7e6779ea9ca1c45bbe20b60bddc274"
+  },
+  "assets/images/icons/FXSRES.DLL_I2725_0409.png": {
+    "mtime": 1791833908.800219,
+    "seen": 1793193311.2187681,
+    "ast_hash": "c161cd2dc6e85baa757f57ff00004e6b",
+    "semantic_hash": "c161cd2dc6e85baa757f57ff00004e6b"
+  },
+  "assets/images/icons/FXSST.dll_I233a_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2187681,
+    "ast_hash": "fec45cff43cd151b427969a7eebf8873",
+    "semantic_hash": "fec45cff43cd151b427969a7eebf8873"
+  },
+  "assets/images/icons/Firewall.cpl_I2969_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.220767,
+    "ast_hash": "2f16d1677e92936a2a215fa374bcd894",
+    "semantic_hash": "2f16d1677e92936a2a215fa374bcd894"
+  },
+  "assets/images/icons/Firewall.cpl_I296a_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.220767,
+    "ast_hash": "866e56267f58279e82024adf5787c433",
+    "semantic_hash": "866e56267f58279e82024adf5787c433"
+  },
+  "assets/images/icons/Firewall.cpl_I296b_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2217653,
+    "ast_hash": "7c2e0d808bf57452805f3028b2bd22f1",
+    "semantic_hash": "7c2e0d808bf57452805f3028b2bd22f1"
+  },
+  "assets/images/icons/Firewall.cpl_I296c_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2217653,
+    "ast_hash": "41d6f82c35471f67cffb2f54b72fe267",
+    "semantic_hash": "41d6f82c35471f67cffb2f54b72fe267"
+  },
+  "assets/images/icons/FirewallControlPanel.exe_I138b_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2227647,
+    "ast_hash": "20be48d34891c6afb65a413300d729a3",
+    "semantic_hash": "20be48d34891c6afb65a413300d729a3"
+  },
+  "assets/images/icons/FlickLearningWizard.exe_I006b_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2227647,
+    "ast_hash": "d7fb7c9698c778389093a0910ba7c220",
+    "semantic_hash": "d7fb7c9698c778389093a0910ba7c220"
+  },
+  "assets/images/icons/FreeCell.exe_I0079_0409.png": {
+    "mtime": 1791833908.6023424,
+    "seen": 1793193311.2237642,
+    "ast_hash": "bc02532bc61c44a3b1d0042299966d50",
+    "semantic_hash": "bc02532bc61c44a3b1d0042299966d50"
+  },
+  "assets/images/icons/Hearts.exe_I006c_0409.png": {
+    "mtime": 1791833908.9841359,
+    "seen": 1793193311.2237642,
+    "ast_hash": "66cb7bd1348447e8167bbadae6098083",
+    "semantic_hash": "66cb7bd1348447e8167bbadae6098083"
+  },
+  "assets/images/icons/InetMgr.exe_S0_0409.png": {
+    "mtime": 1791833912.2992427,
+    "seen": 1793193311.2247636,
+    "ast_hash": "ee79d828dbbac17ff0c15d2045a9de83",
+    "semantic_hash": "ee79d828dbbac17ff0c15d2045a9de83"
+  },
+  "assets/images/icons/InkWatson.exe_I012c_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2247636,
+    "ast_hash": "7cc4cb4eee7691a1b0487e50ecbeff7d",
+    "semantic_hash": "7cc4cb4eee7691a1b0487e50ecbeff7d"
+  },
+  "assets/images/icons/InkWatson.exe_I012d_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2247636,
+    "ast_hash": "7e75b5603216573935e4ce1ba1651f4f",
+    "semantic_hash": "7e75b5603216573935e4ce1ba1651f4f"
+  },
+  "assets/images/icons/Journal.exe_I0068_0409.png": {
+    "mtime": 1791833912.5391681,
+    "seen": 1793193311.2257633,
+    "ast_hash": "622ec611413ac7d4cebcf30221a21fdf",
+    "semantic_hash": "622ec611413ac7d4cebcf30221a21fdf"
+  },
+  "assets/images/icons/Journal.exe_I0069_0409.png": {
+    "mtime": 1791833912.564156,
+    "seen": 1793193311.2257633,
+    "ast_hash": "fad4cd83e23d00fe508a9a96abd54c74",
+    "semantic_hash": "fad4cd83e23d00fe508a9a96abd54c74"
+  },
+  "assets/images/icons/Journal.exe_I007f_0409.png": {
+    "mtime": 1791833912.5881374,
+    "seen": 1793193311.2267628,
+    "ast_hash": "2d52fc43aec2bb322b529116bf3e7783",
+    "semantic_hash": "2d52fc43aec2bb322b529116bf3e7783"
+  },
+  "assets/images/icons/MIGUIImg.dll_I00ad_0409.png": {
+    "mtime": 1791833912.9174724,
+    "seen": 1793193311.2267628,
+    "ast_hash": "46ceb939c3ff54e7efb82a0d5188e604",
+    "semantic_hash": "46ceb939c3ff54e7efb82a0d5188e604"
+  },
+  "assets/images/icons/MSASCui.exe_SIDI_APP_0409.png": {
+    "mtime": 1791833913.0710194,
+    "seen": 1793193311.2267628,
+    "ast_hash": "40763b0169976d848b2a067a4b4d64f9",
+    "semantic_hash": "40763b0169976d848b2a067a4b4d64f9"
+  },
+  "assets/images/icons/Magnify.exe_S0_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2277637,
+    "ast_hash": "154ba943af0108cc0b1540cd1c8ed8d6",
+    "semantic_hash": "154ba943af0108cc0b1540cd1c8ed8d6"
+  },
+  "assets/images/icons/Mahjong.exe_I0066_0409.png": {
+    "mtime": 1791833912.6990707,
+    "seen": 1793193311.2277637,
+    "ast_hash": "71d8ad24ac5b8b61b7dfa4d85c011fbb",
+    "semantic_hash": "71d8ad24ac5b8b61b7dfa4d85c011fbb"
+  },
+  "assets/images/icons/McxDriv.dll_I0065_0409.png": {
+    "mtime": 1791833912.8459804,
+    "seen": 1793193311.2287617,
+    "ast_hash": "29a3041d9f5077ffb8588b3a0d12928f",
+    "semantic_hash": "29a3041d9f5077ffb8588b3a0d12928f"
+  },
+  "assets/images/icons/MdSched.exe_I1388_0409.png": {
+    "mtime": 1791833912.8709648,
+    "seen": 1793193311.2287617,
+    "ast_hash": "62f7d6f4e8ab8c36dc19f75766a0e766",
+    "semantic_hash": "62f7d6f4e8ab8c36dc19f75766a0e766"
+  },
+  "assets/images/icons/MigAutoPlay.exe_I00ad_0409.png": {
+    "mtime": 1791833912.8949773,
+    "seen": 1793193311.229761,
+    "ast_hash": "355825248fd6d20f1b412974a248e9e7",
+    "semantic_hash": "355825248fd6d20f1b412974a248e9e7"
+  },
+  "assets/images/icons/MineSweeper.exe_I006e_0409.png": {
+    "mtime": 1791833912.9730785,
+    "seen": 1793193311.2307603,
+    "ast_hash": "91880e9d19a6dff28c72f20eeca316e9",
+    "semantic_hash": "91880e9d19a6dff28c72f20eeca316e9"
+  },
+  "assets/images/icons/MineSweeper.exe_I006f_0409.png": {
+    "mtime": 1791833912.9970636,
+    "seen": 1793193311.2307603,
+    "ast_hash": "25b03a31e74c4b9c32037326a5576982",
+    "semantic_hash": "25b03a31e74c4b9c32037326a5576982"
+  },
+  "assets/images/icons/NetProj.exe_I0065_0409.png": {
+    "mtime": 1791833913.8375745,
+    "seen": 1793193311.2317605,
+    "ast_hash": "dc687ac6e0392ab997f41a9f95afb6df",
+    "semantic_hash": "dc687ac6e0392ab997f41a9f95afb6df"
+  },
+  "assets/images/icons/PenTraining.exe_I0066_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.23218,
+    "ast_hash": "6b73a7938b03376a2033dbe906dbf23f",
+    "semantic_hash": "6b73a7938b03376a2033dbe906dbf23f"
+  },
+  "assets/images/icons/PresentationHost.exe_I03e8_0409.png": {
+    "mtime": 1791833915.2101607,
+    "seen": 1793193311.2326975,
+    "ast_hash": "d505137331ae00f355934f4073c47823",
+    "semantic_hash": "d505137331ae00f355934f4073c47823"
+  },
+  "assets/images/icons/PresentationHost.exe_I03e9_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2326975,
+    "ast_hash": "e30e3fb97ff4d2d1c4f5b1f59bcc3cca",
+    "semantic_hash": "e30e3fb97ff4d2d1c4f5b1f59bcc3cca"
+  },
+  "assets/images/icons/PresentationHost.exe_I03ea_0409.png": {
+    "mtime": 1791833915.275125,
+    "seen": 1793193311.233689,
+    "ast_hash": "d662f60d6d853fc826defc417e58a9ad",
+    "semantic_hash": "d662f60d6d853fc826defc417e58a9ad"
+  },
+  "assets/images/icons/PresentationHost.exe_I03eb_0409.png": {
+    "mtime": 1791833915.2991107,
+    "seen": 1793193311.233689,
+    "ast_hash": "d505137331ae00f355934f4073c47823",
+    "semantic_hash": "d505137331ae00f355934f4073c47823"
+  },
+  "assets/images/icons/RASMM.dll_I0064_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2346883,
+    "ast_hash": "7fb050a26dfeb167a9bf3054ff6d37b9",
+    "semantic_hash": "7fb050a26dfeb167a9bf3054ff6d37b9"
+  },
+  "assets/images/icons/RelMon.dll_I00c9_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2356882,
+    "ast_hash": "fabad99095d2aaadb142895ca994fd96",
+    "semantic_hash": "fabad99095d2aaadb142895ca994fd96"
+  },
+  "assets/images/icons/RelPost.exe_I2af8_0409.png": {
+    "mtime": 1791833915.388055,
+    "seen": 1793193311.2356882,
+    "ast_hash": "6cabaed4431bdb211dab1b427724bb65",
+    "semantic_hash": "6cabaed4431bdb211dab1b427724bb65"
+  },
+  "assets/images/icons/SLUI.exe_I0001_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2366874,
+    "ast_hash": "991cfd29c84290609b3a250537235d26",
+    "semantic_hash": "991cfd29c84290609b3a250537235d26"
+  },
+  "assets/images/icons/SLUI.exe_I0003_0409.png": {
+    "mtime": 1791833915.9284985,
+    "seen": 1793193311.2366874,
+    "ast_hash": "98a31ba8348cc633cda55c253266f594",
+    "semantic_hash": "98a31ba8348cc633cda55c253266f594"
+  },
+  "assets/images/icons/Setup.exe_I0001_0409.png": {
+    "mtime": 1791833915.6199627,
+    "seen": 1793193311.237686,
+    "ast_hash": "cc183b1fb6433abe14cce2258fc5f43b",
+    "semantic_hash": "cc183b1fb6433abe14cce2258fc5f43b"
+  },
+  "assets/images/icons/SnippingTool.exe_I00a5_0409.png": {
+    "mtime": 1791833915.96248,
+    "seen": 1793193311.237686,
+    "ast_hash": "6f5f8121f0f806ea16f4bde14f9d0f16",
+    "semantic_hash": "6f5f8121f0f806ea16f4bde14f9d0f16"
+  },
+  "assets/images/icons/SoundRecorder.exe_I00c9_0409.png": {
+    "mtime": 1791833915.9874618,
+    "seen": 1793193311.238687,
+    "ast_hash": "7ee28193ee18dd716e6dd4bee77d7c51",
+    "semantic_hash": "7ee28193ee18dd716e6dd4bee77d7c51"
+  },
+  "assets/images/icons/StikyNot.exe_I0064_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.238687,
+    "ast_hash": "5ca28c3f22a7ae0a82f8c142a81d06c0",
+    "semantic_hash": "5ca28c3f22a7ae0a82f8c142a81d06c0"
+  },
+  "assets/images/icons/SyncCenter.dll_I03ea_0409.png": {
+    "mtime": 1791833916.1265635,
+    "seen": 1793193311.238687,
+    "ast_hash": "c27703446cda8d6d1afc2b14bafbd700",
+    "semantic_hash": "c27703446cda8d6d1afc2b14bafbd700"
+  },
+  "assets/images/icons/SyncCenter.dll_I03ee_0409.png": {
+    "mtime": 1791833916.1501105,
+    "seen": 1793193311.2396874,
+    "ast_hash": "91d372cbb04c9d1349cd400830b66df4",
+    "semantic_hash": "91d372cbb04c9d1349cd400830b66df4"
+  },
+  "assets/images/icons/SystemPropertiesProtection.exe_I1f41_0409.png": {
+    "mtime": 1791833916.1996293,
+    "seen": 1793193311.2406843,
+    "ast_hash": "e41ae1fd537f448d2d51c16c3aa90481",
+    "semantic_hash": "e41ae1fd537f448d2d51c16c3aa90481"
+  },
+  "assets/images/icons/TabletPC.cpl_I27db_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2416835,
+    "ast_hash": "94079030e1077585be08a17a9c50f1b3",
+    "semantic_hash": "94079030e1077585be08a17a9c50f1b3"
+  },
+  "assets/images/icons/TouchTraining.exe_I0066_0409.png": {
+    "mtime": 1791833916.260594,
+    "seen": 1793193311.2416835,
+    "ast_hash": "dd007302a38d0d42a5e79d36f7b49820",
+    "semantic_hash": "dd007302a38d0d42a5e79d36f7b49820"
+  },
+  "assets/images/icons/TouchX.dll_I006b_0409.png": {
+    "mtime": 1791833916.2843342,
+    "seen": 1793193311.2426848,
+    "ast_hash": "bd63e181f19d4ca4ff7771a7a15fa717",
+    "semantic_hash": "bd63e181f19d4ca4ff7771a7a15fa717"
+  },
+  "assets/images/icons/UIHub.dll_I0516_0409.png": {
+    "mtime": 1791833916.3093207,
+    "seen": 1793193311.2426848,
+    "ast_hash": "5fcee08cf087dc7f06cafa30e261b438",
+    "semantic_hash": "5fcee08cf087dc7f06cafa30e261b438"
+  },
+  "assets/images/icons/VAN.dll_I0083_0409.png": {
+    "mtime": 1791833916.3333056,
+    "seen": 1793193311.2436833,
+    "ast_hash": "d6af5c1e2703ebba031f3ce64e5aa0c7",
+    "semantic_hash": "d6af5c1e2703ebba031f3ce64e5aa0c7"
+  },
+  "assets/images/icons/WMPhoto.dll_I0190_0409.png": {
+    "mtime": 1791833916.9147713,
+    "seen": 1793193311.2446826,
+    "ast_hash": "51e496fcad3808ac4d0141ee30fcbf31",
+    "semantic_hash": "51e496fcad3808ac4d0141ee30fcbf31"
+  },
+  "assets/images/icons/WinCal.exe_I0064_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2446826,
+    "ast_hash": "de54fd9b5b49fe853d3f13b67e820ece",
+    "semantic_hash": "de54fd9b5b49fe853d3f13b67e820ece"
+  },
+  "assets/images/icons/WinMail.exe_I0004_0409.png": {
+    "mtime": 1791833916.7633266,
+    "seen": 1793193311.245683,
+    "ast_hash": "ace4572cc6170a9d48dcbcc09b7c991e",
+    "semantic_hash": "ace4572cc6170a9d48dcbcc09b7c991e"
+  },
+  "assets/images/icons/WlanMM.dll_I0bb8_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2466817,
+    "ast_hash": "995553e644d77303d027ba9b155c7b36",
+    "semantic_hash": "995553e644d77303d027ba9b155c7b36"
+  },
+  "assets/images/icons/accessibilitycpl.dll_I0140_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2466817,
+    "ast_hash": "e5e5ae627bb3329c2c2730e11d334101",
+    "semantic_hash": "e5e5ae627bb3329c2c2730e11d334101"
+  },
+  "assets/images/icons/accessibilitycpl.dll_I0141_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.24768,
+    "ast_hash": "154ba943af0108cc0b1540cd1c8ed8d6",
+    "semantic_hash": "154ba943af0108cc0b1540cd1c8ed8d6"
+  },
+  "assets/images/icons/accessibilitycpl.dll_I0142_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.24868,
+    "ast_hash": "8341d40e10152a12084f33b166dd9331",
+    "semantic_hash": "8341d40e10152a12084f33b166dd9331"
+  },
+  "assets/images/icons/accessibilitycpl.dll_I0143_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.24868,
+    "ast_hash": "6455402ec2e786104af379a71d06e953",
+    "semantic_hash": "6455402ec2e786104af379a71d06e953"
+  },
+  "assets/images/icons/accessibilitycpl.dll_I0144_0409.png": {
+    "mtime": 1791833906.2101438,
+    "seen": 1793193311.2496793,
+    "ast_hash": "4ab6c52744189552835698cb8b797938",
+    "semantic_hash": "4ab6c52744189552835698cb8b797938"
+  },
+  "assets/images/icons/accessibilitycpl.dll_I0145_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2506793,
+    "ast_hash": "b575c4502044ad798b403e94348f8dfa",
+    "semantic_hash": "b575c4502044ad798b403e94348f8dfa"
+  },
+  "assets/images/icons/accessibilitycpl.dll_I0146_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2506793,
+    "ast_hash": "26ccaddc4df4c1f7d56391a0acfbef11",
+    "semantic_hash": "26ccaddc4df4c1f7d56391a0acfbef11"
+  },
+  "assets/images/icons/accessibilitycpl.dll_I0153_0409.png": {
+    "mtime": 1791833906.3167994,
+    "seen": 1793193311.251679,
+    "ast_hash": "9cd665ad71974d3607279f83748f934e",
+    "semantic_hash": "9cd665ad71974d3607279f83748f934e"
+  },
+  "assets/images/icons/appwiz.cpl_I00fb_0409.png": {
+    "mtime": 1791833906.3407125,
+    "seen": 1793193311.251679,
+    "ast_hash": "4c1d87b8c53002eee94672059c1fd0e2",
+    "semantic_hash": "4c1d87b8c53002eee94672059c1fd0e2"
+  },
+  "assets/images/icons/appwiz.cpl_I05dc_0409.png": {
+    "mtime": 1791833906.3643906,
+    "seen": 1793193311.2526784,
+    "ast_hash": "02d3c10000d9b49befd3845d8398f29d",
+    "semantic_hash": "02d3c10000d9b49befd3845d8398f29d"
+  },
+  "assets/images/icons/appwiz.cpl_I05e3_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2526784,
+    "ast_hash": "55003d0c6ea7e58ae0711aac920016e1",
+    "semantic_hash": "55003d0c6ea7e58ae0711aac920016e1"
+  },
+  "assets/images/icons/audiosrv.dll_I00cb_0409.png": {
+    "mtime": 1791833906.4354029,
+    "seen": 1793193311.2536786,
+    "ast_hash": "93fba8f30d7955ed373fa3536cf8b18e",
+    "semantic_hash": "93fba8f30d7955ed373fa3536cf8b18e"
+  },
+  "assets/images/icons/autoplay.dll_I0001_0409.png": {
+    "mtime": 1791833906.5183542,
+    "seen": 1793193311.2546766,
+    "ast_hash": "117e5bb01a2434a2f0a2beea40e51e55",
+    "semantic_hash": "117e5bb01a2434a2f0a2beea40e51e55"
+  },
+  "assets/images/icons/brcpl.dll_I0001_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2546766,
+    "ast_hash": "9017c688ce661cc553752144fdebb68e",
+    "semantic_hash": "9017c688ce661cc553752144fdebb68e"
+  },
+  "assets/images/icons/brcpl.dll_I0002_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2556782,
+    "ast_hash": "41b87e8df2e5f25c4b093c253633e6fe",
+    "semantic_hash": "41b87e8df2e5f25c4b093c253633e6fe"
+  },
+  "assets/images/icons/brcpl.dll_I0003_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2566764,
+    "ast_hash": "14a0f2e16089bc11963f4751bf7e31cb",
+    "semantic_hash": "14a0f2e16089bc11963f4751bf7e31cb"
+  },
+  "assets/images/icons/bthprops.cpl_I0097_0409.png": {
+    "mtime": 1791833906.7664988,
+    "seen": 1793193311.2566764,
+    "ast_hash": "6ba6e187402a6754e16f47db47c6a9d3",
+    "semantic_hash": "6ba6e187402a6754e16f47db47c6a9d3"
+  },
+  "assets/images/icons/calc.exe_SSC_0409.png": {
+    "mtime": 1791833906.7904847,
+    "seen": 1793193311.257676,
+    "ast_hash": "fae274d26fbb5f1c98404ed615d45b54",
+    "semantic_hash": "fae274d26fbb5f1c98404ed615d45b54"
+  },
+  "assets/images/icons/charmap.exe_I006f_0409.png": {
+    "mtime": 1791833906.8894243,
+    "seen": 1793193311.2586741,
+    "ast_hash": "0dbdf4e3964b01c3324ac5eb303f7aa0",
+    "semantic_hash": "0dbdf4e3964b01c3324ac5eb303f7aa0"
+  },
+  "assets/images/icons/cleanmgr.exe_I0068_0409.png": {
+    "mtime": 1791833906.9423904,
+    "seen": 1793193311.2586741,
+    "ast_hash": "3c8460180494b95f35a871c743b55ce6",
+    "semantic_hash": "3c8460180494b95f35a871c743b55ce6"
+  },
+  "assets/images/icons/cmd.exe_SIDI_APPICON_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2606726,
+    "ast_hash": "c5fccd762a2380bf3946fb57ee7b1219",
+    "semantic_hash": "c5fccd762a2380bf3946fb57ee7b1219"
+  },
+  "assets/images/icons/collab.cpl_I03e9_0409.png": {
+    "mtime": 1791833907.016347,
+    "seen": 1793193311.2606726,
+    "ast_hash": "22a0548d6662bb679ef00fb91933ad38",
+    "semantic_hash": "22a0548d6662bb679ef00fb91933ad38"
+  },
+  "assets/images/icons/colorcpl.exe_I0005_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2616718,
+    "ast_hash": "3a321ac22eab7a477c3ab3ee0569c7b7",
+    "semantic_hash": "3a321ac22eab7a477c3ab3ee0569c7b7"
+  },
+  "assets/images/icons/colorui.dll_I000f_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2616718,
+    "ast_hash": "ec440bc262d10324c5d89957cb215013",
+    "semantic_hash": "ec440bc262d10324c5d89957cb215013"
+  },
+  "assets/images/icons/colorui.dll_I0010_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2626708,
+    "ast_hash": "648db390ddd968aaa9abb6ef9c5aec17",
+    "semantic_hash": "648db390ddd968aaa9abb6ef9c5aec17"
+  },
+  "assets/images/icons/colorui.dll_I0011_0409.png": {
+    "mtime": 1791833907.2140782,
+    "seen": 1793193311.2636702,
+    "ast_hash": "111afef97daa2c7a4a842fc123563697",
+    "semantic_hash": "111afef97daa2c7a4a842fc123563697"
+  },
+  "assets/images/icons/colorui.dll_I0012_0409.png": {
+    "mtime": 1791833907.2386053,
+    "seen": 1793193311.2636702,
+    "ast_hash": "4b818472a57d85d9d04c2f4f5346391c",
+    "semantic_hash": "4b818472a57d85d9d04c2f4f5346391c"
+  },
+  "assets/images/icons/colorui.dll_I045a_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2646697,
+    "ast_hash": "87cc0525d58de2375e6142dcfa50eeb4",
+    "semantic_hash": "87cc0525d58de2375e6142dcfa50eeb4"
+  },
+  "assets/images/icons/colorui.dll_I045b_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.265669,
+    "ast_hash": "d58db8ef4388091258d1c471fd5aa788",
+    "semantic_hash": "d58db8ef4388091258d1c471fd5aa788"
+  },
+  "assets/images/icons/comres.dll_I0001_0409.png": {
+    "mtime": 1791833907.373298,
+    "seen": 1793193311.265669,
+    "ast_hash": "c83a167fedcac30c04902be469417105",
+    "semantic_hash": "c83a167fedcac30c04902be469417105"
+  },
+  "assets/images/icons/connect.dll_I2775_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2666686,
+    "ast_hash": "1cd87e35c15dd5f56d499f650688c69c",
+    "semantic_hash": "1cd87e35c15dd5f56d499f650688c69c"
+  },
+  "assets/images/icons/connect.dll_I27d9_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2666686,
+    "ast_hash": "07adf2996bcb85fc5a0c5f380d99e47c",
+    "semantic_hash": "07adf2996bcb85fc5a0c5f380d99e47c"
+  },
+  "assets/images/icons/connect.dll_I28a1_0409.png": {
+    "mtime": 1791833907.4866388,
+    "seen": 1793193311.2676678,
+    "ast_hash": "d6af5c1e2703ebba031f3ce64e5aa0c7",
+    "semantic_hash": "d6af5c1e2703ebba031f3ce64e5aa0c7"
+  },
+  "assets/images/icons/connect.dll_I2906_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2676678,
+    "ast_hash": "aa723e15175ef403a892b9142a81d78e",
+    "semantic_hash": "aa723e15175ef403a892b9142a81d78e"
+  },
+  "assets/images/icons/connect.dll_I2907_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.268667,
+    "ast_hash": "9039d43a5d4182c7ed731b8febb06e77",
+    "semantic_hash": "9039d43a5d4182c7ed731b8febb06e77"
+  },
+  "assets/images/icons/connect.dll_I2908_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2696688,
+    "ast_hash": "d74129ff789ec331bf5060ebe5775deb",
+    "semantic_hash": "d74129ff789ec331bf5060ebe5775deb"
+  },
+  "assets/images/icons/control.exe_I0065_0409.png": {
+    "mtime": 1791833907.6462662,
+    "seen": 1793193311.2706661,
+    "ast_hash": "40bb302f5c779e438059665037b1814f",
+    "semantic_hash": "40bb302f5c779e438059665037b1814f"
+  },
+  "assets/images/icons/cscui.dll_I04b0_0409.png": {
+    "mtime": 1791833907.6762834,
+    "seen": 1793193311.2706661,
+    "ast_hash": "4916329e2d83f3b8174df64714028e97",
+    "semantic_hash": "4916329e2d83f3b8174df64714028e97"
+  },
+  "assets/images/icons/desk.cpl_I0028_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2706661,
+    "ast_hash": "ffb0551b03b0baf2611fa7a3f2f94a2a",
+    "semantic_hash": "ffb0551b03b0baf2611fa7a3f2f94a2a"
+  },
+  "assets/images/icons/devmgr.dll_I00c9_0409.png": {
+    "mtime": 1791833907.8013613,
+    "seen": 1793193311.271667,
+    "ast_hash": "15cf30831be9d49c2c0aa23eecd7fc13",
+    "semantic_hash": "15cf30831be9d49c2c0aa23eecd7fc13"
+  },
+  "assets/images/icons/dfrgui.exe_I0089_0409.png": {
+    "mtime": 1791833907.8265653,
+    "seen": 1793193311.271667,
+    "ast_hash": "0546560e12ae728bf4e211dd961a416b",
+    "semantic_hash": "0546560e12ae728bf4e211dd961a416b"
+  },
+  "assets/images/icons/dfrgui.exe_I008d_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.271667,
+    "ast_hash": "71d9dec31170887c0eff1f77742dd055",
+    "semantic_hash": "71d9dec31170887c0eff1f77742dd055"
+  },
+  "assets/images/icons/digitalx.exe_I0065_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.272667,
+    "ast_hash": "0275876a70f37cfde288f6ceeab199f0",
+    "semantic_hash": "0275876a70f37cfde288f6ceeab199f0"
+  },
+  "assets/images/icons/dmdskres.dll_I0158_0409.png": {
+    "mtime": 1791833907.9530797,
+    "seen": 1793193311.272667,
+    "ast_hash": "1d3e3e834ee899a3b1c21a07e3fcfca2",
+    "semantic_hash": "1d3e3e834ee899a3b1c21a07e3fcfca2"
+  },
+  "assets/images/icons/dot3ui.dll_I07d0_0409.png": {
+    "mtime": 1791833907.9770663,
+    "seen": 1793193311.272667,
+    "ast_hash": "0d9ade10adbfcdced8a2b86a9d8513c9",
+    "semantic_hash": "0d9ade10adbfcdced8a2b86a9d8513c9"
+  },
+  "assets/images/icons/ehSSO.dll_I00dc_0409.png": {
+    "mtime": 1791833908.1819427,
+    "seen": 1793193311.273665,
+    "ast_hash": "29a3041d9f5077ffb8588b3a0d12928f",
+    "semantic_hash": "29a3041d9f5077ffb8588b3a0d12928f"
+  },
+  "assets/images/icons/ehdrop.dll_I00c9_0409.png": {
+    "mtime": 1791833908.1019907,
+    "seen": 1793193311.273665,
+    "ast_hash": "f3f8708e69a9caee2da5948fa3164101",
+    "semantic_hash": "f3f8708e69a9caee2da5948fa3164101"
+  },
+  "assets/images/icons/ehdrop.dll_I00cc_0409.png": {
+    "mtime": 1791833908.1349695,
+    "seen": 1793193311.273665,
+    "ast_hash": "0e8eaa5f6aec461a3fc8bc5ec9395d7b",
+    "semantic_hash": "0e8eaa5f6aec461a3fc8bc5ec9395d7b"
+  },
+  "assets/images/icons/ehres.dll_I0002_0409.png": {
+    "mtime": 1791833908.1599545,
+    "seen": 1793193311.2746665,
+    "ast_hash": "d4d11e6b06a3685aa38d140109c02e65",
+    "semantic_hash": "d4d11e6b06a3685aa38d140109c02e65"
+  },
+  "assets/images/icons/emdmgmt.dll_I012c_0409.png": {
+    "mtime": 1791833908.2045274,
+    "seen": 1793193311.2746665,
+    "ast_hash": "2db28a864176f12d0afc132a67e032f2",
+    "semantic_hash": "2db28a864176f12d0afc132a67e032f2"
+  },
+  "assets/images/icons/explorer.exe_I0064_0409.png": {
+    "mtime": 1791833908.2295616,
+    "seen": 1793193311.275663,
+    "ast_hash": "5233f047d266eb5f6373406197d26385",
+    "semantic_hash": "5233f047d266eb5f6373406197d26385"
+  },
+  "assets/images/icons/explorer.exe_I0104_0409.png": {
+    "mtime": 1791833908.2524977,
+    "seen": 1793193311.275663,
+    "ast_hash": "14e2622f46bd2bd8fe37ca2c7b85b9fd",
+    "semantic_hash": "14e2622f46bd2bd8fe37ca2c7b85b9fd"
+  },
+  "assets/images/icons/filemgmt.dll_I00ec_0409.png": {
+    "mtime": 1791833908.275645,
+    "seen": 1793193311.275663,
+    "ast_hash": "9a726c8c502e27477fecce7d215c9c6c",
+    "semantic_hash": "9a726c8c502e27477fecce7d215c9c6c"
+  },
+  "assets/images/icons/fvecpl.dll_I0001_0409.png": {
+    "mtime": 1791833908.625839,
+    "seen": 1793193311.2766623,
+    "ast_hash": "6f179bd89a46d4acf38174e8482f2898",
+    "semantic_hash": "6f179bd89a46d4acf38174e8482f2898"
+  },
+  "assets/images/icons/fveui.dll_I0002_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2766623,
+    "ast_hash": "4192abe1e976161b558e752283bb061d",
+    "semantic_hash": "4192abe1e976161b558e752283bb061d"
+  },
+  "assets/images/icons/gameux.dll_I00ce_0409.png": {
+    "mtime": 1791833908.8661778,
+    "seen": 1793193311.2766623,
+    "ast_hash": "c7243ee84c3c15bbe3f630d5e2bd7955",
+    "semantic_hash": "c7243ee84c3c15bbe3f630d5e2bd7955"
+  },
+  "assets/images/icons/gameux.dll_I00d1_0409.png": {
+    "mtime": 1791833908.8911645,
+    "seen": 1793193311.2776613,
+    "ast_hash": "a719237620c75a122e825ee6d7ba843e",
+    "semantic_hash": "a719237620c75a122e825ee6d7ba843e"
+  },
+  "assets/images/icons/gameux.dll_I00d3_0409.png": {
+    "mtime": 1791833908.9151504,
+    "seen": 1793193311.2776613,
+    "ast_hash": "c5d33f166a3bfb87e2fed8e2e47020b7",
+    "semantic_hash": "c5d33f166a3bfb87e2fed8e2e47020b7"
+  },
+  "assets/images/icons/gameux.dll_I00d4_0409.png": {
+    "mtime": 1791833908.938136,
+    "seen": 1793193311.278661,
+    "ast_hash": "7d8622d2da996bc2a14500bc2634091b",
+    "semantic_hash": "7d8622d2da996bc2a14500bc2634091b"
+  },
+  "assets/images/icons/hdwwiz.exe_I05dd_0409.png": {
+    "mtime": 1791833908.9611216,
+    "seen": 1793193311.278661,
+    "ast_hash": "a8d8c853ca7a74d50eb28ccf7d06924c",
+    "semantic_hash": "a8d8c853ca7a74d50eb28ccf7d06924c"
+  },
+  "assets/images/icons/icardres.dll.mui_I012d_0409.png": {
+    "mtime": 1791833909.0061262,
+    "seen": 1793193311.278661,
+    "ast_hash": "35edb78a7862ef21d1da3e1333e92472",
+    "semantic_hash": "35edb78a7862ef21d1da3e1333e92472"
+  },
+  "assets/images/icons/icardres.dll.mui_I1010_0409.png": {
+    "mtime": 1791833909.0301118,
+    "seen": 1793193311.2796602,
+    "ast_hash": "5804c0af2a1c5993d1cf87f689723dcc",
+    "semantic_hash": "5804c0af2a1c5993d1cf87f689723dcc"
+  },
+  "assets/images/icons/icardres.dll.mui_I1011_0409.png": {
+    "mtime": 1791833909.0590935,
+    "seen": 1793193311.2806602,
+    "ast_hash": "b6058dd9c56b1adfeb6b552e08d10b32",
+    "semantic_hash": "b6058dd9c56b1adfeb6b552e08d10b32"
+  },
+  "assets/images/icons/icon_01.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2806602,
+    "ast_hash": "73d4f457b3092d148294c07efbe3a05a",
+    "semantic_hash": "73d4f457b3092d148294c07efbe3a05a"
+  },
+  "assets/images/icons/icon_02.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2806602,
+    "ast_hash": "427080ce722dde7b6f8de018d75b6237",
+    "semantic_hash": "427080ce722dde7b6f8de018d75b6237"
+  },
+  "assets/images/icons/icon_03.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.281659,
+    "ast_hash": "a1f14457b9838204e13ecd7a221415d2",
+    "semantic_hash": "a1f14457b9838204e13ecd7a221415d2"
+  },
+  "assets/images/icons/icon_04.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.281659,
+    "ast_hash": "ea93a71af4b9868001c1f5fe4bec61db",
+    "semantic_hash": "ea93a71af4b9868001c1f5fe4bec61db"
+  },
+  "assets/images/icons/icon_05.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2826586,
+    "ast_hash": "2929ce42a0fafa6261564f9c75e859aa",
+    "semantic_hash": "2929ce42a0fafa6261564f9c75e859aa"
+  },
+  "assets/images/icons/icon_06.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2826586,
+    "ast_hash": "712e7dfedd006303ee7b5d26418c9290",
+    "semantic_hash": "712e7dfedd006303ee7b5d26418c9290"
+  },
+  "assets/images/icons/icon_07.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2836587,
+    "ast_hash": "cfa749c735be1e5428d2ea2eee065d46",
+    "semantic_hash": "cfa749c735be1e5428d2ea2eee065d46"
+  },
+  "assets/images/icons/icon_08.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2836587,
+    "ast_hash": "ecdf0dd895a4556ee0924b9d49639e46",
+    "semantic_hash": "ecdf0dd895a4556ee0924b9d49639e46"
+  },
+  "assets/images/icons/icon_09.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2846577,
+    "ast_hash": "c0a7ea33faefc88d674c7d2bc81bca90",
+    "semantic_hash": "c0a7ea33faefc88d674c7d2bc81bca90"
+  },
+  "assets/images/icons/icon_10.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2846577,
+    "ast_hash": "0b90891776206dc1f4c86cc810793353",
+    "semantic_hash": "0b90891776206dc1f4c86cc810793353"
+  },
+  "assets/images/icons/icon_11.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2856562,
+    "ast_hash": "a799e8091db73c3737121e1290665a5f",
+    "semantic_hash": "a799e8091db73c3737121e1290665a5f"
+  },
+  "assets/images/icons/icon_12.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2856562,
+    "ast_hash": "5daae33acff64fe39a0d274a89803528",
+    "semantic_hash": "5daae33acff64fe39a0d274a89803528"
+  },
+  "assets/images/icons/icon_13.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2866554,
+    "ast_hash": "aa0d461248d76caecdfdf0cd44a76e22",
+    "semantic_hash": "aa0d461248d76caecdfdf0cd44a76e22"
+  },
+  "assets/images/icons/icon_14.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2876549,
+    "ast_hash": "eca93ea4cfbb1cf2aa1f3c8efcfd00cd",
+    "semantic_hash": "eca93ea4cfbb1cf2aa1f3c8efcfd00cd"
+  },
+  "assets/images/icons/icon_15.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2876549,
+    "ast_hash": "be8de61aff4cecb779532db0ee966e1f",
+    "semantic_hash": "be8de61aff4cecb779532db0ee966e1f"
+  },
+  "assets/images/icons/icon_16.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2886546,
+    "ast_hash": "f592c90600f97c4c13fba64c809a32ee",
+    "semantic_hash": "f592c90600f97c4c13fba64c809a32ee"
+  },
+  "assets/images/icons/icon_17.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2886546,
+    "ast_hash": "939976dad4d387aa0945736f6d7517bd",
+    "semantic_hash": "939976dad4d387aa0945736f6d7517bd"
+  },
+  "assets/images/icons/icon_18.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.289654,
+    "ast_hash": "9f8d9c9ef947fa827386b7fddf53d96e",
+    "semantic_hash": "9f8d9c9ef947fa827386b7fddf53d96e"
+  },
+  "assets/images/icons/icon_19.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2906559,
+    "ast_hash": "81e61060d4d5cc8c4d691ded385f6cee",
+    "semantic_hash": "81e61060d4d5cc8c4d691ded385f6cee"
+  },
+  "assets/images/icons/icon_20.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2906559,
+    "ast_hash": "7114ddf907b7e77cb464733366d08680",
+    "semantic_hash": "7114ddf907b7e77cb464733366d08680"
+  },
+  "assets/images/icons/icsigd.dll_I007a_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.291655,
+    "ast_hash": "ad1bfd3bf7560fda38453c2312e63499",
+    "semantic_hash": "ad1bfd3bf7560fda38453c2312e63499"
+  },
+  "assets/images/icons/ieframe.dll_I00be_0409.png": {
+    "mtime": 1791833909.1230545,
+    "seen": 1793193311.291655,
+    "ast_hash": "ac7c3f0c8ffaa79f8eea94d1c428156b",
+    "semantic_hash": "ac7c3f0c8ffaa79f8eea94d1c428156b"
+  },
+  "assets/images/icons/ieframe.dll_I00d2_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2926536,
+    "ast_hash": "402d1782f82d9d8f79c3263bb4358371",
+    "semantic_hash": "402d1782f82d9d8f79c3263bb4358371"
+  },
+  "assets/images/icons/ieuser.exe_I07d9_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.2926536,
+    "ast_hash": "dfcebc2e86636453bf8ae274d3b82a99",
+    "semantic_hash": "dfcebc2e86636453bf8ae274d3b82a99"
+  },
+  "assets/images/icons/iisres.dll_I4e88_0409.png": {
+    "mtime": 1791833909.2329898,
+    "seen": 1793193311.293653,
+    "ast_hash": "ee79d828dbbac17ff0c15d2045a9de83",
+    "semantic_hash": "ee79d828dbbac17ff0c15d2045a9de83"
+  },
+  "assets/images/icons/imageres.dll_I0008_0409.png": {
+    "mtime": 1791833909.2569718,
+    "seen": 1793193311.293653,
+    "ast_hash": "058969acad11dcc1ba21a0e5f1b0ec94",
+    "semantic_hash": "058969acad11dcc1ba21a0e5f1b0ec94"
+  },
+  "assets/images/icons/imageres.dll_I000e_0409.png": {
+    "mtime": 1791833909.28196,
+    "seen": 1793193311.2946508,
+    "ast_hash": "330d38ba048b9ae533e74587e1f568bb",
+    "semantic_hash": "330d38ba048b9ae533e74587e1f568bb"
+  },
+  "assets/images/icons/imageres.dll_I0012_0409.png": {
+    "mtime": 1791833909.3069444,
+    "seen": 1793193311.2946508,
+    "ast_hash": "5cd78aabfc18b580902fb7ca24c68926",
+    "semantic_hash": "5cd78aabfc18b580902fb7ca24c68926"
+  },
+  "assets/images/icons/imageres.dll_I0013_0409.png": {
+    "mtime": 1791833909.3353038,
+    "seen": 1793193311.2946508,
+    "ast_hash": "1d2968c1850101909360ec45313de03e",
+    "semantic_hash": "1d2968c1850101909360ec45313de03e"
+  },
+  "assets/images/icons/imageres.dll_I0014_0409.png": {
+    "mtime": 1791833909.360359,
+    "seen": 1793193311.29565,
+    "ast_hash": "ace4572cc6170a9d48dcbcc09b7c991e",
+    "semantic_hash": "ace4572cc6170a9d48dcbcc09b7c991e"
+  },
+  "assets/images/icons/imageres.dll_I0015_0409.png": {
+    "mtime": 1791833909.3853443,
+    "seen": 1793193311.29565,
+    "ast_hash": "951f3571ca31dd12c8b11d269b518c53",
+    "semantic_hash": "951f3571ca31dd12c8b11d269b518c53"
+  },
+  "assets/images/icons/imageres.dll_I0016_0409.png": {
+    "mtime": 1791833909.4103284,
+    "seen": 1793193311.29565,
+    "ast_hash": "4ff24996c78127c4ece241c9b420c7e1",
+    "semantic_hash": "4ff24996c78127c4ece241c9b420c7e1"
+  },
+  "assets/images/icons/imageres.dll_I0017_0409.png": {
+    "mtime": 1791833909.4353135,
+    "seen": 1793193311.2966518,
+    "ast_hash": "0c615b6a116f33229fb005e29f021065",
+    "semantic_hash": "0c615b6a116f33229fb005e29f021065"
+  },
+  "assets/images/icons/imageres.dll_I0018_0409.png": {
+    "mtime": 1791833909.462512,
+    "seen": 1793193311.2966518,
+    "ast_hash": "17d9cfa3209584bf513a89a65fcea1a5",
+    "semantic_hash": "17d9cfa3209584bf513a89a65fcea1a5"
+  },
+  "assets/images/icons/imageres.dll_I0019_0409.png": {
+    "mtime": 1791833909.4874995,
+    "seen": 1793193311.2966518,
+    "ast_hash": "6eb21ff31e6f6bc7eeba22c577f693c1",
+    "semantic_hash": "6eb21ff31e6f6bc7eeba22c577f693c1"
+  },
+  "assets/images/icons/imageres.dll_I001a_0409.png": {
+    "mtime": 1791833909.5124857,
+    "seen": 1793193311.29765,
+    "ast_hash": "fd5fbd638a491ec9599c25d3003af0f4",
+    "semantic_hash": "fd5fbd638a491ec9599c25d3003af0f4"
+  },
+  "assets/images/icons/imageres.dll_I001c_0409.png": {
+    "mtime": 1791833909.5374682,
+    "seen": 1793193311.29765,
+    "ast_hash": "1f2861d58070322e507c079acc8dfb57",
+    "semantic_hash": "1f2861d58070322e507c079acc8dfb57"
+  },
+  "assets/images/icons/imageres.dll_I001d_0409.png": {
+    "mtime": 1791833909.5614557,
+    "seen": 1793193311.29765,
+    "ast_hash": "50aa88d6fd7da38ac89538e859513e34",
+    "semantic_hash": "50aa88d6fd7da38ac89538e859513e34"
+  },
+  "assets/images/icons/imageres.dll_I001e_0409.png": {
+    "mtime": 1791833909.5854387,
+    "seen": 1793193311.2986498,
+    "ast_hash": "262b86a1a64e310ce61fc546affbb7c0",
+    "semantic_hash": "262b86a1a64e310ce61fc546affbb7c0"
+  },
+  "assets/images/icons/imageres.dll_I001f_0409.png": {
+    "mtime": 1791833909.6164198,
+    "seen": 1793193311.2986498,
+    "ast_hash": "8e15e74170889a712eac2d6cd5936d83",
+    "semantic_hash": "8e15e74170889a712eac2d6cd5936d83"
+  },
+  "assets/images/icons/imageres.dll_I0020_0409.png": {
+    "mtime": 1791833909.646402,
+    "seen": 1793193311.2986498,
+    "ast_hash": "86399b61a9befbf7981a999d9b0daf45",
+    "semantic_hash": "86399b61a9befbf7981a999d9b0daf45"
+  },
+  "assets/images/icons/imageres.dll_I0021_0409.png": {
+    "mtime": 1791833909.681381,
+    "seen": 1793193311.2996492,
+    "ast_hash": "20252bc0d3dc2f83308098462301223f",
+    "semantic_hash": "20252bc0d3dc2f83308098462301223f"
+  },
+  "assets/images/icons/imageres.dll_I0022_0409.png": {
+    "mtime": 1791833909.7153606,
+    "seen": 1793193311.2996492,
+    "ast_hash": "e225a29d1770e66a3f50fa6c2bbfd4c8",
+    "semantic_hash": "e225a29d1770e66a3f50fa6c2bbfd4c8"
+  },
+  "assets/images/icons/imageres.dll_I0023_0409.png": {
+    "mtime": 1791833909.7543356,
+    "seen": 1793193311.3006473,
+    "ast_hash": "747216db47eb87ff39fd575290de00d1",
+    "semantic_hash": "747216db47eb87ff39fd575290de00d1"
+  },
+  "assets/images/icons/imageres.dll_I0024_0409.png": {
+    "mtime": 1791833909.7803192,
+    "seen": 1793193311.3006473,
+    "ast_hash": "101a3ad147c124ebc96dc52aa517eb80",
+    "semantic_hash": "101a3ad147c124ebc96dc52aa517eb80"
+  },
+  "assets/images/icons/imageres.dll_I0025_0409.png": {
+    "mtime": 1791833909.8029659,
+    "seen": 1793193311.3006473,
+    "ast_hash": "a6e8b87c572c72a79cc291f337d43193",
+    "semantic_hash": "a6e8b87c572c72a79cc291f337d43193"
+  },
+  "assets/images/icons/imageres.dll_I0026_0409.png": {
+    "mtime": 1791833909.8249562,
+    "seen": 1793193311.3016467,
+    "ast_hash": "16f3708883dcda102a47d3eaf53b6c02",
+    "semantic_hash": "16f3708883dcda102a47d3eaf53b6c02"
+  },
+  "assets/images/icons/imageres.dll_I0027_0409.png": {
+    "mtime": 1791833909.8483932,
+    "seen": 1793193311.3016467,
+    "ast_hash": "e9aa77a6b991953916fc5376fbea3e0c",
+    "semantic_hash": "e9aa77a6b991953916fc5376fbea3e0c"
+  },
+  "assets/images/icons/imageres.dll_I002a_0409.png": {
+    "mtime": 1791833909.8713791,
+    "seen": 1793193311.3026457,
+    "ast_hash": "92ab90b293028b0f234efe221cdb1bd2",
+    "semantic_hash": "92ab90b293028b0f234efe221cdb1bd2"
+  },
+  "assets/images/icons/imageres.dll_I002b_0409.png": {
+    "mtime": 1791833909.8947198,
+    "seen": 1793193311.3026457,
+    "ast_hash": "073f817db9d5ddfe9585a651c086bebd",
+    "semantic_hash": "073f817db9d5ddfe9585a651c086bebd"
+  },
+  "assets/images/icons/imageres.dll_I002c_0409.png": {
+    "mtime": 1791833909.9177067,
+    "seen": 1793193311.3026457,
+    "ast_hash": "68f1019847cdd3e7504c0e00e429ebb3",
+    "semantic_hash": "68f1019847cdd3e7504c0e00e429ebb3"
+  },
+  "assets/images/icons/imageres.dll_I002d_0409.png": {
+    "mtime": 1791833909.9396935,
+    "seen": 1793193311.3036451,
+    "ast_hash": "84eec7255ca7770c5c10fcbf244eb488",
+    "semantic_hash": "84eec7255ca7770c5c10fcbf244eb488"
+  },
+  "assets/images/icons/imageres.dll_I002f_0409.png": {
+    "mtime": 1791833909.9626794,
+    "seen": 1793193311.3036451,
+    "ast_hash": "1ee8db7d8d99c3638ff7a52e8906c9b2",
+    "semantic_hash": "1ee8db7d8d99c3638ff7a52e8906c9b2"
+  },
+  "assets/images/icons/imageres.dll_I0030_0409.png": {
+    "mtime": 1791833909.9862018,
+    "seen": 1793193311.3036451,
+    "ast_hash": "0fd0bb100b4f67188d0d85909d831040",
+    "semantic_hash": "0fd0bb100b4f67188d0d85909d831040"
+  },
+  "assets/images/icons/imageres.dll_I0031_0409.png": {
+    "mtime": 1791833910.009664,
+    "seen": 1793193311.3046443,
+    "ast_hash": "24b537bbcd70252c41a820d6e252ec97",
+    "semantic_hash": "24b537bbcd70252c41a820d6e252ec97"
+  },
+  "assets/images/icons/imageres.dll_I0032_0409.png": {
+    "mtime": 1791833910.0330036,
+    "seen": 1793193311.3046443,
+    "ast_hash": "64ca1499460af7accbe0054032fb18fa",
+    "semantic_hash": "64ca1499460af7accbe0054032fb18fa"
+  },
+  "assets/images/icons/imageres.dll_I0036_0409.png": {
+    "mtime": 1791833910.056115,
+    "seen": 1793193311.3046443,
+    "ast_hash": "67244b1f80976bd917e187252806fe07",
+    "semantic_hash": "67244b1f80976bd917e187252806fe07"
+  },
+  "assets/images/icons/imageres.dll_I0037_0409.png": {
+    "mtime": 1791833910.0799568,
+    "seen": 1793193311.3056438,
+    "ast_hash": "5f180bd0a1cbd27f9580fd09024a6dfd",
+    "semantic_hash": "5f180bd0a1cbd27f9580fd09024a6dfd"
+  },
+  "assets/images/icons/imageres.dll_I0039_0409.png": {
+    "mtime": 1791833910.1059442,
+    "seen": 1793193311.3056438,
+    "ast_hash": "1f9db6cb64f43f47e48e9200a3f76688",
+    "semantic_hash": "1f9db6cb64f43f47e48e9200a3f76688"
+  },
+  "assets/images/icons/imageres.dll_I003a_0409.png": {
+    "mtime": 1791833910.1289294,
+    "seen": 1793193311.3056438,
+    "ast_hash": "fe5facc4c5625ccaa802e4643187b503",
+    "semantic_hash": "fe5facc4c5625ccaa802e4643187b503"
+  },
+  "assets/images/icons/imageres.dll_I003b_0409.png": {
+    "mtime": 1791833910.1529143,
+    "seen": 1793193311.3066435,
+    "ast_hash": "15f219889cd0016330e7537837e5c931",
+    "semantic_hash": "15f219889cd0016330e7537837e5c931"
+  },
+  "assets/images/icons/imageres.dll_I003c_0409.png": {
+    "mtime": 1791833910.1759026,
+    "seen": 1793193311.3066435,
+    "ast_hash": "f3851d191b5882a31bdcd95f1dd4954a",
+    "semantic_hash": "f3851d191b5882a31bdcd95f1dd4954a"
+  },
+  "assets/images/icons/imageres.dll_I003d_0409.png": {
+    "mtime": 1791833910.1998875,
+    "seen": 1793193311.3066435,
+    "ast_hash": "5c6619378b4644d7ad1513ab7011de9e",
+    "semantic_hash": "5c6619378b4644d7ad1513ab7011de9e"
+  },
+  "assets/images/icons/imageres.dll_I003e_0409.png": {
+    "mtime": 1791833910.2218723,
+    "seen": 1793193311.3076427,
+    "ast_hash": "b208b2928200673d385e94a49c51d7ae",
+    "semantic_hash": "b208b2928200673d385e94a49c51d7ae"
+  },
+  "assets/images/icons/imageres.dll_I003f_0409.png": {
+    "mtime": 1791833910.246859,
+    "seen": 1793193311.3076427,
+    "ast_hash": "5438fae4cbc550c1b0511f7f668e3359",
+    "semantic_hash": "5438fae4cbc550c1b0511f7f668e3359"
+  },
+  "assets/images/icons/imageres.dll_I0041_0409.png": {
+    "mtime": 1791833910.269843,
+    "seen": 1793193311.3076427,
+    "ast_hash": "f6cf0b90f0a6eba89a2512381201fc03",
+    "semantic_hash": "f6cf0b90f0a6eba89a2512381201fc03"
+  },
+  "assets/images/icons/imageres.dll_I0042_0409.png": {
+    "mtime": 1791833910.2957711,
+    "seen": 1793193311.3076427,
+    "ast_hash": "c8d78fa3e7d96a9b7c324ec8cb377aca",
+    "semantic_hash": "c8d78fa3e7d96a9b7c324ec8cb377aca"
+  },
+  "assets/images/icons/imageres.dll_I0043_0409.png": {
+    "mtime": 1791833910.3187556,
+    "seen": 1793193311.3086424,
+    "ast_hash": "692711a1dd21fda348486f92b342e2be",
+    "semantic_hash": "692711a1dd21fda348486f92b342e2be"
+  },
+  "assets/images/icons/imageres.dll_I0044_0409.png": {
+    "mtime": 1791833910.3427427,
+    "seen": 1793193311.3086424,
+    "ast_hash": "d9001e8e3254b7473144e0ea6620f475",
+    "semantic_hash": "d9001e8e3254b7473144e0ea6620f475"
+  },
+  "assets/images/icons/imageres.dll_I0045_0409.png": {
+    "mtime": 1791833910.36795,
+    "seen": 1793193311.3086424,
+    "ast_hash": "580e42fe98b0428463e1aa8082737174",
+    "semantic_hash": "580e42fe98b0428463e1aa8082737174"
+  },
+  "assets/images/icons/imageres.dll_I0047_0409.png": {
+    "mtime": 1791833910.3909361,
+    "seen": 1793193311.3096411,
+    "ast_hash": "54b8ac7829144bb8aa2417d9c64765ac",
+    "semantic_hash": "54b8ac7829144bb8aa2417d9c64765ac"
+  },
+  "assets/images/icons/imageres.dll_I0048_0409.png": {
+    "mtime": 1791833910.414921,
+    "seen": 1793193311.310641,
+    "ast_hash": "f2b19360e32fadb714ee294f61d27c81",
+    "semantic_hash": "f2b19360e32fadb714ee294f61d27c81"
+  },
+  "assets/images/icons/imageres.dll_I004a_0409.png": {
+    "mtime": 1791833910.4419045,
+    "seen": 1793193311.310641,
+    "ast_hash": "a1ff9474010a5431fe5f91f544ca97aa",
+    "semantic_hash": "a1ff9474010a5431fe5f91f544ca97aa"
+  },
+  "assets/images/icons/imageres.dll_I004b_0409.png": {
+    "mtime": 1791833910.4678888,
+    "seen": 1793193311.310641,
+    "ast_hash": "b0fe3a9279f4121eb57b48e0f6116024",
+    "semantic_hash": "b0fe3a9279f4121eb57b48e0f6116024"
+  },
+  "assets/images/icons/imageres.dll_I004d_0409.png": {
+    "mtime": 1791833910.4968717,
+    "seen": 1793193311.3116403,
+    "ast_hash": "5e28e94b032365212f0a3227b644ddb8",
+    "semantic_hash": "5e28e94b032365212f0a3227b644ddb8"
+  },
+  "assets/images/icons/imageres.dll_I0050_0409.png": {
+    "mtime": 1791833910.5208566,
+    "seen": 1793193311.3116403,
+    "ast_hash": "3e3cf629b3e16fee32895b664e80aaf4",
+    "semantic_hash": "3e3cf629b3e16fee32895b664e80aaf4"
+  },
+  "assets/images/icons/imageres.dll_I0052_0409.png": {
+    "mtime": 1791833910.7186036,
+    "seen": 1793193311.3116403,
+    "ast_hash": "45bd0ac0954d08f73c0a5ca6619234af",
+    "semantic_hash": "45bd0ac0954d08f73c0a5ca6619234af"
+  },
+  "assets/images/icons/imageres.dll_I0053_0409.png": {
+    "mtime": 1791833910.7415893,
+    "seen": 1793193311.3126397,
+    "ast_hash": "b40134ef895ddd8269cc8006edd29f0d",
+    "semantic_hash": "b40134ef895ddd8269cc8006edd29f0d"
+  },
+  "assets/images/icons/imageres.dll_I0055_0409.png": {
+    "mtime": 1791833910.7645743,
+    "seen": 1793193311.3126397,
+    "ast_hash": "fbc47c5e70cb78746c44baf68d56b9dd",
+    "semantic_hash": "fbc47c5e70cb78746c44baf68d56b9dd"
+  },
+  "assets/images/icons/imageres.dll_I005a_0409.png": {
+    "mtime": 1791833910.7865615,
+    "seen": 1793193311.3126397,
+    "ast_hash": "541339bdf75ad71bb415c2e6575f06de",
+    "semantic_hash": "541339bdf75ad71bb415c2e6575f06de"
+  },
+  "assets/images/icons/imageres.dll_I005b_0409.png": {
+    "mtime": 1791833910.809916,
+    "seen": 1793193311.3136387,
+    "ast_hash": "0712b5673fbb6a3121444df1d088e942",
+    "semantic_hash": "0712b5673fbb6a3121444df1d088e942"
+  },
+  "assets/images/icons/imageres.dll_I005c_0409.png": {
+    "mtime": 1791833910.8327436,
+    "seen": 1793193311.3136387,
+    "ast_hash": "786330edf869804435230f22edb51af8",
+    "semantic_hash": "786330edf869804435230f22edb51af8"
+  },
+  "assets/images/icons/imageres.dll_I005d_0409.png": {
+    "mtime": 1791833910.856729,
+    "seen": 1793193311.3136387,
+    "ast_hash": "afd616b8d095117c11309ccbbccccaf6",
+    "semantic_hash": "afd616b8d095117c11309ccbbccccaf6"
+  },
+  "assets/images/icons/imageres.dll_I005e_0409.png": {
+    "mtime": 1791833910.8784976,
+    "seen": 1793193311.314638,
+    "ast_hash": "6eda93133e9b968d8be694be3915e8ea",
+    "semantic_hash": "6eda93133e9b968d8be694be3915e8ea"
+  },
+  "assets/images/icons/imageres.dll_I0060_0409.png": {
+    "mtime": 1791833910.9020412,
+    "seen": 1793193311.314638,
+    "ast_hash": "32b66b8b238a9e85aeefc2212f553c12",
+    "semantic_hash": "32b66b8b238a9e85aeefc2212f553c12"
+  },
+  "assets/images/icons/imageres.dll_I0061_0409.png": {
+    "mtime": 1791833910.9230328,
+    "seen": 1793193311.314638,
+    "ast_hash": "3e0740ecda71f8081ae7715551037b82",
+    "semantic_hash": "3e0740ecda71f8081ae7715551037b82"
+  },
+  "assets/images/icons/imageres.dll_I0062_0409.png": {
+    "mtime": 1791833910.9470167,
+    "seen": 1793193311.314638,
+    "ast_hash": "8c2174adeaadf3c9a5c7b0439ab9c787",
+    "semantic_hash": "8c2174adeaadf3c9a5c7b0439ab9c787"
+  },
+  "assets/images/icons/imageres.dll_I0064_0409.png": {
+    "mtime": 1791833910.9700036,
+    "seen": 1793193311.3156374,
+    "ast_hash": "a9c83b494a08ab568b47e6e759cdb499",
+    "semantic_hash": "a9c83b494a08ab568b47e6e759cdb499"
+  },
+  "assets/images/icons/imageres.dll_I0065_0409.png": {
+    "mtime": 1791833910.9929883,
+    "seen": 1793193311.3156374,
+    "ast_hash": "423b48bd7da83f4cced4837d5afa2b61",
+    "semantic_hash": "423b48bd7da83f4cced4837d5afa2b61"
+  },
+  "assets/images/icons/imageres.dll_I006c_0409.png": {
+    "mtime": 1791833911.01798,
+    "seen": 1793193311.3156374,
+    "ast_hash": "8fe3233de14dc37a166f155ab834b5c5",
+    "semantic_hash": "8fe3233de14dc37a166f155ab834b5c5"
+  },
+  "assets/images/icons/imageres.dll_I006e_0409.png": {
+    "mtime": 1791833911.040959,
+    "seen": 1793193311.3166366,
+    "ast_hash": "d54081adfe9fedfeb5f201b96d07f05d",
+    "semantic_hash": "d54081adfe9fedfeb5f201b96d07f05d"
+  },
+  "assets/images/icons/imageres.dll_I007a_0409.png": {
+    "mtime": 1791833911.064256,
+    "seen": 1793193311.3166366,
+    "ast_hash": "579f493900d4b220436fdcf3125d8839",
+    "semantic_hash": "579f493900d4b220436fdcf3125d8839"
+  },
+  "assets/images/icons/imageres.dll_I007b_0409.png": {
+    "mtime": 1791833911.087972,
+    "seen": 1793193311.3166366,
+    "ast_hash": "0760e2d2fdd73c232c90f08b5dd0f546",
+    "semantic_hash": "0760e2d2fdd73c232c90f08b5dd0f546"
+  },
+  "assets/images/icons/imageres.dll_I007c_0409.png": {
+    "mtime": 1791833911.1129284,
+    "seen": 1793193311.317636,
+    "ast_hash": "5e446b594a68a0a6fed4cccddb58a65b",
+    "semantic_hash": "5e446b594a68a0a6fed4cccddb58a65b"
+  },
+  "assets/images/icons/imageres.dll_I007d_0409.png": {
+    "mtime": 1791833911.1369133,
+    "seen": 1793193311.317636,
+    "ast_hash": "5016d3bd22d48244ea840027b45f16fe",
+    "semantic_hash": "5016d3bd22d48244ea840027b45f16fe"
+  },
+  "assets/images/icons/imageres.dll_I007e_0409.png": {
+    "mtime": 1791833911.1599007,
+    "seen": 1793193311.317636,
+    "ast_hash": "b185de8344e09bb10241fc0d9ce57609",
+    "semantic_hash": "b185de8344e09bb10241fc0d9ce57609"
+  },
+  "assets/images/icons/imageres.dll_I008a_0409.png": {
+    "mtime": 1791833911.1858852,
+    "seen": 1793193311.3186357,
+    "ast_hash": "bdb35ee8565cd46a974c16be53814ce8",
+    "semantic_hash": "bdb35ee8565cd46a974c16be53814ce8"
+  },
+  "assets/images/icons/imageres.dll_I008b_0409.png": {
+    "mtime": 1791833911.2108698,
+    "seen": 1793193311.3186357,
+    "ast_hash": "8299db2e18d2f2c63dcbdde8b0008a52",
+    "semantic_hash": "8299db2e18d2f2c63dcbdde8b0008a52"
+  },
+  "assets/images/icons/imageres.dll_I008c_0409.png": {
+    "mtime": 1791833911.2374241,
+    "seen": 1793193311.3186357,
+    "ast_hash": "2a8e219500a7c4b6c99b5a717a16daa6",
+    "semantic_hash": "2a8e219500a7c4b6c99b5a717a16daa6"
+  },
+  "assets/images/icons/imageres.dll_I008d_0409.png": {
+    "mtime": 1791833911.260408,
+    "seen": 1793193311.319635,
+    "ast_hash": "411bc4fdefc5dced79a5efb1a2c7475e",
+    "semantic_hash": "411bc4fdefc5dced79a5efb1a2c7475e"
+  },
+  "assets/images/icons/imageres.dll_I008e_0409.png": {
+    "mtime": 1791833911.2843952,
+    "seen": 1793193311.319635,
+    "ast_hash": "b9655b3218e5d5f64aabd919e3c3f55b",
+    "semantic_hash": "b9655b3218e5d5f64aabd919e3c3f55b"
+  },
+  "assets/images/icons/imageres.dll_I009b_0409.png": {
+    "mtime": 1791833911.3093798,
+    "seen": 1793193311.3206358,
+    "ast_hash": "f7af70a825bb8eb96717133bdd0ae6e1",
+    "semantic_hash": "f7af70a825bb8eb96717133bdd0ae6e1"
+  },
+  "assets/images/icons/imageres.dll_I009e_0409.png": {
+    "mtime": 1791833911.3323658,
+    "seen": 1793193311.3206358,
+    "ast_hash": "5148fc867b1cf1fd0411864e4a570a3c",
+    "semantic_hash": "5148fc867b1cf1fd0411864e4a570a3c"
+  },
+  "assets/images/icons/imageres.dll_I009f_0409.png": {
+    "mtime": 1791833911.363346,
+    "seen": 1793193311.3216343,
+    "ast_hash": "e6e66dde71d1a7fb6da4b2be9516c16e",
+    "semantic_hash": "e6e66dde71d1a7fb6da4b2be9516c16e"
+  },
+  "assets/images/icons/imageres.dll_I00a0_0409.png": {
+    "mtime": 1791833911.3863325,
+    "seen": 1793193311.3216343,
+    "ast_hash": "4c55fc6dc053404153e67daabbedfc03",
+    "semantic_hash": "4c55fc6dc053404153e67daabbedfc03"
+  },
+  "assets/images/icons/imageres.dll_I00a2_0409.png": {
+    "mtime": 1791833911.4134283,
+    "seen": 1793193311.3216343,
+    "ast_hash": "c9fdab74e82f7e1821b511c37f178830",
+    "semantic_hash": "c9fdab74e82f7e1821b511c37f178830"
+  },
+  "assets/images/icons/imageres.dll_I00a3_0409.png": {
+    "mtime": 1791833911.436413,
+    "seen": 1793193311.3226333,
+    "ast_hash": "f87ef311678bc49ec601e6436f9cd765",
+    "semantic_hash": "f87ef311678bc49ec601e6436f9cd765"
+  },
+  "assets/images/icons/imageres.dll_I00a5_0409.png": {
+    "mtime": 1791833911.4604006,
+    "seen": 1793193311.3226333,
+    "ast_hash": "0e6d501810bca87ce2698b39c5267263",
+    "semantic_hash": "0e6d501810bca87ce2698b39c5267263"
+  },
+  "assets/images/icons/imageres.dll_I00a6_0409.png": {
+    "mtime": 1791833911.4853861,
+    "seen": 1793193311.3226333,
+    "ast_hash": "17e5f52b3f284a946fe5bcbe29275c63",
+    "semantic_hash": "17e5f52b3f284a946fe5bcbe29275c63"
+  },
+  "assets/images/icons/imageres.dll_I00a7_0409.png": {
+    "mtime": 1791833911.5133662,
+    "seen": 1793193311.3226333,
+    "ast_hash": "f9077eb9a16427817c76cdf6bb8e9614",
+    "semantic_hash": "f9077eb9a16427817c76cdf6bb8e9614"
+  },
+  "assets/images/icons/imageres.dll_I00a8_0409.png": {
+    "mtime": 1791833911.5473466,
+    "seen": 1793193311.3236327,
+    "ast_hash": "51e496fcad3808ac4d0141ee30fcbf31",
+    "semantic_hash": "51e496fcad3808ac4d0141ee30fcbf31"
+  },
+  "assets/images/icons/imageres.dll_I00a9_0409.png": {
+    "mtime": 1791833911.5763288,
+    "seen": 1793193311.3236327,
+    "ast_hash": "cb1586dadf0a476678b9fbf9f6295d1f",
+    "semantic_hash": "cb1586dadf0a476678b9fbf9f6295d1f"
+  },
+  "assets/images/icons/imageres.dll_I00ab_0409.png": {
+    "mtime": 1791833911.6103082,
+    "seen": 1793193311.3236327,
+    "ast_hash": "d6af5c1e2703ebba031f3ce64e5aa0c7",
+    "semantic_hash": "d6af5c1e2703ebba031f3ce64e5aa0c7"
+  },
+  "assets/images/icons/imageres.dll_I00ac_0409.png": {
+    "mtime": 1791833911.6522827,
+    "seen": 1793193311.3246317,
+    "ast_hash": "ed62645c80f8b096f9860a037d7d50fb",
+    "semantic_hash": "ed62645c80f8b096f9860a037d7d50fb"
+  },
+  "assets/images/icons/imageres.dll_I00ad_0409.png": {
+    "mtime": 1791833911.6918738,
+    "seen": 1793193311.3246317,
+    "ast_hash": "9547990f94d911aa750bc0ebae6f7cde",
+    "semantic_hash": "9547990f94d911aa750bc0ebae6f7cde"
+  },
+  "assets/images/icons/imageres.dll_I00ae_0409.png": {
+    "mtime": 1791833911.7299993,
+    "seen": 1793193311.3246317,
+    "ast_hash": "2c1437d3b9ce0257bd82f561ff9bbb62",
+    "semantic_hash": "2c1437d3b9ce0257bd82f561ff9bbb62"
+  },
+  "assets/images/icons/imageres.dll_I00af_0409.png": {
+    "mtime": 1791833911.76842,
+    "seen": 1793193311.325631,
+    "ast_hash": "3403d1bd05f3ce8899210c65d635f9b4",
+    "semantic_hash": "3403d1bd05f3ce8899210c65d635f9b4"
+  },
+  "assets/images/icons/imageres.dll_I00b1_0409.png": {
+    "mtime": 1791833911.8053563,
+    "seen": 1793193311.325631,
+    "ast_hash": "a3725e4514ebc2c858d33405c02739c7",
+    "semantic_hash": "a3725e4514ebc2c858d33405c02739c7"
+  },
+  "assets/images/icons/imageres.dll_I00b2_0409.png": {
+    "mtime": 1791833911.8484194,
+    "seen": 1793193311.325631,
+    "ast_hash": "c01f6df6f841d0b740c353040df3dd7b",
+    "semantic_hash": "c01f6df6f841d0b740c353040df3dd7b"
+  },
+  "assets/images/icons/imageres.dll_I00b3_0409.png": {
+    "mtime": 1791833911.8863957,
+    "seen": 1793193311.3266306,
+    "ast_hash": "d62a1c5ee176effdbe1b57aeea4b8ef0",
+    "semantic_hash": "d62a1c5ee176effdbe1b57aeea4b8ef0"
+  },
+  "assets/images/icons/imageres.dll_I00b4_0409.png": {
+    "mtime": 1791833911.922074,
+    "seen": 1793193311.3266306,
+    "ast_hash": "fc0f5b977b497e2dc0c3be31928f6783",
+    "semantic_hash": "fc0f5b977b497e2dc0c3be31928f6783"
+  },
+  "assets/images/icons/imageres.dll_I00b5_0409.png": {
+    "mtime": 1791833911.9520552,
+    "seen": 1793193311.3266306,
+    "ast_hash": "feb77f911674629c73c21beb3cc0cde7",
+    "semantic_hash": "feb77f911674629c73c21beb3cc0cde7"
+  },
+  "assets/images/icons/imageres.dll_I00b6_0409.png": {
+    "mtime": 1791833911.9820385,
+    "seen": 1793193311.32763,
+    "ast_hash": "4ab6c52744189552835698cb8b797938",
+    "semantic_hash": "4ab6c52744189552835698cb8b797938"
+  },
+  "assets/images/icons/imageres.dll_I00b7_0409.png": {
+    "mtime": 1791833912.0190153,
+    "seen": 1793193311.32763,
+    "ast_hash": "aba5831ef19ecdaf7eedcb75f7e2799e",
+    "semantic_hash": "aba5831ef19ecdaf7eedcb75f7e2799e"
+  },
+  "assets/images/icons/imageres.dll_I00b8_0409.png": {
+    "mtime": 1791833912.0549917,
+    "seen": 1793193311.3286304,
+    "ast_hash": "baf31d74c1d3341db8cb57fb97c823f8",
+    "semantic_hash": "baf31d74c1d3341db8cb57fb97c823f8"
+  },
+  "assets/images/icons/imageres.dll_I00b9_0409.png": {
+    "mtime": 1791833912.0859735,
+    "seen": 1793193311.3286304,
+    "ast_hash": "cdc70c5433665d5c83438da7ef6a6d50",
+    "semantic_hash": "cdc70c5433665d5c83438da7ef6a6d50"
+  },
+  "assets/images/icons/imageres.dll_I00ba_0409.png": {
+    "mtime": 1791833912.1219518,
+    "seen": 1793193311.3296292,
+    "ast_hash": "49b92475b8c9fdab49a8ce302de61b2f",
+    "semantic_hash": "49b92475b8c9fdab49a8ce302de61b2f"
+  },
+  "assets/images/icons/imageres.dll_I00bd_0409.png": {
+    "mtime": 1791833912.1579287,
+    "seen": 1793193311.3306305,
+    "ast_hash": "f389c242986921881fd5ec4cb862a7b3",
+    "semantic_hash": "f389c242986921881fd5ec4cb862a7b3"
+  },
+  "assets/images/icons/imageres.dll_I00be_0409.png": {
+    "mtime": 1791833912.189909,
+    "seen": 1793193311.3306305,
+    "ast_hash": "ea87822c16bfccddb038bc1e512c251f",
+    "semantic_hash": "ea87822c16bfccddb038bc1e512c251f"
+  },
+  "assets/images/icons/inetcpl.cpl_I1180_0409.png": {
+    "mtime": 1791833912.2228887,
+    "seen": 1793193311.3306305,
+    "ast_hash": "0aae9a7bdde814a8d938aaa1f995f4c9",
+    "semantic_hash": "0aae9a7bdde814a8d938aaa1f995f4c9"
+  },
+  "assets/images/icons/inetcpl.cpl_I1181_0409.png": {
+    "mtime": 1791833912.2628634,
+    "seen": 1793193311.3316295,
+    "ast_hash": "587c2622821b7641e22d39dde1517d4a",
+    "semantic_hash": "587c2622821b7641e22d39dde1517d4a"
+  },
+  "assets/images/icons/inkball.exe_I0065_0409.png": {
+    "mtime": 1791833912.3372192,
+    "seen": 1793193311.3316295,
+    "ast_hash": "023406718440416f0f6c3f6912b05bad",
+    "semantic_hash": "023406718440416f0f6c3f6912b05bad"
+  },
+  "assets/images/icons/intl.cpl_I00c8_0409.png": {
+    "mtime": 1791833912.4612157,
+    "seen": 1793193311.3316295,
+    "ast_hash": "0e2cdae04cc384a06d3fec30193b60bf",
+    "semantic_hash": "0e2cdae04cc384a06d3fec30193b60bf"
+  },
+  "assets/images/icons/irprops.cpl_I0081_0409.png": {
+    "mtime": 1791833912.4852042,
+    "seen": 1793193311.3326275,
+    "ast_hash": "d268a61ba3f82f3122800c49909336e0",
+    "semantic_hash": "d268a61ba3f82f3122800c49909336e0"
+  },
+  "assets/images/icons/iscsicli.exe_I0001_0409.png": {
+    "mtime": 1791833912.5121849,
+    "seen": 1793193311.3326275,
+    "ast_hash": "d62a1c5ee176effdbe1b57aeea4b8ef0",
+    "semantic_hash": "d62a1c5ee176effdbe1b57aeea4b8ef0"
+  },
+  "assets/images/icons/joy.cpl_I0066_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3326275,
+    "ast_hash": "4da880db33caca0402216e19b582b1e8",
+    "semantic_hash": "4da880db33caca0402216e19b582b1e8"
+  },
+  "assets/images/icons/main.cpl_I0064_0409.png": {
+    "mtime": 1791833912.7260528,
+    "seen": 1793193311.3336275,
+    "ast_hash": "6aec7bde8d3cc91c85bff4b36734593b",
+    "semantic_hash": "6aec7bde8d3cc91c85bff4b36734593b"
+  },
+  "assets/images/icons/main.cpl_I00c8_0409.png": {
+    "mtime": 1791833912.7510383,
+    "seen": 1793193311.3336275,
+    "ast_hash": "4ab6c52744189552835698cb8b797938",
+    "semantic_hash": "4ab6c52744189552835698cb8b797938"
+  },
+  "assets/images/icons/main.cpl_I0190_0409.png": {
+    "mtime": 1791833912.774024,
+    "seen": 1793193311.3336275,
+    "ast_hash": "5e28e94b032365212f0a3227b644ddb8",
+    "semantic_hash": "5e28e94b032365212f0a3227b644ddb8"
+  },
+  "assets/images/icons/mblctr.exe_I0064_0409.png": {
+    "mtime": 1791833912.7970114,
+    "seen": 1793193311.3346267,
+    "ast_hash": "039584c24dca98dbb826aa2e0d0a6824",
+    "semantic_hash": "039584c24dca98dbb826aa2e0d0a6824"
+  },
+  "assets/images/icons/mblctr.exe_I00aa_0409.png": {
+    "mtime": 1791833912.8209946,
+    "seen": 1793193311.3346267,
+    "ast_hash": "3407a3ec15c183efa8f0234609759325",
+    "semantic_hash": "3407a3ec15c183efa8f0234609759325"
+  },
+  "assets/images/icons/miguiresource.dll_I0258_0409.png": {
+    "mtime": 1791833912.9424562,
+    "seen": 1793193311.3346267,
+    "ast_hash": "fe765788a784936063579591ebe1362c",
+    "semantic_hash": "fe765788a784936063579591ebe1362c"
+  },
+  "assets/images/icons/mmc.exe_I0080_0409.png": {
+    "mtime": 1791833913.0210488,
+    "seen": 1793193311.335626,
+    "ast_hash": "6e6a38cca8cef9999a7cbe66644e91f4",
+    "semantic_hash": "6e6a38cca8cef9999a7cbe66644e91f4"
+  },
+  "assets/images/icons/mobsync.exe_I0001_0409.png": {
+    "mtime": 1791833913.0470326,
+    "seen": 1793193311.335626,
+    "ast_hash": "65a9b61ebe2cdac961fe1e9147036e96",
+    "semantic_hash": "65a9b61ebe2cdac961fe1e9147036e96"
+  },
+  "assets/images/icons/msconfig.exe_I0080_0409.png": {
+    "mtime": 1791833913.1679583,
+    "seen": 1793193311.335626,
+    "ast_hash": "d732c31fb714a613997f67a49bad0032",
+    "semantic_hash": "d732c31fb714a613997f67a49bad0032"
+  },
+  "assets/images/icons/msieftp.dll_I0008_0409.png": {
+    "mtime": 1791833913.1919436,
+    "seen": 1793193311.3366258,
+    "ast_hash": "2573d49a6357a16855c2cad3e069175f",
+    "semantic_hash": "2573d49a6357a16855c2cad3e069175f"
+  },
+  "assets/images/icons/msinfo32.exe_I2712_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3366258,
+    "ast_hash": "fe17a751e3e012de44066b90755d3cba",
+    "semantic_hash": "fe17a751e3e012de44066b90755d3cba"
+  },
+  "assets/images/icons/mspaint.exe_I0002_0409.png": {
+    "mtime": 1791833913.2658987,
+    "seen": 1793193311.3366258,
+    "ast_hash": "c89e51857d6064a40102f8b915decb8f",
+    "semantic_hash": "c89e51857d6064a40102f8b915decb8f"
+  },
+  "assets/images/icons/mssvp.dll_I01f9_0409.png": {
+    "mtime": 1791833913.2928824,
+    "seen": 1793193311.3376245,
+    "ast_hash": "262e47fde4569edbb867332c26c310b5",
+    "semantic_hash": "262e47fde4569edbb867332c26c310b5"
+  },
+  "assets/images/icons/mstscax.dll_I345e_0409.png": {
+    "mtime": 1791833913.3188665,
+    "seen": 1793193311.3376245,
+    "ast_hash": "6ac5fee341b1c4d78a491d91768bc8fa",
+    "semantic_hash": "6ac5fee341b1c4d78a491d91768bc8fa"
+  },
+  "assets/images/icons/ncpa.cpl_I03e9_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3376245,
+    "ast_hash": "14846f81594814ad19d94598f7474e78",
+    "semantic_hash": "14846f81594814ad19d94598f7474e78"
+  },
+  "assets/images/icons/ndfapi.dll_I01f4_0409.png": {
+    "mtime": 1791833913.391822,
+    "seen": 1793193311.3386245,
+    "ast_hash": "681417e50b6297d66c4e06f7a4a50451",
+    "semantic_hash": "681417e50b6297d66c4e06f7a4a50451"
+  },
+  "assets/images/icons/netcenter.dll_I0001_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3386245,
+    "ast_hash": "44308417c7fa83304e8594b7a5fe8040",
+    "semantic_hash": "44308417c7fa83304e8594b7a5fe8040"
+  },
+  "assets/images/icons/netcenter.dll_I0007_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3386245,
+    "ast_hash": "c1216abf6ce9cc5e694ea9c4c6646588",
+    "semantic_hash": "c1216abf6ce9cc5e694ea9c4c6646588"
+  },
+  "assets/images/icons/netcenter.dll_I0008_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3396244,
+    "ast_hash": "bc1eb80ce8289da1314d9c474729140d",
+    "semantic_hash": "bc1eb80ce8289da1314d9c474729140d"
+  },
+  "assets/images/icons/netcenter.dll_I000b_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3396244,
+    "ast_hash": "567370d57aebdfb0d14b852fc9afef87",
+    "semantic_hash": "567370d57aebdfb0d14b852fc9afef87"
+  },
+  "assets/images/icons/netcenter.dll_I0011_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.340624,
+    "ast_hash": "294cbff099f0ed9fa84828eda4016327",
+    "semantic_hash": "294cbff099f0ed9fa84828eda4016327"
+  },
+  "assets/images/icons/netcenter.dll_I01f8_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.340624,
+    "ast_hash": "6f93a024c0c4e69eca7ec43578ba158b",
+    "semantic_hash": "6f93a024c0c4e69eca7ec43578ba158b"
+  },
+  "assets/images/icons/netprof.dll_I0bbe_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3416235,
+    "ast_hash": "356cd3ba754e175496f67f7079dc4ec7",
+    "semantic_hash": "356cd3ba754e175496f67f7079dc4ec7"
+  },
+  "assets/images/icons/netshell.dll_I0643_0409.png": {
+    "mtime": 1791833913.8630676,
+    "seen": 1793193311.342621,
+    "ast_hash": "5a362f22cea19ff86b70399001c63155",
+    "semantic_hash": "5a362f22cea19ff86b70399001c63155"
+  },
+  "assets/images/icons/netshell.dll_I076d_0409.png": {
+    "mtime": 1791833913.895047,
+    "seen": 1793193311.342621,
+    "ast_hash": "52963609c666bda478f26240b3a7296a",
+    "semantic_hash": "52963609c666bda478f26240b3a7296a"
+  },
+  "assets/images/icons/networkexplorer.dll_I0065_0409.png": {
+    "mtime": 1791833913.9190326,
+    "seen": 1793193311.343621,
+    "ast_hash": "5a0e7324f1a5ce09da1a157a7eb94366",
+    "semantic_hash": "5a0e7324f1a5ce09da1a157a7eb94366"
+  },
+  "assets/images/icons/networkexplorer.dll_I006b_0409.png": {
+    "mtime": 1791833913.9428718,
+    "seen": 1793193311.3443277,
+    "ast_hash": "bbd4cb153b4dd83b4eb35a31df62c3f3",
+    "semantic_hash": "bbd4cb153b4dd83b4eb35a31df62c3f3"
+  },
+  "assets/images/icons/networkexplorer.dll_I006c_0409.png": {
+    "mtime": 1791833913.9658604,
+    "seen": 1793193311.3453245,
+    "ast_hash": "848a677365b923f2441f0fd521bc58c3",
+    "semantic_hash": "848a677365b923f2441f0fd521bc58c3"
+  },
+  "assets/images/icons/networkexplorer.dll_I0076_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3453245,
+    "ast_hash": "0d3dd87b17d5c5795dc34c38aaade879",
+    "semantic_hash": "0d3dd87b17d5c5795dc34c38aaade879"
+  },
+  "assets/images/icons/networkexplorer.dll_I007c_0409.png": {
+    "mtime": 1791833914.0285985,
+    "seen": 1793193311.3463237,
+    "ast_hash": "c00e844f41078d4331307905ecb20f64",
+    "semantic_hash": "c00e844f41078d4331307905ecb20f64"
+  },
+  "assets/images/icons/networkexplorer.dll_I007d_0409.png": {
+    "mtime": 1791833914.052586,
+    "seen": 1793193311.3463237,
+    "ast_hash": "7a2d3ac12a83af358c1b41dd4c069c6d",
+    "semantic_hash": "7a2d3ac12a83af358c1b41dd4c069c6d"
+  },
+  "assets/images/icons/networkexplorer.dll_I007f_0409.png": {
+    "mtime": 1791833914.0775704,
+    "seen": 1793193311.347325,
+    "ast_hash": "f780295c9d31cfe932c4b167551ce458",
+    "semantic_hash": "f780295c9d31cfe932c4b167551ce458"
+  },
+  "assets/images/icons/networkexplorer.dll_I0080_0409.png": {
+    "mtime": 1791833914.1015556,
+    "seen": 1793193311.3483233,
+    "ast_hash": "87abc0d0e6eb316e545c117b53b15713",
+    "semantic_hash": "87abc0d0e6eb316e545c117b53b15713"
+  },
+  "assets/images/icons/networkexplorer.dll_I0082_0409.png": {
+    "mtime": 1791833914.1235406,
+    "seen": 1793193311.3483233,
+    "ast_hash": "51149a94e2beec0de2f7ddfdbb482003",
+    "semantic_hash": "51149a94e2beec0de2f7ddfdbb482003"
+  },
+  "assets/images/icons/networkmap.dll_I0001_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3493266,
+    "ast_hash": "0f6ca483faa2a4c0efb2ddc8885ee828",
+    "semantic_hash": "0f6ca483faa2a4c0efb2ddc8885ee828"
+  },
+  "assets/images/icons/networkmap.dll_I00d0_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3493266,
+    "ast_hash": "599bee25e36f44b75bc8297f2a095c44",
+    "semantic_hash": "599bee25e36f44b75bc8297f2a095c44"
+  },
+  "assets/images/icons/networkmap.dll_I00d2_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3503225,
+    "ast_hash": "603ad94ccfbf753bd80bab83c80660c3",
+    "semantic_hash": "603ad94ccfbf753bd80bab83c80660c3"
+  },
+  "assets/images/icons/networkmap.dll_I00d3_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3513227,
+    "ast_hash": "ad1bfd3bf7560fda38453c2312e63499",
+    "semantic_hash": "ad1bfd3bf7560fda38453c2312e63499"
+  },
+  "assets/images/icons/networkmap.dll_I00d4_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3513227,
+    "ast_hash": "0b40584bdf38e4d39cef021f8365d600",
+    "semantic_hash": "0b40584bdf38e4d39cef021f8365d600"
+  },
+  "assets/images/icons/networkmap.dll_I00de_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3523214,
+    "ast_hash": "995553e644d77303d027ba9b155c7b36",
+    "semantic_hash": "995553e644d77303d027ba9b155c7b36"
+  },
+  "assets/images/icons/networkmap.dll_I00df_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3523214,
+    "ast_hash": "c7a8f4fa4cdc8d57371260eb78ed0373",
+    "semantic_hash": "c7a8f4fa4cdc8d57371260eb78ed0373"
+  },
+  "assets/images/icons/notepad.exe_I0002_0409.png": {
+    "mtime": 1791833914.4391506,
+    "seen": 1793193311.3533201,
+    "ast_hash": "456029a0b6cf8e5905b220c3259fef8d",
+    "semantic_hash": "456029a0b6cf8e5905b220c3259fef8d"
+  },
+  "assets/images/icons/odbcad32.exe_SIDI_ICON_0409.png": {
+    "mtime": 1791833914.4637713,
+    "seen": 1793193311.3533201,
+    "ast_hash": "87f71a0b826746c4fdc87f08330c12f0",
+    "semantic_hash": "87f71a0b826746c4fdc87f08330c12f0"
+  },
+  "assets/images/icons/odbcint.dll_I2202_0409.png": {
+    "mtime": 1791833914.4867554,
+    "seen": 1793193311.354319,
+    "ast_hash": "0266ab34bea92af03c391eeb5cddbb81",
+    "semantic_hash": "0266ab34bea92af03c391eeb5cddbb81"
+  },
+  "assets/images/icons/oledb32r.dll_I00ca_0409.png": {
+    "mtime": 1791833914.5115883,
+    "seen": 1793193311.3553207,
+    "ast_hash": "be6513e8cd58e9569eb2b6c62c10c635",
+    "semantic_hash": "be6513e8cd58e9569eb2b6c62c10c635"
+  },
+  "assets/images/icons/oobefldr.dll_I0001_0409.png": {
+    "mtime": 1791833914.5355744,
+    "seen": 1793193311.3553207,
+    "ast_hash": "84d867dafc90acd969a64df5e0a527d7",
+    "semantic_hash": "84d867dafc90acd969a64df5e0a527d7"
+  },
+  "assets/images/icons/oobefldr.dll_I0004_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.356321,
+    "ast_hash": "ec167a743ea1f6b1c898e762651a8987",
+    "semantic_hash": "ec167a743ea1f6b1c898e762651a8987"
+  },
+  "assets/images/icons/oobefldr.dll_I0065_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.356321,
+    "ast_hash": "5ff1447aa5aaca40e268c3461dfaa9d6",
+    "semantic_hash": "5ff1447aa5aaca40e268c3461dfaa9d6"
+  },
+  "assets/images/icons/oobefldr.dll_I0066_0409.png": {
+    "mtime": 1791833914.6421404,
+    "seen": 1793193311.3573184,
+    "ast_hash": "4c3ec71585c06fb4702f5502555c9b9a",
+    "semantic_hash": "4c3ec71585c06fb4702f5502555c9b9a"
+  },
+  "assets/images/icons/oobefldr.dll_I0068_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3573184,
+    "ast_hash": "d113e6873408d3266442bd010e4a847a",
+    "semantic_hash": "d113e6873408d3266442bd010e4a847a"
+  },
+  "assets/images/icons/oobefldr.dll_I0069_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3573184,
+    "ast_hash": "b5c194024f446cf1c4396c22adb389f1",
+    "semantic_hash": "b5c194024f446cf1c4396c22adb389f1"
+  },
+  "assets/images/icons/oobefldr.dll_I006a_0409.png": {
+    "mtime": 1791833914.7460773,
+    "seen": 1793193311.3583174,
+    "ast_hash": "4dc7e279d85cbd7b140831d364bb8c9b",
+    "semantic_hash": "4dc7e279d85cbd7b140831d364bb8c9b"
+  },
+  "assets/images/icons/oobefldr.dll_I006c_0409.png": {
+    "mtime": 1791833914.7870514,
+    "seen": 1793193311.3583174,
+    "ast_hash": "c22b8239ef2740a05059b5fb760e5eff",
+    "semantic_hash": "c22b8239ef2740a05059b5fb760e5eff"
+  },
+  "assets/images/icons/oobefldr.dll_I006d_0409.png": {
+    "mtime": 1791833914.8300252,
+    "seen": 1793193311.359317,
+    "ast_hash": "5acdacede16698172362681ee78e6abb",
+    "semantic_hash": "5acdacede16698172362681ee78e6abb"
+  },
+  "assets/images/icons/oobefldr.dll_S0_0409.png": {
+    "mtime": 1791833914.8630054,
+    "seen": 1793193311.3605807,
+    "ast_hash": "cd11ee2f53895a84dd060adfab44ec50",
+    "semantic_hash": "cd11ee2f53895a84dd060adfab44ec50"
+  },
+  "assets/images/icons/perfmon.exe_I0069_0409.png": {
+    "mtime": 1791833914.943955,
+    "seen": 1793193311.3610969,
+    "ast_hash": "f2e1208fa0378b31c4f4c4aa8dc57769",
+    "semantic_hash": "f2e1208fa0378b31c4f4c4aa8dc57769"
+  },
+  "assets/images/icons/powercfg.cpl_I00ca_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3610969,
+    "ast_hash": "8447687c9c32fed557a8a8bd8e56f430",
+    "semantic_hash": "8447687c9c32fed557a8a8bd8e56f430"
+  },
+  "assets/images/icons/rstrui.exe_I009b_0409.png": {
+    "mtime": 1791833915.4120426,
+    "seen": 1793193311.3620918,
+    "ast_hash": "47da090ca2ec3a80a27769fda3697769",
+    "semantic_hash": "47da090ca2ec3a80a27769fda3697769"
+  },
+  "assets/images/icons/sapi.cpl_I008a_0409.png": {
+    "mtime": 1791833915.4959896,
+    "seen": 1793193311.3620918,
+    "ast_hash": "c1db12c700413a22c4b851b9251513fe",
+    "semantic_hash": "c1db12c700413a22c4b851b9251513fe"
+  },
+  "assets/images/icons/sapi.cpl_I2710_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3630917,
+    "ast_hash": "4b69e46ccbba4d90fb04567387e77e1f",
+    "semantic_hash": "4b69e46ccbba4d90fb04567387e77e1f"
+  },
+  "assets/images/icons/sbdrop.dll_I0001_0409.png": {
+    "mtime": 1791833915.5649958,
+    "seen": 1793193311.3630917,
+    "ast_hash": "6fd69daf12c45fe904d4673b66ebae6e",
+    "semantic_hash": "6fd69daf12c45fe904d4673b66ebae6e"
+  },
+  "assets/images/icons/sdclt.exe_I1585_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3640902,
+    "ast_hash": "e039aa1db9923fdcae5a55faf0a016f1",
+    "semantic_hash": "e039aa1db9923fdcae5a55faf0a016f1"
+  },
+  "assets/images/icons/setup_wm.exe_I0046_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3640902,
+    "ast_hash": "a3d6d03519d3cd6525dd5b32fad9ccd2",
+    "semantic_hash": "a3d6d03519d3cd6525dd5b32fad9ccd2"
+  },
+  "assets/images/icons/shell32.dll_I0086_0409.png": {
+    "mtime": 1791833915.6979144,
+    "seen": 1793193311.365089,
+    "ast_hash": "be409cb4727c9797ea54009db66be8f1",
+    "semantic_hash": "be409cb4727c9797ea54009db66be8f1"
+  },
+  "assets/images/icons/shell32.dll_I0100_0409.png": {
+    "mtime": 1791833915.7219002,
+    "seen": 1793193311.365089,
+    "ast_hash": "32e4715fb7527a58337192237eb117f9",
+    "semantic_hash": "32e4715fb7527a58337192237eb117f9"
+  },
+  "assets/images/icons/shell32.dll_I0124_0409.png": {
+    "mtime": 1791833915.7458851,
+    "seen": 1793193311.3660898,
+    "ast_hash": "fc0f5b977b497e2dc0c3be31928f6783",
+    "semantic_hash": "fc0f5b977b497e2dc0c3be31928f6783"
+  },
+  "assets/images/icons/shell32.dll_I4189_0409.png": {
+    "mtime": 1791833915.768871,
+    "seen": 1793193311.3660898,
+    "ast_hash": "a98d2cd107b15cbb98458498666c407e",
+    "semantic_hash": "a98d2cd107b15cbb98458498666c407e"
+  },
+  "assets/images/icons/sidebar.exe_I0064_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.367087,
+    "ast_hash": "f9ecebb892afb0e7c6313ef00adab61d",
+    "semantic_hash": "f9ecebb892afb0e7c6313ef00adab61d"
+  },
+  "assets/images/icons/slcc.dll_I0002_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.367087,
+    "ast_hash": "1fe83e7dc9f62dec651ecf95227954c4",
+    "semantic_hash": "1fe83e7dc9f62dec651ecf95227954c4"
+  },
+  "assets/images/icons/speechuxcpl.dll_I03b8_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.368087,
+    "ast_hash": "2cbdfe82bf9014bf063d501b726f1286",
+    "semantic_hash": "2cbdfe82bf9014bf063d501b726f1286"
+  },
+  "assets/images/icons/srchadmin.dll_I00c9_0409.png": {
+    "mtime": 1791833916.062603,
+    "seen": 1793193311.368087,
+    "ast_hash": "0375bd3de57cbc750feb7f5d67281bc5",
+    "semantic_hash": "0375bd3de57cbc750feb7f5d67281bc5"
+  },
+  "assets/images/icons/sysmon.ocx_SIDR_PEFMON_ICON_0409.png": {
+    "mtime": 1791833916.1730947,
+    "seen": 1793193311.369087,
+    "ast_hash": "b9ea63d29e37251fefad35e792159bc2",
+    "semantic_hash": "b9ea63d29e37251fefad35e792159bc2"
+  },
+  "assets/images/icons/wab.exe_I0001_0409.png": {
+    "mtime": 1791833916.3552904,
+    "seen": 1793193311.369087,
+    "ast_hash": "cea057c3e190881e782d6afb9ee73f60",
+    "semantic_hash": "cea057c3e190881e782d6afb9ee73f60"
+  },
+  "assets/images/icons/wab.exe_I0002_0409.png": {
+    "mtime": 1791833916.3822756,
+    "seen": 1793193311.3700879,
+    "ast_hash": "bb92b902b6cf55cd99224e51fce03141",
+    "semantic_hash": "bb92b902b6cf55cd99224e51fce03141"
+  },
+  "assets/images/icons/wab.exe_I0004_0409.png": {
+    "mtime": 1791833916.404263,
+    "seen": 1793193311.371086,
+    "ast_hash": "8285dd76665bda2b907461d371b2967b",
+    "semantic_hash": "8285dd76665bda2b907461d371b2967b"
+  },
+  "assets/images/icons/wab.exe_I0005_0409.png": {
+    "mtime": 1791833916.4292467,
+    "seen": 1793193311.371086,
+    "ast_hash": "ae5ff7f619449ae60d33d5ab44f2e410",
+    "semantic_hash": "ae5ff7f619449ae60d33d5ab44f2e410"
+  },
+  "assets/images/icons/wab.exe_I0006_0409.png": {
+    "mtime": 1791833916.4532301,
+    "seen": 1793193311.3720856,
+    "ast_hash": "30ef9613eb0c89b7e5c9559d3510702e",
+    "semantic_hash": "30ef9613eb0c89b7e5c9559d3510702e"
+  },
+  "assets/images/icons/wab.exe_I0007_0409.png": {
+    "mtime": 1791833916.4762166,
+    "seen": 1793193311.3720856,
+    "ast_hash": "97ff1d697ece5d5ebdfa71c4bde5fe21",
+    "semantic_hash": "97ff1d697ece5d5ebdfa71c4bde5fe21"
+  },
+  "assets/images/icons/wab.exe_I0008_0409.png": {
+    "mtime": 1791833916.4992034,
+    "seen": 1793193311.3730836,
+    "ast_hash": "e5b70f22f6da62a40f8c427ef2f6496c",
+    "semantic_hash": "e5b70f22f6da62a40f8c427ef2f6496c"
+  },
+  "assets/images/icons/wab.exe_I0009_0409.png": {
+    "mtime": 1791833916.523189,
+    "seen": 1793193311.3730836,
+    "ast_hash": "075b6a606bce25ae25f85dc6d9abbe4f",
+    "semantic_hash": "075b6a606bce25ae25f85dc6d9abbe4f"
+  },
+  "assets/images/icons/wbemtest.exe_SIDI_ICON1_0409.png": {
+    "mtime": 1791833916.5461748,
+    "seen": 1793193311.3740828,
+    "ast_hash": "b1cc57c41b8f069c548d359d562fd412",
+    "semantic_hash": "b1cc57c41b8f069c548d359d562fd412"
+  },
+  "assets/images/icons/wcescomm.dll_I0064_0409.png": {
+    "mtime": 1791833916.5708547,
+    "seen": 1793193311.3740828,
+    "ast_hash": "5f9658f0fc98648ba57b032674a9c4de",
+    "semantic_hash": "5f9658f0fc98648ba57b032674a9c4de"
+  },
+  "assets/images/icons/wcnwiz.dll_I2905_0409.png": {
+    "mtime": 1791833916.5978389,
+    "seen": 1793193311.3750823,
+    "ast_hash": "792c0af0c611a2e7538309e6c962ebcd",
+    "semantic_hash": "792c0af0c611a2e7538309e6c962ebcd"
+  },
+  "assets/images/icons/wcnwiz.dll_I296b_0409.png": {
+    "mtime": 1791833916.6268213,
+    "seen": 1793193311.3750823,
+    "ast_hash": "b9f1598c9b9892f5e4f8840060de0fc0",
+    "semantic_hash": "b9f1598c9b9892f5e4f8840060de0fc0"
+  },
+  "assets/images/icons/wdc.dll_SIDI_REPORT_0409.png": {
+    "mtime": 1791833916.6558044,
+    "seen": 1793193311.3760812,
+    "ast_hash": "2ee829890a3080a16439e4eef45c7fe1",
+    "semantic_hash": "2ee829890a3080a16439e4eef45c7fe1"
+  },
+  "assets/images/icons/wer.dll_I0194_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3760812,
+    "ast_hash": "1f53e21f6c163b3b786ef9d012c893cc",
+    "semantic_hash": "1f53e21f6c163b3b786ef9d012c893cc"
+  },
+  "assets/images/icons/wlanpref.dll_I006a_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3770812,
+    "ast_hash": "e9e8767aeed86365345f1051ff1c64e4",
+    "semantic_hash": "e9e8767aeed86365345f1051ff1c64e4"
+  },
+  "assets/images/icons/wmp.dll_I704e_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3770812,
+    "ast_hash": "11bfab2fa3a2b4b7cbec51f5ffada6dc",
+    "semantic_hash": "11bfab2fa3a2b4b7cbec51f5ffada6dc"
+  },
+  "assets/images/icons/wmploc.DLL_I0265_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3780813,
+    "ast_hash": "f735e14694ee8e95470e6581c30e86ff",
+    "semantic_hash": "f735e14694ee8e95470e6581c30e86ff"
+  },
+  "assets/images/icons/wmploc.DLL_I02da_0409.png": {
+    "mtime": 1791833916.9767354,
+    "seen": 1793193311.3780813,
+    "ast_hash": "318ab38c7b940d31d5f092815b202687",
+    "semantic_hash": "318ab38c7b940d31d5f092815b202687"
+  },
+  "assets/images/icons/wmploc.DLL_I02db_0409.png": {
+    "mtime": 1791833917.0167115,
+    "seen": 1793193311.3790803,
+    "ast_hash": "f6672cea99727f2c24e36bff8d98b5eb",
+    "semantic_hash": "f6672cea99727f2c24e36bff8d98b5eb"
+  },
+  "assets/images/icons/wmploc.DLL_I02dc_0409.png": {
+    "mtime": 1791833917.040694,
+    "seen": 1793193311.3790803,
+    "ast_hash": "682b55b21fa5983b141147202e9f4b94",
+    "semantic_hash": "682b55b21fa5983b141147202e9f4b94"
+  },
+  "assets/images/icons/wmploc.DLL_I02dd_0409.png": {
+    "mtime": 1791833917.0656803,
+    "seen": 1793193311.3800812,
+    "ast_hash": "955b272ed1618dafea18dd79d3156c4d",
+    "semantic_hash": "955b272ed1618dafea18dd79d3156c4d"
+  },
+  "assets/images/icons/wmploc.DLL_I02de_0409.png": {
+    "mtime": 1791833917.0887554,
+    "seen": 1793193311.3800812,
+    "ast_hash": "54c5a96a6747c3c9f3dfece52a18c138",
+    "semantic_hash": "54c5a96a6747c3c9f3dfece52a18c138"
+  },
+  "assets/images/icons/wmploc.DLL_I02df_0409.png": {
+    "mtime": 1791833917.1137402,
+    "seen": 1793193311.3810782,
+    "ast_hash": "33748c778a8cc3029d273091e569d8fd",
+    "semantic_hash": "33748c778a8cc3029d273091e569d8fd"
+  },
+  "assets/images/icons/wmploc.DLL_I02e0_0409.png": {
+    "mtime": 1791833917.135725,
+    "seen": 1793193311.3810782,
+    "ast_hash": "93e27efb1db1e8ba2d86e93fec319fc0",
+    "semantic_hash": "93e27efb1db1e8ba2d86e93fec319fc0"
+  },
+  "assets/images/icons/wmploc.DLL_I0b8d_0409.png": {
+    "mtime": 1791833917.159711,
+    "seen": 1793193311.3820772,
+    "ast_hash": "43442e909f8f30463a4195db38aebffb",
+    "semantic_hash": "43442e909f8f30463a4195db38aebffb"
+  },
+  "assets/images/icons/wmploc.DLL_I5b08_0409.png": {
+    "mtime": 1791833917.1825445,
+    "seen": 1793193311.3820772,
+    "ast_hash": "e8fcead1fb229f198564c0afdc9da089",
+    "semantic_hash": "e8fcead1fb229f198564c0afdc9da089"
+  },
+  "assets/images/icons/wordpad.exe_I0080_0409.png": {
+    "mtime": 1791833917.2057383,
+    "seen": 1793193311.3830771,
+    "ast_hash": "e2cb3253e09fd890aef1dde0b82752d7",
+    "semantic_hash": "e2cb3253e09fd890aef1dde0b82752d7"
+  },
+  "assets/images/icons/wordpad.exe_I009a_0409.png": {
+    "mtime": 1791833917.2287238,
+    "seen": 1793193311.3830771,
+    "ast_hash": "541339bdf75ad71bb415c2e6575f06de",
+    "semantic_hash": "541339bdf75ad71bb415c2e6575f06de"
+  },
+  "assets/images/icons/wpcao.dll_I0079_0409.png": {
+    "mtime": 1791833917.2387166,
+    "seen": 1793193311.3840768,
+    "ast_hash": "c5d33f166a3bfb87e2fed8e2e47020b7",
+    "semantic_hash": "c5d33f166a3bfb87e2fed8e2e47020b7"
+  },
+  "assets/images/icons/wpccpl.dll_I0001_0409.png": {
+    "mtime": 1791833917.2497108,
+    "seen": 1793193311.3840768,
+    "ast_hash": "3c27dabedd0c668765d2fbc0dca29661",
+    "semantic_hash": "3c27dabedd0c668765d2fbc0dca29661"
+  },
+  "assets/images/icons/wpd_ci.dll_I0064_0409.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.385076,
+    "ast_hash": "d832dd9db3898ee58bb3b09ae6476f74",
+    "semantic_hash": "d832dd9db3898ee58bb3b09ae6476f74"
+  },
+  "assets/images/ill_admin.png": {
+    "mtime": 1791903072.0,
+    "seen": 1793193311.385076,
+    "ast_hash": "479ed12550127020dceccdda26f74931",
+    "semantic_hash": "479ed12550127020dceccdda26f74931"
+  },
+  "assets/images/ill_admin_panel.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.385076,
+    "ast_hash": "9dfbd7c56d98c702dac63f1894187898",
+    "semantic_hash": "9dfbd7c56d98c702dac63f1894187898"
+  },
+  "assets/images/ill_announcement.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3860755,
+    "ast_hash": "e02d8df21caf71f67d1a386b6e1ae93c",
+    "semantic_hash": "e02d8df21caf71f67d1a386b6e1ae93c"
+  },
+  "assets/images/ill_archive.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3870752,
+    "ast_hash": "67205e28d065094753b032be89f4dbed",
+    "semantic_hash": "67205e28d065094753b032be89f4dbed"
+  },
+  "assets/images/ill_audit_log.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3870752,
+    "ast_hash": "9b306231034688d6c11ea0870449132d",
+    "semantic_hash": "9b306231034688d6c11ea0870449132d"
+  },
+  "assets/images/ill_calendar.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3870752,
+    "ast_hash": "18a5f4d23fade34e4386c0fea55fc3c0",
+    "semantic_hash": "18a5f4d23fade34e4386c0fea55fc3c0"
+  },
+  "assets/images/ill_circular_rules.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3880734,
+    "ast_hash": "d33d5d7274a4c3c7dff895c5ac35a213",
+    "semantic_hash": "d33d5d7274a4c3c7dff895c5ac35a213"
+  },
+  "assets/images/ill_correction.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3880734,
+    "ast_hash": "172b909b9e060c0d566cf7f4f32d8562",
+    "semantic_hash": "172b909b9e060c0d566cf7f4f32d8562"
+  },
+  "assets/images/ill_deputy.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3890734,
+    "ast_hash": "218b18472b401ce18e8a48e7478cca1d",
+    "semantic_hash": "218b18472b401ce18e8a48e7478cca1d"
+  },
+  "assets/images/ill_educational_planning.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.390073,
+    "ast_hash": "db807857c41d99e09fb671ff12752a0b",
+    "semantic_hash": "db807857c41d99e09fb671ff12752a0b"
+  },
+  "assets/images/ill_food_allergy.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.390073,
+    "ast_hash": "65374badd94831b6e78008a8d1a81228",
+    "semantic_hash": "65374badd94831b6e78008a8d1a81228"
+  },
+  "assets/images/ill_fun.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.391073,
+    "ast_hash": "2735d98f457f2eb9e2af40b6b58de2b7",
+    "semantic_hash": "2735d98f457f2eb9e2af40b6b58de2b7"
+  },
+  "assets/images/ill_homework_upload.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.391073,
+    "ast_hash": "5840636ee3329beab7ad769b0c82ddd2",
+    "semantic_hash": "5840636ee3329beab7ad769b0c82ddd2"
+  },
+  "assets/images/ill_management.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3920712,
+    "ast_hash": "b678ae75ef3d6c02f078703c04d23769",
+    "semantic_hash": "b678ae75ef3d6c02f078703c04d23769"
+  },
+  "assets/images/ill_menu.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3920712,
+    "ast_hash": "21b2ff2366b38c6db432aa7a517c0122",
+    "semantic_hash": "21b2ff2366b38c6db432aa7a517c0122"
+  },
+  "assets/images/ill_mission.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3930702,
+    "ast_hash": "d24ae8292c039457e821f1a772624034",
+    "semantic_hash": "d24ae8292c039457e821f1a772624034"
+  },
+  "assets/images/ill_nutrition_health.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3930702,
+    "ast_hash": "219a5b11259ccb120c984593a247531a",
+    "semantic_hash": "219a5b11259ccb120c984593a247531a"
+  },
+  "assets/images/ill_parents.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3930702,
+    "ast_hash": "a04da6f9dbb42d69b6eb0b676ff97eb0",
+    "semantic_hash": "a04da6f9dbb42d69b6eb0b676ff97eb0"
+  },
+  "assets/images/ill_requests.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3940718,
+    "ast_hash": "ce6b22793c1799882d0e8156de467a7d",
+    "semantic_hash": "ce6b22793c1799882d0e8156de467a7d"
+  },
+  "assets/images/ill_students.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3940718,
+    "ast_hash": "413c5606044916c9e6cbe52fabc4942a",
+    "semantic_hash": "413c5606044916c9e6cbe52fabc4942a"
+  },
+  "assets/images/ill_teachers.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3950706,
+    "ast_hash": "40d676d2df028c1e80c9096638f1296d",
+    "semantic_hash": "40d676d2df028c1e80c9096638f1296d"
+  },
+  "assets/images/ill_toolbox.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3950706,
+    "ast_hash": "6bc9939d10974505bf83a9cfc0493758",
+    "semantic_hash": "6bc9939d10974505bf83a9cfc0493758"
+  },
+  "assets/images/ill_user_management.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3950706,
+    "ast_hash": "231d4d8a7386f663acaf004cf765a990",
+    "semantic_hash": "231d4d8a7386f663acaf004cf765a990"
+  },
+  "assets/images/logo.jpg": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3960695,
+    "ast_hash": "284c5ef262d95c625c29da3287bb072f",
+    "semantic_hash": "284c5ef262d95c625c29da3287bb072f"
+  },
+  "assets/images/logo_no_text.jpg": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3960695,
+    "ast_hash": "f6fb81979a94774b525c0b705d117fd1",
+    "semantic_hash": "f6fb81979a94774b525c0b705d117fd1"
+  },
+  "assets/images/messages.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3960695,
+    "ast_hash": "cfafce090e7227d331877cb63698d039",
+    "semantic_hash": "cfafce090e7227d331877cb63698d039"
+  },
+  "assets/images/payment.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3970687,
+    "ast_hash": "0bafc0229415830cd1033d5433acb5a6",
+    "semantic_hash": "0bafc0229415830cd1033d5433acb5a6"
+  },
+  "assets/images/report.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3970687,
+    "ast_hash": "6004e46df322e58244c0d9162c2681e8",
+    "semantic_hash": "6004e46df322e58244c0d9162c2681e8"
+  },
+  "assets/images/scene_announcement.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3980699,
+    "ast_hash": "2d2d9953b42a2e64a85f299a8518ba8c",
+    "semantic_hash": "2d2d9953b42a2e64a85f299a8518ba8c"
+  },
+  "assets/images/scene_attendance.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3980699,
+    "ast_hash": "ef0058da02304066cb878d90187bfa1f",
+    "semantic_hash": "ef0058da02304066cb878d90187bfa1f"
+  },
+  "assets/images/scene_gallery.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3990674,
+    "ast_hash": "426da3c48f43a65e87add6bef706175a",
+    "semantic_hash": "426da3c48f43a65e87add6bef706175a"
+  },
+  "assets/images/scene_homework.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.3990674,
+    "ast_hash": "2ab408ac0c96c3863d52bcdf31b24f58",
+    "semantic_hash": "2ab408ac0c96c3863d52bcdf31b24f58"
+  },
+  "assets/images/scene_messages.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.4000664,
+    "ast_hash": "07bbbd561d512adf5e23defa52ab78e4",
+    "semantic_hash": "07bbbd561d512adf5e23defa52ab78e4"
+  },
+  "assets/images/scene_payment.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.4000664,
+    "ast_hash": "00fe4cbdb087169f2dbcce245a4b5f8f",
+    "semantic_hash": "00fe4cbdb087169f2dbcce245a4b5f8f"
+  },
+  "assets/images/scene_report.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.4010665,
+    "ast_hash": "06e4c7c959499348741a7709c1ba3f09",
+    "semantic_hash": "06e4c7c959499348741a7709c1ba3f09"
+  },
+  "assets/images/scene_schedule.png": {
+    "mtime": 1791903073.0,
+    "seen": 1793193311.4010665,
+    "ast_hash": "87d5763064f0d01be0d8d36ea58f5452",
+    "semantic_hash": "87d5763064f0d01be0d8d36ea58f5452"
+  },
+  "assets/images/stationery/s01.png": {
+    "mtime": 1792526162.4203742,
+    "seen": 1793193311.4010665,
+    "ast_hash": "807eebdbd016f7aae58f9c34044d6fb9",
+    "semantic_hash": "807eebdbd016f7aae58f9c34044d6fb9"
+  },
+  "assets/images/stationery/s02.png": {
+    "mtime": 1792526162.554545,
+    "seen": 1793193311.402066,
+    "ast_hash": "9fb2e67bbffad621174383d3adab521d",
+    "semantic_hash": "9fb2e67bbffad621174383d3adab521d"
+  },
+  "assets/images/stationery/s03.png": {
+    "mtime": 1792526163.1607,
+    "seen": 1793193311.402066,
+    "ast_hash": "e4d1e08f6daad1950908d7fcbcb1f3eb",
+    "semantic_hash": "e4d1e08f6daad1950908d7fcbcb1f3eb"
+  },
+  "assets/images/stationery/s04.png": {
+    "mtime": 1792526163.4869397,
+    "seen": 1793193311.4030652,
+    "ast_hash": "81382f4470e800dad24b433ecce10927",
+    "semantic_hash": "81382f4470e800dad24b433ecce10927"
+  },
+  "assets/images/stationery/s05.png": {
+    "mtime": 1792526163.9411578,
+    "seen": 1793193311.4030652,
+    "ast_hash": "7579a02dda4763f3a80f87422f01db18",
+    "semantic_hash": "7579a02dda4763f3a80f87422f01db18"
+  },
+  "assets/images/stationery/s06.png": {
+    "mtime": 1792526164.1884577,
+    "seen": 1793193311.4040644,
+    "ast_hash": "ac6cb53e93ed5a2a89647aefeb1dd5e8",
+    "semantic_hash": "ac6cb53e93ed5a2a89647aefeb1dd5e8"
+  },
+  "assets/images/stationery/s07.png": {
+    "mtime": 1792526164.7179098,
+    "seen": 1793193311.4040644,
+    "ast_hash": "cb4cfc8c5f9030f1e0cd6decba73fbd8",
+    "semantic_hash": "cb4cfc8c5f9030f1e0cd6decba73fbd8"
+  },
+  "assets/images/stationery/s08.png": {
+    "mtime": 1792526165.0943422,
+    "seen": 1793193311.4050639,
+    "ast_hash": "b9b4f7a86e8ee13f499da34828cb067a",
+    "semantic_hash": "b9b4f7a86e8ee13f499da34828cb067a"
+  },
+  "assets/images/stationery/s09.png": {
+    "mtime": 1792526165.253352,
+    "seen": 1793193311.4050639,
+    "ast_hash": "e9e5e804c17dd957ab5f317cc4fa8ada",
+    "semantic_hash": "e9e5e804c17dd957ab5f317cc4fa8ada"
+  },
+  "assets/images/stationery/s10.png": {
+    "mtime": 1792526165.8313937,
+    "seen": 1793193311.4060633,
+    "ast_hash": "f179dbdb3d9f90e4cfcfdc3ef327f891",
+    "semantic_hash": "f179dbdb3d9f90e4cfcfdc3ef327f891"
+  },
+  "assets/images/stationery/s11.png": {
+    "mtime": 1792526166.089497,
+    "seen": 1793193311.4060633,
+    "ast_hash": "f2d75d04c8e0242a1887c977792f1f76",
+    "semantic_hash": "f2d75d04c8e0242a1887c977792f1f76"
+  },
+  "assets/images/stationery/s12.png": {
+    "mtime": 1792526166.585946,
+    "seen": 1793193311.4070625,
+    "ast_hash": "c1c1a2e371ad4694976fad0b6b807e94",
+    "semantic_hash": "c1c1a2e371ad4694976fad0b6b807e94"
+  },
+  "assets/images/stationery/s13.png": {
+    "mtime": 1792526166.9976182,
+    "seen": 1793193311.4074202,
+    "ast_hash": "e52e580c6fbdb8d8f5ef9db6e341a17b",
+    "semantic_hash": "e52e580c6fbdb8d8f5ef9db6e341a17b"
+  },
+  "assets/images/stationery/s14.png": {
+    "mtime": 1792526167.2387996,
+    "seen": 1793193311.408202,
+    "ast_hash": "28186de9bd5777215a79334260aebb5f",
+    "semantic_hash": "28186de9bd5777215a79334260aebb5f"
+  },
+  "assets/images/stationery/s15.png": {
+    "mtime": 1792526167.2819493,
+    "seen": 1793193311.4087214,
+    "ast_hash": "e7a478ac54d8db8b1fb173adb54be50c",
+    "semantic_hash": "e7a478ac54d8db8b1fb173adb54be50c"
+  },
+  "assets/images/stationery/s16.png": {
+    "mtime": 1792526167.438004,
+    "seen": 1793193311.4092994,
+    "ast_hash": "0a014d2aab4e72b178e8865d791fc827",
+    "semantic_hash": "0a014d2aab4e72b178e8865d791fc827"
+  },
+  "assets/images/stationery/s17.png": {
+    "mtime": 1792526167.4579883,
+    "seen": 1793193311.4104548,
+    "ast_hash": "eb8e4fbf20fb73d3783794ed9d55908e",
+    "semantic_hash": "eb8e4fbf20fb73d3783794ed9d55908e"
+  },
+  "assets/images/stationery/s18.png": {
+    "mtime": 1792526167.4805324,
+    "seen": 1793193311.4110572,
+    "ast_hash": "439c4fee3e3534cbc5d7e04ccd145e44",
+    "semantic_hash": "439c4fee3e3534cbc5d7e04ccd145e44"
+  },
+  "assets/images/stationery/s19.png": {
+    "mtime": 1792526167.5071135,
+    "seen": 1793193311.411579,
+    "ast_hash": "88531193cec654ff8be97bd208b1ed7d",
+    "semantic_hash": "88531193cec654ff8be97bd208b1ed7d"
+  },
+  "assets/images/stationery/s20.png": {
+    "mtime": 1792526167.5330942,
+    "seen": 1793193311.4125662,
+    "ast_hash": "a021e3bf8265dfb67a68661ea6274ae6",
+    "semantic_hash": "a021e3bf8265dfb67a68661ea6274ae6"
+  },
+  "assets/images/stationery/s21.png": {
+    "mtime": 1792526167.5592723,
+    "seen": 1793193311.412962,
+    "ast_hash": "5c59b4f46947b2dc9046669076b5b7a6",
+    "semantic_hash": "5c59b4f46947b2dc9046669076b5b7a6"
+  },
+  "assets/images/stationery/s22.png": {
+    "mtime": 1792526167.5822546,
+    "seen": 1793193311.4135382,
+    "ast_hash": "4b91b2baa34d212c2bbb186ef5760ae3",
+    "semantic_hash": "4b91b2baa34d212c2bbb186ef5760ae3"
+  },
+  "assets/images/stationery/s23.png": {
+    "mtime": 1792526167.5969455,
+    "seen": 1793193311.4140964,
+    "ast_hash": "f8099dd2662543a4e177ce8f628ff178",
+    "semantic_hash": "f8099dd2662543a4e177ce8f628ff178"
+  },
+  "assets/images/stationery/s24.png": {
+    "mtime": 1792526167.6179328,
+    "seen": 1793193311.414664,
+    "ast_hash": "f27305b3f9842ecdcdb2001695a4f137",
+    "semantic_hash": "f27305b3f9842ecdcdb2001695a4f137"
+  },
+  "assets/images/stationery/s25.png": {
+    "mtime": 1792526167.634922,
+    "seen": 1793193311.415768,
+    "ast_hash": "bf49231e0d0936536bd9c49d72f2471c",
+    "semantic_hash": "bf49231e0d0936536bd9c49d72f2471c"
+  },
+  "assets/images/stationery/s26.png": {
+    "mtime": 1792526167.652632,
+    "seen": 1793193311.415768,
+    "ast_hash": "5e2ebfef40bab1984b8110b7091c46f6",
+    "semantic_hash": "5e2ebfef40bab1984b8110b7091c46f6"
+  },
+  "assets/images/stationery/s27.png": {
+    "mtime": 1792526167.6746182,
+    "seen": 1793193311.4163082,
+    "ast_hash": "d8218be66bf173198a3a8e86ecaa5533",
+    "semantic_hash": "d8218be66bf173198a3a8e86ecaa5533"
+  },
+  "assets/images/stationery/s28.png": {
+    "mtime": 1792526167.6896093,
+    "seen": 1793193311.4168286,
+    "ast_hash": "fd8d35e5ef475ddae056a46ce7fd8ea4",
+    "semantic_hash": "fd8d35e5ef475ddae056a46ce7fd8ea4"
+  },
+  "assets/images/stationery/s29.png": {
+    "mtime": 1792526167.715593,
+    "seen": 1793193311.417345,
+    "ast_hash": "2edad8c1d7ccccc6bcfaad5d032e382b",
+    "semantic_hash": "2edad8c1d7ccccc6bcfaad5d032e382b"
+  },
+  "assets/images/stationery/s30.png": {
+    "mtime": 1792526167.7400415,
+    "seen": 1793193311.417345,
+    "ast_hash": "1200521c510e4de1ba37e7317b6beb9a",
+    "semantic_hash": "1200521c510e4de1ba37e7317b6beb9a"
+  },
+  "assets/images/stationery/s31.png": {
+    "mtime": 1792526168.0722382,
+    "seen": 1793193311.4178622,
+    "ast_hash": "e6ee3e24a78588cb39e6e7e9379cf7b3",
+    "semantic_hash": "e6ee3e24a78588cb39e6e7e9379cf7b3"
+  },
+  "assets/images/stationery/s32.png": {
+    "mtime": 1792526168.0958233,
+    "seen": 1793193311.4183786,
+    "ast_hash": "50fffdefe16e999071057491982855fe",
+    "semantic_hash": "50fffdefe16e999071057491982855fe"
+  },
+  "assets/images/stationery/s33.png": {
+    "mtime": 1792526168.1168106,
+    "seen": 1793193311.4183786,
+    "ast_hash": "d18afc7626e0d717c7402c3d0c8b1c46",
+    "semantic_hash": "d18afc7626e0d717c7402c3d0c8b1c46"
+  },
+  "assets/images/stationery/s34.png": {
+    "mtime": 1792526168.1549754,
+    "seen": 1793193311.4188888,
+    "ast_hash": "9462307636e6df37ef5a8f69bec97768",
+    "semantic_hash": "9462307636e6df37ef5a8f69bec97768"
+  },
+  "assets/images/stationery/s35.png": {
+    "mtime": 1792526168.1865692,
+    "seen": 1793193311.4194102,
+    "ast_hash": "76621a73e4cfe5996321d586160d0c17",
+    "semantic_hash": "76621a73e4cfe5996321d586160d0c17"
+  },
+  "assets/images/stationery/s36.png": {
+    "mtime": 1792526168.2337618,
+    "seen": 1793193311.4194102,
+    "ast_hash": "f9058e0e910866ac792bdd325c8736d5",
+    "semantic_hash": "f9058e0e910866ac792bdd325c8736d5"
+  },
+  "assets/images/stationery/s37.png": {
+    "mtime": 1792526168.4426324,
+    "seen": 1793193311.4203944,
+    "ast_hash": "65d29390a5bfc71639b14e19f54d46d2",
+    "semantic_hash": "65d29390a5bfc71639b14e19f54d46d2"
+  },
+  "assets/images/stationery/s38.png": {
+    "mtime": 1792526168.750244,
+    "seen": 1793193311.4203944,
+    "ast_hash": "e77d5be2276e36c04ae24249aa467df8",
+    "semantic_hash": "e77d5be2276e36c04ae24249aa467df8"
+  },
+  "assets/images/stationery/s39.png": {
+    "mtime": 1792526168.7782235,
+    "seen": 1793193311.4213936,
+    "ast_hash": "c2d3def14441bda98e8b449c0b4f2ee0",
+    "semantic_hash": "c2d3def14441bda98e8b449c0b4f2ee0"
+  },
+  "assets/images/stationery/s40.png": {
+    "mtime": 1792526168.8051841,
+    "seen": 1793193311.4213936,
+    "ast_hash": "239acb52b27828928740877f8660107c",
+    "semantic_hash": "239acb52b27828928740877f8660107c"
+  },
+  "assets/images/stationery/s41.png": {
+    "mtime": 1792526168.8241725,
+    "seen": 1793193311.422393,
+    "ast_hash": "780212d10854a213bd79b80e99b83a92",
+    "semantic_hash": "780212d10854a213bd79b80e99b83a92"
+  },
+  "assets/images/stationery/s42.png": {
+    "mtime": 1792526169.1391134,
+    "seen": 1793193311.422393,
+    "ast_hash": "df9c2122cc5a6d0654ced8c5cfc5b8c3",
+    "semantic_hash": "df9c2122cc5a6d0654ced8c5cfc5b8c3"
+  },
+  "assets/images/stationery/s43.png": {
+    "mtime": 1792526169.4748433,
+    "seen": 1793193311.4233935,
+    "ast_hash": "bb5df78690bb48126826baa44d6b2f8c",
+    "semantic_hash": "bb5df78690bb48126826baa44d6b2f8c"
+  },
+  "assets/images/stationery/s44.png": {
+    "mtime": 1792526170.0883088,
+    "seen": 1793193311.4243922,
+    "ast_hash": "afd46df03438d29a8975a4ae798ce912",
+    "semantic_hash": "afd46df03438d29a8975a4ae798ce912"
+  },
+  "assets/images/stationery/s45.png": {
+    "mtime": 1792526170.2617583,
+    "seen": 1793193311.4243922,
+    "ast_hash": "9592fef5b745dc873584f3f02b47a16b",
+    "semantic_hash": "9592fef5b745dc873584f3f02b47a16b"
+  },
+  "assets/images/stationery/s46.png": {
+    "mtime": 1792526171.1925123,
+    "seen": 1793193311.4253924,
+    "ast_hash": "d0aa187d245259bf94808688b7c77667",
+    "semantic_hash": "d0aa187d245259bf94808688b7c77667"
+  },
+  "assets/images/stationery/s47.png": {
+    "mtime": 1792526171.7780302,
+    "seen": 1793193311.4253924,
+    "ast_hash": "749540bdd0a557e06160e297be980c6e",
+    "semantic_hash": "749540bdd0a557e06160e297be980c6e"
+  },
+  "assets/images/stationery/s48.png": {
+    "mtime": 1792526172.2446883,
+    "seen": 1793193311.4263935,
+    "ast_hash": "119a2817cad50500f544781e92c6465a",
+    "semantic_hash": "119a2817cad50500f544781e92c6465a"
+  },
+  "assets/images/stationery/s49.png": {
+    "mtime": 1792526172.8915362,
+    "seen": 1793193311.4273932,
+    "ast_hash": "8d972bcc25b1b5d3f792bb1f615dc1ed",
+    "semantic_hash": "8d972bcc25b1b5d3f792bb1f615dc1ed"
+  },
+  "assets/images/stationery/s50.png": {
+    "mtime": 1792526173.09541,
+    "seen": 1793193311.4273932,
+    "ast_hash": "2486f54258c73e8ce56b173a98bd66d1",
+    "semantic_hash": "2486f54258c73e8ce56b173a98bd66d1"
+  },
+  "assets/images/stationery/s51.png": {
+    "mtime": 1792526173.4609158,
+    "seen": 1793193311.428392,
+    "ast_hash": "6fbbd2f12fe91f4c4cae5f6faa55dfa5",
+    "semantic_hash": "6fbbd2f12fe91f4c4cae5f6faa55dfa5"
+  },
+  "assets/images/stationery/s52.png": {
+    "mtime": 1792526173.6647866,
+    "seen": 1793193311.4293895,
+    "ast_hash": "5b723fd14f77f8aee3eae4f67d4d5fdf",
+    "semantic_hash": "5b723fd14f77f8aee3eae4f67d4d5fdf"
+  },
+  "assets/images/stationery/s54.png": {
+    "mtime": 1792526174.3794112,
+    "seen": 1793193311.4293895,
+    "ast_hash": "ece764b707cc31a41d8499183bc8bd3f",
+    "semantic_hash": "ece764b707cc31a41d8499183bc8bd3f"
+  },
+  "assets/images/stationery/s55.png": {
+    "mtime": 1792526174.3983996,
+    "seen": 1793193311.4303927,
+    "ast_hash": "a532c6c5285d0a209e24ea87a1d6d919",
+    "semantic_hash": "a532c6c5285d0a209e24ea87a1d6d919"
+  },
+  "assets/images/welcome_bg.jpg": {
+    "mtime": 1792980836.0,
+    "seen": 1793193311.431389,
+    "ast_hash": "2b4058d8efe5a0ecf956e864e7875a33",
+    "semantic_hash": "2b4058d8efe5a0ecf956e864e7875a33"
+  },
+  "assets/images/world_bg.jpg": {
+    "mtime": 1792980422.0,
+    "seen": 1793193311.431389,
+    "ast_hash": "717af29963ad789a67702cf42ddfdbe2",
+    "semantic_hash": "717af29963ad789a67702cf42ddfdbe2"
+  },
+  "ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png": {
+    "mtime": 1790801703.5461981,
+    "seen": 1793193311.4323893,
+    "ast_hash": "c785f8932297af4acd5f5ccb7630f01c",
+    "semantic_hash": "c785f8932297af4acd5f5ccb7630f01c"
+  },
+  "ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@3x.png": {
+    "mtime": 1790801703.551195,
+    "seen": 1793193311.4333873,
+    "ast_hash": "2b1452c4c1bda6177b4fbbb832df217f",
+    "semantic_hash": "2b1452c4c1bda6177b4fbbb832df217f"
+  },
+  "ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@1x.png": {
+    "mtime": 1790801703.5372033,
+    "seen": 1793193311.4333873,
+    "ast_hash": "2247a840b6ee72b8a069208af170e5b1",
+    "semantic_hash": "2247a840b6ee72b8a069208af170e5b1"
+  },
+  "ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@2x.png": {
+    "mtime": 1790801703.5681853,
+    "seen": 1793193311.4333873,
+    "ast_hash": "8245359312aea1b0d2412f79a07b0ca5",
+    "semantic_hash": "8245359312aea1b0d2412f79a07b0ca5"
+  },
+  "ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@3x.png": {
+    "mtime": 1790801703.5392108,
+    "seen": 1793193311.4343867,
+    "ast_hash": "5b3c0902200ce596e9848f22e1f0fe0e",
+    "semantic_hash": "5b3c0902200ce596e9848f22e1f0fe0e"
+  },
+  "ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-60x60@2x.png": {
+    "mtime": 1790801703.5442014,
+    "seen": 1793193311.4343867,
+    "ast_hash": "5b3c0902200ce596e9848f22e1f0fe0e",
+    "semantic_hash": "5b3c0902200ce596e9848f22e1f0fe0e"
+  },
+  "ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-60x60@3x.png": {
+    "mtime": 1790801703.5342054,
+    "seen": 1793193311.4353867,
+    "ast_hash": "e419d22a37bc40ba185aca1acb6d4ac6",
+    "semantic_hash": "e419d22a37bc40ba185aca1acb6d4ac6"
+  },
+  "ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-76x76@1x.png": {
+    "mtime": 1790801703.5412025,
+    "seen": 1793193311.4353867,
+    "ast_hash": "36c0d7a7132bdde18898ffdfcfcdc4d2",
+    "semantic_hash": "36c0d7a7132bdde18898ffdfcfcdc4d2"
+  },
+  "ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-76x76@2x.png": {
+    "mtime": 1790801703.5751812,
+    "seen": 1793193311.4363844,
+    "ast_hash": "643842917530acf4c5159ae851b0baf2",
+    "semantic_hash": "643842917530acf4c5159ae851b0baf2"
+  },
+  "ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-83.5x83.5@2x.png": {
+    "mtime": 1790801703.5651894,
+    "seen": 1793193311.4363844,
+    "ast_hash": "665cb5e3c5729da6d639d26eff47a503",
+    "semantic_hash": "665cb5e3c5729da6d639d26eff47a503"
+  },
+  "ios/Runner/Assets.xcassets/LaunchImage.imageset/LaunchImage.png": {
+    "mtime": 1790801703.5312104,
+    "seen": 1793193311.437384,
+    "ast_hash": "978c1bee49d7ad5fc1a4d81099b13e18",
+    "semantic_hash": "978c1bee49d7ad5fc1a4d81099b13e18"
+  },
+  "ios/Runner/Assets.xcassets/LaunchImage.imageset/LaunchImage@2x.png": {
+    "mtime": 1790801703.5292087,
+    "seen": 1793193311.437384,
+    "ast_hash": "978c1bee49d7ad5fc1a4d81099b13e18",
+    "semantic_hash": "978c1bee49d7ad5fc1a4d81099b13e18"
+  },
+  "ios/Runner/Assets.xcassets/LaunchImage.imageset/LaunchImage@3x.png": {
+    "mtime": 1790801703.5262122,
+    "seen": 1793193311.4383843,
+    "ast_hash": "978c1bee49d7ad5fc1a4d81099b13e18",
+    "semantic_hash": "978c1bee49d7ad5fc1a4d81099b13e18"
+  },
+  "macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_1024.png": {
+    "mtime": 1790801703.5072227,
+    "seen": 1793193311.4383843,
+    "ast_hash": "c9becc9105f8cabce934d20c7bfb6aac",
+    "semantic_hash": "c9becc9105f8cabce934d20c7bfb6aac"
+  },
+  "macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_128.png": {
+    "mtime": 1790801703.498227,
+    "seen": 1793193311.4393842,
+    "ast_hash": "3ded30823804caaa5ccc944067c54a36",
+    "semantic_hash": "3ded30823804caaa5ccc944067c54a36"
+  },
+  "macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_16.png": {
+    "mtime": 1790801703.5012248,
+    "seen": 1793193311.4393842,
+    "ast_hash": "8bf511604bc6ed0a6aeb380c5113fdcf",
+    "semantic_hash": "8bf511604bc6ed0a6aeb380c5113fdcf"
+  },
+  "macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_256.png": {
+    "mtime": 1790801703.510222,
+    "seen": 1793193311.4403846,
+    "ast_hash": "dfe2c93d1536ae02f085cc63faa3430e",
+    "semantic_hash": "dfe2c93d1536ae02f085cc63faa3430e"
+  },
+  "macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_32.png": {
+    "mtime": 1790801703.5022242,
+    "seen": 1793193311.4403846,
+    "ast_hash": "8e0ae58e362a6636bdfccbc04da2c58c",
+    "semantic_hash": "8e0ae58e362a6636bdfccbc04da2c58c"
+  },
+  "macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_512.png": {
+    "mtime": 1790801703.500226,
+    "seen": 1793193311.4403846,
+    "ast_hash": "0ad44039155424738917502c69667699",
+    "semantic_hash": "0ad44039155424738917502c69667699"
+  },
+  "macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_64.png": {
+    "mtime": 1790801703.4972303,
+    "seen": 1793193311.4413831,
+    "ast_hash": "04e7b6ef05346c70b663ca1d97de3ad5",
+    "semantic_hash": "04e7b6ef05346c70b663ca1d97de3ad5"
+  },
+  "web/favicon.png": {
+    "mtime": 1789762033.883008,
+    "seen": 1793193311.4413831,
+    "ast_hash": "5dcef449791fa27946b3d35ad8803796",
+    "semantic_hash": "5dcef449791fa27946b3d35ad8803796"
+  },
+  "web/icons/Icon-192.png": {
+    "mtime": 1789762033.8831677,
+    "seen": 1793193311.4413831,
+    "ast_hash": "ac9a721a12bbc803b44f645561ecb1e1",
+    "semantic_hash": "ac9a721a12bbc803b44f645561ecb1e1"
+  },
+  "web/icons/Icon-512.png": {
+    "mtime": 1789762033.8846128,
+    "seen": 1793193311.442382,
+    "ast_hash": "96e752610906ba2a93c65f8abe1645f1",
+    "semantic_hash": "96e752610906ba2a93c65f8abe1645f1"
+  },
+  "web/icons/Icon-maskable-192.png": {
+    "mtime": 1790801703.7878735,
+    "seen": 1793193311.4433808,
+    "ast_hash": "c457ef57daa1d16f64b27b786ec2ea3c",
+    "semantic_hash": "c457ef57daa1d16f64b27b786ec2ea3c"
+  },
+  "web/icons/Icon-maskable-512.png": {
+    "mtime": 1790801703.7858741,
+    "seen": 1793193311.4433808,
+    "ast_hash": "301a7604d45b3e739efc881eb04896ea",
+    "semantic_hash": "301a7604d45b3e739efc881eb04896ea"
+  }
+}

@@ -6,6 +6,11 @@ import '../services/gemini_service.dart';
 class AiAssistantPage extends StatefulWidget {
   const AiAssistantPage({super.key});
 
+  static bool allowsRole(AppRole role) => switch (role) {
+        AppRole.admin || AppRole.manager || AppRole.deputy || AppRole.teacher => true,
+        AppRole.parent || AppRole.student || AppRole.kitchen => false,
+      };
+
   @override
   State<AiAssistantPage> createState() => _AiAssistantPageState();
 }
@@ -19,7 +24,7 @@ class _AiAssistantPageState extends State<AiAssistantPage> {
   String? _error;
   bool _hasKey = true;
 
-  bool get _allowed => Session.role != AppRole.parent;
+  bool get _allowed => AiAssistantPage.allowsRole(Session.role);
 
   @override
   void initState() {

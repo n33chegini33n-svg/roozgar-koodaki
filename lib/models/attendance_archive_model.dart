@@ -314,4 +314,22 @@ class AttendanceArchiveService {
     }
     return list;
   }
+
+  /// میانگین نرخ حضور برای ۵ روز کاری هفته (شنبه تا چهارشنبه)، بر حسب درصد (۰ تا ۱۰۰).
+  /// حاضر و تأخیر = حاضر؛ غایب و مرخصی در مخرج لحاظ می‌شوند.
+  static Future<Map<String, double>> weeklyAttendanceRates() async {
+    final all = await getRecords();
+    const days = ['شنبه', 'یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه'];
+    final result = <String, double>{};
+    for (final day in days) {
+      final dayRecords = all.where((r) => r.day == day).toList();
+      if (dayRecords.isEmpty) continue;
+      final attended = dayRecords.where((r) {
+        final s = r.status;
+        return s.contains('حاضر') || s.contains('تأخیر');
+      }).length;
+      result[day] = (attended * 100.0) / dayRecords.length;
+    }
+    return result;
+  }
 }

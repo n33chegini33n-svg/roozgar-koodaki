@@ -5,6 +5,10 @@ import '../services/backend.dart';
 import '../services/backend_directory.dart';
 
 /// کاربر سامانه. نقش‌ها: student، parent، teacher، deputy، manager، admin
+///
+/// id: شناسهٔ ردیف (students.id برای نوآموز بدون حساب، profiles.id برای کاربران دارای حساب)
+/// profileId: شناسهٔ حساب ورود (profiles.id)؛ اگر null باشد یعنی حساب ورود ندارد
+/// isStudentRecord: true یعنی ردیف از جدول students آمده است
 class UserModel {
   final String id;
   final String name;
@@ -12,6 +16,11 @@ class UserModel {
   final String className;
   final String phone;
   final String linkedStudent; // فقط برای ولی: نام فرزند
+  final String? profileId;
+  final bool? active;
+  final bool isStudentRecord;
+  final List<String> classIds; // شناسهٔ همهٔ کلاس‌های کادر
+  final List<String> relatedNames; // ولی: نام فرزندان | نوآموز: نام ولی‌ها
 
   const UserModel({
     required this.id,
@@ -20,15 +29,36 @@ class UserModel {
     required this.className,
     required this.phone,
     this.linkedStudent = '',
+    this.profileId,
+    this.active,
+    this.isStudentRecord = false,
+    this.classIds = const [],
+    this.relatedNames = const [],
   });
 
-  UserModel copyWith({String? name, String? role, String? className, String? phone, String? linkedStudent}) => UserModel(
+  UserModel copyWith({
+    String? name,
+    String? role,
+    String? className,
+    String? phone,
+    String? linkedStudent,
+    String? profileId,
+    bool? active,
+    bool? isStudentRecord,
+    List<String>? relatedNames,
+  }) =>
+      UserModel(
         id: id,
         name: name ?? this.name,
         role: role ?? this.role,
         className: className ?? this.className,
         phone: phone ?? this.phone,
         linkedStudent: linkedStudent ?? this.linkedStudent,
+        profileId: profileId ?? this.profileId,
+        active: active ?? this.active,
+        isStudentRecord: isStudentRecord ?? this.isStudentRecord,
+        classIds: classIds,
+        relatedNames: relatedNames ?? this.relatedNames,
       );
 
   Map<String, dynamic> toJson() => {
@@ -85,36 +115,105 @@ class UserDirectory {
 
   static void clearCache() => _cache = null;
 
-  /// حالت سرور: خواندن تمامی کاربران (دانش‌آموزان، اولیاء، کادر، مدیران) از جدول profiles دیتابیس
+  /// حالت سرور: خواندن تمامی کاربران (دانش‌آموزان، اولیاء، کادر، مدیران)
   static Future<List<UserModel>> _loadServer() async {
     if (_cache != null) return _cache!;
     await ServerDirectory.ensureLoaded();
     final list = <UserModel>[];
 
-    // ۱. لیست نوآموزان ثبت‌شده در جدول students
+    // ۱. نوآموزان ثبت‌شده در جدول students (ممکن است حساب ورود نداشته باشند)
     for (final s in ServerDirectory.students) {
-      list.add(UserModel(id: s.id, name: s.name, role: 'student', className: s.className, phone: ''));
+      list.add(UserModel(
+        id: s.id,
+        name: s.name,
+        role: 'student',
+        className: s.className,
+        phone: '',
+        isStudentRecord: true,
+      ));
     }
 
     try {
-      // ۲. لیست تمام کاربران ثبت‌شده در جدول profiles
-      final profiles = await Backend.client.from('profiles').select('id, full_name, role, phone, grade, classes(name)');
+      // ۲. کاربران دارای حساب ورود (profiles)
+      // مسیر رابطهٔ کلاس صریح است، چون profiles دو مسیر به classes دارد
+      final profiles = await Backend.client
+          .from('profiles')
+          .select('id, full_name, role, phone, grade, active, classes!profiles_class_id_fkey(name)');
       final existingStudentNames = list.map((u) => u.name).toSet();
+      final staffClass = <String, List<String>>{};
+      final staffIds = <String, List<String>>{};
+      final tcRows = await Backend.client.from('teacher_classes').select('profile_id, class_id, classes(name)');
+      for (final r in tcRows) {
+        final c = r['classes'];
+        final key = '${r['profile_id']}';
+        if (c is Map && c['name'] is String) {
+          staffClass.putIfAbsent(key, () => []).add(normalizeClassName(c['name'] as String));
+        }
+        staffIds.putIfAbsent(key, () => []).add('${r['class_id']}');
+      }
 
       for (final p in profiles) {
+        final pid = p['id'] as String;
         final role = (p['role'] ?? 'parent').toString();
         final name = (p['full_name'] ?? '').toString();
         final phone = (p['phone'] ?? '').toString();
+        final active = p['active'] is bool ? p['active'] as bool : null;
         final c = p['classes'];
         final className = normalizeClassName(c is Map && c['name'] is String ? c['name'] as String : (p['grade'] ?? ''));
 
-        // اگر کاربر دانش‌آموز است و قبلاً از جدول students اضافه نشده، اضافه می‌شود
         if (role == 'student') {
-          if (!existingStudentNames.contains(name) && name.isNotEmpty) {
-            list.add(UserModel(id: p['id'] as String, name: name, role: 'student', className: className, phone: phone));
+          // نوآموزی که از قبل در students است، همان ردیف را با حساب وصل می‌کنیم
+          final idx = list.indexWhere((u) => u.isStudentRecord && u.name == name);
+          if (idx >= 0) {
+            list[idx] = list[idx].copyWith(profileId: pid, active: active);
+          } else if (!existingStudentNames.contains(name) && name.isNotEmpty) {
+            list.add(UserModel(
+              id: pid,
+              name: name,
+              role: 'student',
+              className: className,
+              phone: phone,
+              profileId: pid,
+              active: active,
+            ));
           }
         } else {
-          list.add(UserModel(id: p['id'] as String, name: name, role: role, className: className, phone: phone));
+          list.add(UserModel(
+            id: pid,
+            name: name,
+            role: role,
+            className: staffClass[pid]?.join('، ') ?? className,
+            classIds: staffIds[pid] ?? const [],
+            phone: phone,
+            profileId: pid,
+            active: active,
+          ));
+        }
+      }
+
+      // ۳. ارتباط ولی و نوآموز (parent_students)
+      final links = await Backend.client.from('parent_students').select('parent_id, student_id');
+      final studentNameById = {for (final s in ServerDirectory.students) s.id: s.name};
+      final profileNameById = {for (final p in profiles) '${p['id']}': '${p['full_name'] ?? ''}'};
+      final childrenOf = <String, List<String>>{};
+      final guardiansOf = <String, List<String>>{};
+      for (final l in links) {
+        final pid = '${l['parent_id']}';
+        final sid = '${l['student_id']}';
+        final sn = studentNameById[sid];
+        final pn = profileNameById[pid];
+        if (sn != null) childrenOf.putIfAbsent(pid, () => []).add(sn);
+        if (pn != null && pn.isNotEmpty) guardiansOf.putIfAbsent(sid, () => []).add(pn);
+      }
+      for (int i = 0; i < list.length; i++) {
+        final u = list[i];
+        if (u.role == 'parent' && u.profileId != null && childrenOf[u.profileId] != null) {
+          list[i] = u.copyWith(relatedNames: childrenOf[u.profileId]);
+        } else if (u.role == 'student') {
+          final sid = u.isStudentRecord ? u.id : ServerDirectory.studentId(u.name, u.className);
+          if (sid != null && guardiansOf[sid] != null) {
+            list[i] = u.copyWith(relatedNames: guardiansOf[sid]);
+          }
         }
       }
     } catch (_) {}

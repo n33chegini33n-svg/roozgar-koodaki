@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import '../widgets/class_switcher.dart';
 import '../theme/app_colors.dart';
 import '../parent/parent_sections.dart' show SectionScaffold, softCard;
 import '../models/announcement_model.dart';
@@ -42,12 +44,19 @@ class _TeacherAnnouncePageState extends State<TeacherAnnouncePage> {
       return;
     }
     setState(() => _sending = true);
-    await AnnouncementService.send(
-      title: title,
-      body: body,
-      audience: Audience.classOnly,
-      className: Session.className,
-    );
+    try {
+      await AnnouncementService.send(
+        title: title,
+        body: body,
+        audience: Audience.classOnly,
+        className: Session.className,
+      );
+    } catch (e) {
+      debugPrint('announce send failed: $e');
+      if (mounted) setState(() => _sending = false);
+      _snack('❌ ارسال انجام نشد: ${'$e'.replaceFirst('Exception: ', '')}', Colors.red);
+      return;
+    }
     if (!mounted) return;
     _title.clear();
     _body.clear();
@@ -62,6 +71,7 @@ class _TeacherAnnouncePageState extends State<TeacherAnnouncePage> {
       image: 'ill_announcement.png',
       child: Column(
         children: [
+          ClassSwitcher(onChanged: () => setState(() {})),
           softCard(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

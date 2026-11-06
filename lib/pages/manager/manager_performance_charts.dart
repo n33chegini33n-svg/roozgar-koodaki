@@ -12,23 +12,27 @@ class ManagerPendingActionBanner extends StatelessWidget {
   final int pendingReceipts;
   final int pendingAttendanceEdits;
   final int pendingRegistrations;
+  final int pendingDocuments;
   final VoidCallback onOpenReceipts;
   final VoidCallback onOpenRequests;
   final VoidCallback onOpenRegistrations;
+  final VoidCallback onOpenDocuments;
 
   const ManagerPendingActionBanner({
     super.key,
     required this.pendingReceipts,
     required this.pendingAttendanceEdits,
     required this.pendingRegistrations,
+    this.pendingDocuments = 0,
     required this.onOpenReceipts,
     required this.onOpenRequests,
     required this.onOpenRegistrations,
+    required this.onOpenDocuments,
   });
 
   @override
   Widget build(BuildContext context) {
-    final total = pendingReceipts + pendingAttendanceEdits + pendingRegistrations;
+    final total = pendingReceipts + pendingAttendanceEdits + pendingRegistrations + pendingDocuments;
     const orange = Color(0xFFEF6C00);
     return Container(
       padding: const EdgeInsets.all(16),
@@ -99,6 +103,13 @@ class ManagerPendingActionBanner extends StatelessWidget {
                 count: pendingRegistrations,
                 color: const Color(0xFF00897B),
                 onTap: onOpenRegistrations,
+              ),
+              _PendingCountChip(
+                icon: Icons.attach_file_rounded,
+                label: 'مدرک منتظر بررسی',
+                count: pendingDocuments,
+                color: const Color(0xFF00838F),
+                onTap: onOpenDocuments,
               ),
             ],
           ),

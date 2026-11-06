@@ -16,6 +16,8 @@ import 'pages/teacher_behavior_system_page.dart';
 import 'pages/class_story_page.dart';
 import 'pages/chat_page.dart';
 import 'pages/teacher_toolkit_page.dart';
+import 'widgets/notification_center.dart';
+import 'kitchen/kitchen_home_page.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Backend.init();
@@ -48,10 +50,15 @@ String _roleKeyOf(AppRole r) {
       return 'parent';
     case AppRole.student:
       return 'student';
+    case AppRole.kitchen:
+      return 'kitchen';
   }
 }
 
 Widget homeForRole(String roleKey) {
+  if (roleKey == 'kitchen') {
+    return const KitchenHomePage();
+  }
   if (roleKey == 'teacher') {
     return TeacherShell(
       chatBuilder: (_) => const ChatPage(),
@@ -129,6 +136,9 @@ Future<AuthResult> performLogin(String phone, String code, String? demoRole) asy
       case 'student':
         Session.signIn(AppRole.student);
         break;
+      case 'kitchen':
+        Session.signIn(AppRole.kitchen);
+        break;
       default: // parent
         Session.signIn(AppRole.parent);
     }
@@ -190,6 +200,7 @@ class MainDashboard extends StatefulWidget {
 
 class _MainDashboardState extends State<MainDashboard> {
   int _currentIndex = 0;
+  final _managerOverviewKey = GlobalKey<ManagerOverviewPageState>();
 
   @override
   Widget build(BuildContext context) {
@@ -219,6 +230,7 @@ class _MainDashboardState extends State<MainDashboard> {
     } else {
       pages = [
         ManagerOverviewPage(
+          key: _managerOverviewKey,
           role: widget.role == 'deputy'
               ? AppRole.deputy
               : (widget.role == 'admin' ? AppRole.admin : AppRole.manager),
@@ -254,6 +266,14 @@ class _MainDashboardState extends State<MainDashboard> {
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         actions: [
+          if (_currentIndex == 0 &&
+              (widget.role == 'manager' || widget.role == 'deputy' || widget.role == 'admin'))
+            IconButton(
+              icon: const Icon(Icons.refresh_rounded),
+              tooltip: 'تازه‌سازی کارتابل',
+              onPressed: () => _managerOverviewKey.currentState?.reloadStats(),
+            ),
+          if (widget.role == 'student' || widget.role == 'deputy') const NotificationBell(),
           IconButton(
             icon: const Icon(Icons.power_settings_new_rounded),
             tooltip: 'خروج',

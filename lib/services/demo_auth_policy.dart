@@ -15,6 +15,7 @@ class DemoAuthPolicy {
       'deputy',
       'manager',
       'admin',
+      'kitchen',
     };
     return role != null && roles.contains(role) ? role : null;
   }

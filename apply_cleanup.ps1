@@ -1,0 +1,5 @@
+function Rep($f,$a,$b){ $t=[IO.File]::ReadAllText($f); if($t.Contains($a)){ [IO.File]::WriteAllText($f,$t.Replace($a,$b)); "ok $f" } else { "NOT FOUND $f" } }
+Rep 'lib\models\private_message_model.dart' 'static List<PrivateMessage>? _cache;' ('static List<PrivateMessage>? _cache;' + "`n  static void clearCache() => _cache = null;")
+Rep 'lib\models\report_card_model.dart' 'static List<ReportCard>? _cache;' ('static List<ReportCard>? _cache;' + "`n  static void clearCache() => _cache = null;")
+Rep 'lib\services\backend.dart' "import '../models/permissions.dart';" ("import '../models/permissions.dart';`nimport '../models/private_message_model.dart';`nimport '../models/report_card_model.dart';`nimport 'package:shared_preferences/shared_preferences.dart';")
+Rep 'lib\services\backend.dart' 'UserDirectory.clearCache();' ('UserDirectory.clearCache();' + "`n    PrivateMessageService.clearCache();`n    ReportCardService.clearCache();`n    if (_ready) {`n      final prefs = await SharedPreferences.getInstance();`n      for (final k in ['private_messages_v1', 'report_cards_v1', 'registration_draft_v1']) {`n        await prefs.remove(k);`n      }`n    }")

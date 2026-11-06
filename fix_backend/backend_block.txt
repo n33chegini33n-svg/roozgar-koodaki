@@ -1,0 +1,16 @@
+  static Future<void> signOut() async {
+    await _clearAuthState();
+  }
+
+  static Future<void> _clearAuthState() async {
+    if (_ready) {
+      try {
+        await client.auth.signOut();
+      } catch (_) {}
+    }
+    // پاک‌سازی همیشه انجام می‌شود؛ حتی اگر سرور در دسترس نباشد.
+    Session.reset();
+    ServerDirectory.reset();
+    AttendanceArchiveService.clearCache();
+    UserDirectory.clearCache();
+  }

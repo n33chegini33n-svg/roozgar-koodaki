@@ -5,11 +5,14 @@ import '../models/permissions.dart';
 import '../models/announcement_model.dart';
 import '../models/attendance_edit_request_model.dart';
 import '../services/backend.dart';
-import '../services/payment_receipt_admin_service.dart';
+import '../services/manager_payment_service.dart';
 import '../services/registration_admin_service.dart';
+import '../services/purchase_service.dart';
 import '../utils/export_helper.dart';
 import '../widgets/live_clock_banner.dart';
 import '../widgets/safe_image.dart';
+import '../widgets/world3d_background.dart';
+import '../widgets/pop_out_card.dart';
 import '../teacher/teacher_sections.dart' show PageHost;
 
 // صفحات دیگر مدیر
@@ -29,6 +32,8 @@ import 'private_message_page.dart';
 import 'report_card_pages.dart';
 import 'video_meetings_page.dart';
 import 'registration_manager_page.dart';
+import 'purchase_form_page.dart';
+import '../widgets/classes_dashboard_card.dart';
 
 // این سه کلاس هنوز داخل main.dart هستند.
 // بعد از استخراج آن‌ها، این import را حذف و importهای جدید را جایگزین کنید.
@@ -41,15 +46,18 @@ class ManagerOverviewPage extends StatefulWidget {
   const ManagerOverviewPage({super.key, this.role = AppRole.manager});
 
   @override
-  State<ManagerOverviewPage> createState() => _ManagerOverviewPageState();
+  State<ManagerOverviewPage> createState() => ManagerOverviewPageState();
 }
 
-class _ManagerOverviewPageState extends State<ManagerOverviewPage> {
+class ManagerOverviewPageState extends State<ManagerOverviewPage> {
   bool _can(Perm p) => PermissionService.instance.can(widget.role, p);
 
   int _pendingReceiptsCount = 0;
   int _pendingAttendanceCount = 0;
   int _pendingRegistrationsCount = 0;
+  int _pendingDocumentsCount = 0;
+  int _pendingPurchasesCount = 0;
+  int _pendingBuyingCount = 0;
 
   @override
   void initState() {
@@ -57,18 +65,33 @@ class _ManagerOverviewPageState extends State<ManagerOverviewPage> {
     _loadStats();
   }
 
+  Future<void> reloadStats() => _loadStats();
+
   Future<void> _loadStats() async {
-    final reqs = await EditRequestService.getAll();
-    final receipts = Backend.ready
-        ? await PaymentReceiptAdminService.all()
-        : <AdminPaymentReceipt>[];
-    final pendingRegistrations = await RegistrationAdminService.pendingCount();
-    if (!mounted) return;
-    setState(() {
-      _pendingReceiptsCount = receipts.where((r) => r.state == 'pending').length;
-      _pendingAttendanceCount = reqs.where((r) => r.state == 'pending').length;
-      _pendingRegistrationsCount = pendingRegistrations;
-    });
+    try {
+      final reqs = await EditRequestService.getAll();
+      final pendingPayments = Backend.ready
+          ? await ManagerPaymentService.pending()
+          : <PendingPayment>[];
+      final pendingRegistrations = await RegistrationAdminService.pendingCount();
+      final pendingDocuments = await RegistrationAdminService.pendingAttachmentCount();
+      final pendingPurchases = await PurchaseService.pendingCount();
+      final buying = await PurchaseService.inProgressCount();
+      if (!mounted) return;
+      setState(() {
+        _pendingReceiptsCount = pendingPayments.length;
+        _pendingAttendanceCount = reqs.where((r) => r.state == 'pending').length;
+        _pendingRegistrationsCount = pendingRegistrations;
+        _pendingDocumentsCount = pendingDocuments;
+        _pendingPurchasesCount = pendingPurchases;
+        _pendingBuyingCount = buying;
+      });
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('تازه‌سازی کارتابل انجام نشد: $e')),
+      );
+    }
   }
 
   void _openBroadcastDialog() {
@@ -175,7 +198,8 @@ class _ManagerOverviewPageState extends State<ManagerOverviewPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+    return WorldBackground(
+      child: SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
       child: Center(
         child: Container(
@@ -242,9 +266,10 @@ class _ManagerOverviewPageState extends State<ManagerOverviewPage> {
                 pendingReceipts: _pendingReceiptsCount,
                 pendingAttendanceEdits: _pendingAttendanceCount,
                 pendingRegistrations: _pendingRegistrationsCount,
+                pendingDocuments: _pendingDocumentsCount,
                 onOpenReceipts: () => Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (_) => const ManagerPaymentReceiptsPage()),
+                  MaterialPageRoute(builder: (_) => const ManagerFinancialPage()),
                 ),
                 onOpenRequests: () => Navigator.push(
                   context,
@@ -253,7 +278,11 @@ class _ManagerOverviewPageState extends State<ManagerOverviewPage> {
                 onOpenRegistrations: () => Navigator.push(
                   context,
                   MaterialPageRoute(builder: (_) => const RegistrationManagerPage()),
-                ),
+                ).then((_) => reloadStats()),
+                onOpenDocuments: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const RegistrationManagerPage()),
+                ).then((_) => reloadStats()),
               ),
               const SizedBox(height: 20),
 
@@ -370,21 +399,17 @@ class _ManagerOverviewPageState extends State<ManagerOverviewPage> {
 
               const SizedBox(height: 24),
 
+              if (_can(Perm.manageUsers)) ...[
+                const ClassesDashboardCard(),
+                const SizedBox(height: 24),
+              ],
               // Comprehensive Management Modules (User requests, Financial, Permissions, Nutrition, etc.)
               const Text(
                 '🗂️ بخش‌های کلیدی مدیریت و نظارت:',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF01579B)),
               ),
               const SizedBox(height: 12),
-              GridView(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 230,
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 12,
-                  mainAxisExtent: 196,
-                ),
+              PopOutGrid(
                 children: [
                   _buildManagementCard(
                     'آمار و عملکرد مدرسه',
@@ -426,17 +451,6 @@ class _ManagerOverviewPageState extends State<ManagerOverviewPage> {
                     () => Navigator.push(
                       context,
                       MaterialPageRoute(builder: (_) => const ManagerFinancialPage()),
-                    ),
-                  ),
-                  if (_can(Perm.viewFinancial))
-                  _buildManagementCard(
-                    'رسیدهای پرداخت',
-                    'تأیید یا رد رسیدهای ارسالی والدین',
-                    Icons.receipt_long_rounded,
-                    Colors.teal,
-                    () => Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const ManagerPaymentReceiptsPage()),
                     ),
                   ),
                   if (_can(Perm.manageNutrition))
@@ -528,6 +542,68 @@ class _ManagerOverviewPageState extends State<ManagerOverviewPage> {
                       MaterialPageRoute(builder: (_) => const PageHost(title: 'پیام‌ها', child: ChatPage())),
                     ),
                   ),
+                  if (_can(Perm.approveRequests))
+                  Stack(
+                    children: [
+                      _buildManagementCard(
+                        'فرم درخواست کالا و خدمات',
+                        'تأیید فرم‌ها و مدارک پیوست',
+                        Icons.shopping_cart_rounded,
+                        Colors.orange,
+                        () => Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => const PurchaseManagerPage()),
+                        ).then((_) => _loadStats()),
+                      ),
+                      if (_pendingPurchasesCount > 0)
+                        Positioned(
+                          top: 8,
+                          left: 8,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFE5484D),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(
+                              '$_pendingPurchasesCount',
+                              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                  if (_can(Perm.approveRequests))
+                  Stack(
+                    children: [
+                      _buildManagementCard(
+                        'خریدها',
+                        'فرم‌های ارجاع‌شده برای خرید و اسناد خرید',
+                        Icons.shopping_bag_rounded,
+                        Colors.green,
+                        () => Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => const PurchaseBuyingPage(managerView: true)),
+                        ).then((_) => _loadStats()),
+                      ),
+                      if (_pendingBuyingCount > 0)
+                        Positioned(
+                          top: 8,
+                          left: 8,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFE5484D),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(
+                              '$_pendingBuyingCount',
+                              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
                   if (_can(Perm.approveAttendanceEdit) || _can(Perm.approveRequests))
                   _buildManagementCard(
                     'درخواست‌ها و تاییدیه',
@@ -615,7 +691,7 @@ class _ManagerOverviewPageState extends State<ManagerOverviewPage> {
           ),
         ),
       ),
-    );
+    ));
   }
 
   static const Map<String, String> _cardImages = {
@@ -632,54 +708,20 @@ class _ManagerOverviewPageState extends State<ManagerOverviewPage> {
     'گزارش تغییرات': 'ill_audit_log.png',
     'بازبینی پیام‌های خصوصی': 'scene_messages.png',
     'کارنامه‌ها': 'scene_report.png',
+    'آمار و عملکرد مدرسه': 'ill_admin_panel.png',
+    'رسیدهای پرداخت': 'scene_payment.png',
+    'جلسهٔ تصویری کارکنان': 'scene_messages.png',
+    'پیام‌ها': 'scene_messages.png',
+    'فرم درخواست کالا و خدمات': 'ill_requests.png',
+    'خریدها': 'ill_requests.png',
   };
 
   Widget _buildManagementCard(String title, String subtitle, IconData icon, Color color, VoidCallback onTap) {
-    final image = _cardImages[title];
-    return InkWell(
+    return PopOutCard(
+      title: title,
+      image: _cardImages[title] ?? 'ill_management.png',
+      tint: color,
       onTap: onTap,
-      borderRadius: BorderRadius.circular(20),
-      child: Card(
-        elevation: 3,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(10, 10, 10, 8),
-          child: Column(
-            children: [
-              Expanded(
-                child: image != null
-                    ? SafeAssetImage(image, fit: BoxFit.contain)
-                    : Center(
-                        child: Container(
-                          padding: const EdgeInsets.all(14),
-                          decoration: BoxDecoration(
-                            color: color.withValues(alpha: 0.15),
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(icon, color: color, size: 34),
-                        ),
-                      ),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                title,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Color(0xFF01579B)),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 2),
-              Text(
-                subtitle,
-                style: const TextStyle(fontSize: 10, color: Colors.black54),
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }

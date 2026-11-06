@@ -1,4 +1,8 @@
+
 import 'package:flutter/material.dart';
+import '../models/registration_model.dart';
+import '../models/registration_bin.dart';
+import '../models/registration_docs.dart';
 import '../models/audit_log_model.dart';
 import '../models/permissions.dart';
 import '../services/backend.dart';
@@ -40,22 +44,11 @@ class _RegistrationManagerPageState extends State<RegistrationManagerPage> {
       _error = null;
     });
     try {
-      if (!Backend.ready) {
-        setState(() {
-          _records = [];
-          _loading = false;
-        });
-        return;
-      }
-
-      final rows = await Backend.client
-          .from('registration_records')
-          .select('*')
-          .order('updated_at', ascending: false);
-
+      await RegistrationBin.purgeExpired();
+      final rows = await RegistrationDraftService.staffRows(deleted: _selectedStatusFilter == 'deleted');
       if (!mounted) return;
       setState(() {
-        _records = rows.map((e) => Map<String, dynamic>.from(e)).toList();
+        _records = rows;
         _loading = false;
       });
     } catch (e) {
@@ -69,16 +62,24 @@ class _RegistrationManagerPageState extends State<RegistrationManagerPage> {
 
   List<Map<String, dynamic>> get _filteredRecords {
     return _records.where((rec) {
-      final status = '${rec['status'] ?? 'submitted'}';
-      if (_selectedStatusFilter != 'all' && status != _selectedStatusFilter) {
-        return false;
+      final isDeleted = rec['is_deleted'] == true;
+
+      if (_selectedStatusFilter == 'deleted') {
+        if (!isDeleted) return false;
+      } else {
+        if (isDeleted) return false;
+
+        final status = '${rec['status'] ?? 'submitted'}';
+        if (_selectedStatusFilter != 'all' && _selectedStatusFilter != 'deleted' && status != _selectedStatusFilter) {
+          return false;
+        }
       }
 
       if (_searchQuery.trim().isEmpty) return true;
       final query = _searchQuery.trim().toLowerCase();
 
       final data = rec['data'] is Map ? Map<String, dynamic>.from(rec['data'] as Map) : <String, dynamic>{};
-      final studentName = '${data['نام نوآموز'] ?? data['نام'] ?? ''} ${data['نام خانوادگی'] ?? ''}'.toLowerCase();
+      final studentName = '${data['نام نوآموز'] ?? data['نام'] ?? rec['student_name'] ?? ''} ${data['نام خانوادگی'] ?? ''}'.toLowerCase();
       final fatherName = '${data['نام و خانوادگی پدر'] ?? ''}'.toLowerCase();
       final motherName = '${data['نام و خانوادگی مادر'] ?? ''}'.toLowerCase();
       final guardianName = '${data['نام و نام خانوادگی ولی قانونی نوآموز'] ?? data['نام و نام خانوادگی ولی'] ?? ''}'.toLowerCase();
@@ -105,6 +106,21 @@ class _RegistrationManagerPageState extends State<RegistrationManagerPage> {
         foregroundColor: AppColors.navy,
         elevation: 0.5,
         actions: [
+          IconButton(
+            onPressed: () => _exportAll(format: 'excel'),
+            icon: const Icon(Icons.table_chart_rounded, color: Colors.green),
+            tooltip: 'خروجی اکسل فهرست فیلترشده',
+          ),
+          IconButton(
+            onPressed: () => _exportAll(format: 'pdf'),
+            icon: const Icon(Icons.picture_as_pdf_rounded, color: Colors.red),
+            tooltip: 'خروجی PDF فهرست فیلترشده',
+          ),
+          IconButton(
+            onPressed: _printFilteredList,
+            icon: const Icon(Icons.print_rounded),
+            tooltip: 'چاپ فهرست فیلترشده',
+          ),
           IconButton(
             onPressed: _load,
             icon: const Icon(Icons.refresh_rounded),
@@ -204,32 +220,19 @@ class _RegistrationManagerPageState extends State<RegistrationManagerPage> {
                 _buildStatusFilterChip(label: 'تأیید شده', value: 'approved', color: const Color(0xFF2E7D32)),
                 const SizedBox(width: 8),
                 _buildStatusFilterChip(label: 'عدم تأیید', value: 'rejected', color: const Color(0xFFC62828)),
+                const SizedBox(width: 8),
+                _buildStatusFilterChip(label: '🗑️ سطل بازیافت', value: 'deleted', color: Colors.grey),
+                const SizedBox(width: 8),
               ],
             ),
           ),
           const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'تعداد پرونده‌ها: ${_filteredRecords.length} از ${_records.length}',
-                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.navy),
-              ),
-              Row(
-                children: [
-                  TextButton.icon(
-                    onPressed: () => _exportAll(format: 'excel'),
-                    icon: const Icon(Icons.table_chart_rounded, size: 18, color: Colors.green),
-                    label: const Text('خروجی اکسل', style: TextStyle(fontSize: 12, color: Colors.green)),
-                  ),
-                  TextButton.icon(
-                    onPressed: () => _exportAll(format: 'pdf'),
-                    icon: const Icon(Icons.picture_as_pdf_rounded, size: 18, color: Colors.red),
-                    label: const Text('خروجی PDF', style: TextStyle(fontSize: 12, color: Colors.red)),
-                  ),
-                ],
-              ),
-            ],
+          Align(
+            alignment: Alignment.centerRight,
+            child: Text(
+              'تعداد پرونده‌ها: ${_filteredRecords.length} از ${_records.length}',
+              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.navy),
+            ),
           ),
         ],
       ),
@@ -253,20 +256,27 @@ class _RegistrationManagerPageState extends State<RegistrationManagerPage> {
         borderRadius: BorderRadius.circular(20),
         side: BorderSide(color: color.withValues(alpha: isSelected ? 1.0 : 0.4)),
       ),
-      onSelected: (_) => setState(() => _selectedStatusFilter = value),
+      onSelected: (_) {
+        setState(() => _selectedStatusFilter = value);
+        _load();
+      },
     );
   }
 
   Widget _recordCard(Map<String, dynamic> record) {
+    final isDeleted = record['is_deleted'] == true;
     final data = record['data'] is Map ? Map<String, dynamic>.from(record['data'] as Map) : <String, dynamic>{};
-    final studentName = '${data['نام نوآموز'] ?? data['نام'] ?? ''} ${data['نام خانوادگی'] ?? ''}'.trim();
+    final studentName = '${data['نام نوآموز'] ?? data['نام'] ?? record['student_name'] ?? ''} ${data['نام خانوادگی'] ?? ''}'.trim();
     final parentName = '${data['نام و خانوادگی پدر'] ?? data['نام و خانوادگی مادر'] ?? 'مشخص نشده'}';
     final status = '${record['status'] ?? 'submitted'}';
     final rejectionReason = record['rejection_reason']?.toString();
 
     Color statusColor;
     String statusText;
-    if (status == 'approved') {
+    if (isDeleted) {
+      statusColor = const Color(0xFF546E7A);
+      statusText = '🗑️ سطل بازیافت';
+    } else if (status == 'approved') {
       statusColor = const Color(0xFF2E7D32);
       statusText = 'تأیید شده';
     } else if (status == 'rejected') {
@@ -324,7 +334,7 @@ class _RegistrationManagerPageState extends State<RegistrationManagerPage> {
                 ),
               ],
             ),
-            if (status == 'rejected' && rejectionReason != null && rejectionReason.isNotEmpty) ...[
+            if (!isDeleted && status == 'rejected' && rejectionReason != null && rejectionReason.isNotEmpty) ...[
               const SizedBox(height: 8),
               Container(
                 padding: const EdgeInsets.all(8),
@@ -348,27 +358,54 @@ class _RegistrationManagerPageState extends State<RegistrationManagerPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                OutlinedButton.icon(
-                  onPressed: () => _showStatusDialog(record),
-                  icon: const Icon(Icons.traffic_rounded, size: 18),
-                  label: const Text('تغییر وضعیت'),
-                ),
+                if (isDeleted)
+                  ElevatedButton.icon(
+                    onPressed: () => _restore(record),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF2E7D32),
+                      foregroundColor: Colors.white,
+                      elevation: 0.5,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    ),
+                    icon: const Icon(Icons.restore_from_trash_rounded, size: 18),
+                    label: const Text('بازیابی پرونده ↩️'),
+                  )
+                else
+                  OutlinedButton.icon(
+                    onPressed: () => _showStatusDialog(record),
+                    icon: const Icon(Icons.traffic_rounded, size: 18),
+                    label: const Text('تغییر وضعیت'),
+                  ),
                 Row(
                   children: [
-                    IconButton(
-                      icon: const Icon(Icons.medical_services_rounded, color: Colors.teal),
-                      tooltip: 'کارت خانه بهداشت و پرونده سلامت',
-                      onPressed: () => _openHealthCardDialog(record),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.print_rounded, color: AppColors.navy),
-                      tooltip: 'پرینت مستقیم',
-                      onPressed: () => _printSingleRecord(record),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.edit_note_rounded, color: AppColors.navy),
-                      tooltip: 'مشاهده و ویرایش جزئیات',
-                      onPressed: () => _showDetailsDialog(record),
+                    Wrap(
+                      alignment: WrapAlignment.end,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.medical_services_rounded, color: Colors.teal),
+                          tooltip: 'کارت بهداشت و پرونده سلامت',
+                          onPressed: () => _openHealthCardDialog(record),
+                        ),
+                        IconButton(
+                          icon: Icon(
+                            Icons.folder_rounded,
+                            color: '${record['attachment_url'] ?? ''}'.isNotEmpty ? Colors.teal : Colors.grey,
+                          ),
+                          tooltip: 'پوشه مدارک',
+                          onPressed: () => _openDocument(record),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.edit_note_rounded, color: AppColors.navy),
+                          tooltip: 'مشاهده و ویرایش پرونده',
+                          onPressed: () => _showDetailsDialog(record),
+                        ),
+                        if (!isDeleted)
+                          IconButton(
+                            icon: const Icon(Icons.delete_outline_rounded, color: Colors.red),
+                            tooltip: 'انتقال به سطل بازیافت',
+                            onPressed: () => _confirmDelete(record),
+                          ),
+                      ],
                     ),
                   ],
                 ),
@@ -380,8 +417,167 @@ class _RegistrationManagerPageState extends State<RegistrationManagerPage> {
     );
   }
 
+  String _nameOf(Map<String, dynamic> r) {
+    final n = '${r['student_name'] ?? ''}'.trim();
+    if (n.isNotEmpty) return n;
+    final d = r['data'] is Map ? Map<String, dynamic>.from(r['data'] as Map) : <String, dynamic>{};
+    return '${d['نام نوآموز'] ?? ''} ${d['نام خانوادگی'] ?? ''}'.trim();
+  }
+
+  Future<void> _openDocument(Map<String, dynamic> r) async {
+    final id = '${r['id']}';
+    List<Map<String, dynamic>> docs = [];
+    try {
+      docs = await RegistrationDocs.forRecord(id);
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$e')));
+      return;
+    }
+    if (docs.isEmpty && '${r['attachment_url'] ?? ''}'.isNotEmpty) {
+      docs = [
+        {'path': r['attachment_url'], 'file_name': 'مدرک.jpg'},
+      ];
+    }
+    if (docs.isEmpty) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('برای این نوآموز مدرکی ثبت نشده است')));
+      return;
+    }
+    for (final d in docs) {
+      d['url'] = await RegistrationDocs.signedUrl('${d['path']}');
+    }
+    final selected = <int>{};
+    if (!mounted) return;
+    await showDialog(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setD) => Directionality(
+          textDirection: TextDirection.rtl,
+          child: AlertDialog(
+            title: Text('پوشه مدارک ${_nameOf(r)}'),
+            content: SizedBox(
+              width: 460,
+              child: GridView.count(
+                shrinkWrap: true,
+                crossAxisCount: 3,
+                mainAxisSpacing: 8,
+                crossAxisSpacing: 8,
+                children: [
+                  for (var i = 0; i < docs.length; i++)
+                    GestureDetector(
+                      onTap: () => setD(() => selected.contains(i) ? selected.remove(i) : selected.add(i)),
+                      child: Container(
+                        padding: const EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: selected.contains(i) ? AppColors.navy : Colors.transparent,
+                            width: 3,
+                          ),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image.network('${docs[i]['url']}', fit: BoxFit.cover,
+                              errorBuilder: (_, __, ___) => const Icon(Icons.broken_image_rounded)),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => setD(() {
+                  if (selected.length == docs.length) {
+                    selected.clear();
+                  } else {
+                    selected
+                      ..clear()
+                      ..addAll(List.generate(docs.length, (i) => i));
+                  }
+                }),
+                child: const Text('انتخاب همه'),
+              ),
+              FilledButton.icon(
+                icon: const Icon(Icons.print_rounded),
+                label: const Text('چاپ انتخاب‌شده'),
+                onPressed: selected.isEmpty
+                    ? null
+                    : () async {
+                        final messenger = ScaffoldMessenger.of(context);
+                        Navigator.pop(ctx);
+                        try {
+                          await RegistrationDocs.printDocs([
+                            for (final i in (selected.toList()..sort())) '${docs[i]['path']}',
+                          ]);
+                        } catch (e) {
+                          messenger.showSnackBar(SnackBar(content: Text('$e')));
+                        }
+                      },
+              ),
+              FilledButton.icon(
+                icon: const Icon(Icons.download_rounded),
+                label: const Text('دانلود انتخاب‌شده'),
+                onPressed: selected.isEmpty
+                    ? null
+                    : () async {
+                        final messenger = ScaffoldMessenger.of(context);
+                        Navigator.pop(ctx);
+                        for (final i in (selected.toList()..sort())) {
+                          try {
+                            await RegistrationDocs.saveToDevice(
+                              '${docs[i]['path']}',
+                              '${docs[i]['file_name'] ?? 'مدرک_$i.jpg'}',
+                            );
+                          } catch (e) {
+                            messenger.showSnackBar(SnackBar(content: Text('$e')));
+                          }
+                        }
+                      },
+              ),
+              TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('بستن')),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _confirmDelete(Map<String, dynamic> r) async {
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => Directionality(
+        textDirection: TextDirection.rtl,
+        child: AlertDialog(
+          title: const Text('حذف پرونده؟'),
+          content: Text('پرونده ${_nameOf(r)} به سطل بازیافت منتقل می‌شود.'),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('انصراف')),
+            FilledButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('حذف')),
+          ],
+        ),
+      ),
+    );
+    if (ok != true) return;
+    try {
+      await RegistrationDraftService.setDeleted(id: '${r['id']}', name: _nameOf(r), deleted: true);
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$e')));
+      return;
+    }
+    if (!mounted) return;
+    _load();
+  }
+
+  Future<void> _restore(Map<String, dynamic> r) async {
+    await RegistrationDraftService.setDeleted(id: '${r['id']}', name: _nameOf(r), deleted: false);
+    if (!mounted) return;
+    _load();
+  }
+
   void _showStatusDialog(Map<String, dynamic> record) {
-    final parentId = '${record['parent_id']}';
     String currentStatus = '${record['status'] ?? 'submitted'}';
     final reasonController = TextEditingController(text: record['rejection_reason']?.toString() ?? '');
 
@@ -443,45 +639,23 @@ class _RegistrationManagerPageState extends State<RegistrationManagerPage> {
                 onPressed: () async {
                   final messenger = ScaffoldMessenger.of(context);
                   final reason = currentStatus == 'rejected' ? reasonController.text.trim() : null;
-                  final previousStatus = '${record['status'] ?? 'submitted'}';
-                  final previousReason = record['rejection_reason']?.toString() ?? '';
                   Navigator.pop(ctx);
                   try {
-                    try {
-                      await Backend.client.from('registration_records').update({
-                        'status': currentStatus,
-                        'rejection_reason': reason,
-                        'updated_at': DateTime.now().toUtc().toIso8601String(),
-                      }).eq('parent_id', parentId);
-                    } catch (_) {
-                      await Backend.client.from('registration_records').update({
-                        'status': currentStatus,
-                        'updated_at': DateTime.now().toUtc().toIso8601String(),
-                      }).eq('parent_id', parentId);
-                    }
-
-                    if (previousStatus != currentStatus || previousReason != (reason ?? '')) {
-                      await AuditLogService.log(
-                        actor: Session.userName,
-                        role: Session.role.label,
-                        action: 'تغییر وضعیت پرونده ثبت‌نام',
-                        details: 'وضعیت: $previousStatus ← $currentStatus • '
-                            'دلیل قبلی: ${previousReason.isEmpty ? 'نداشت' : previousReason} • '
-                            'دلیل جدید: ${(reason ?? '').isEmpty ? 'ندارد' : reason}',
-                      );
-                    }
-
-                    messenger.showSnackBar(
-                      const SnackBar(content: Text('وضعیت پرونده با موفقیت به روز گردید.')),
+                    await RegistrationDraftService.setStatus(
+                      id: '${record['id']}',
+                      name: _nameOf(record),
+                      from: '${record['status']}',
+                      to: currentStatus,
+                      reason: reason,
                     );
+                    messenger.showSnackBar(const SnackBar(content: Text('وضعیت پرونده به‌روز شد.')));
                     _load();
                   } catch (e) {
-                    messenger.showSnackBar(
-                      SnackBar(content: Text('خطا در به‌روزرسانی وضعیت: $e')),
-                    );
+                    messenger.showSnackBar(SnackBar(content: Text('$e')));
                   }
                 },
-                child: const Text('ثبت تغییرات'),
+                
+child: const Text('ثبت تغییرات'),
               ),
             ],
           );
@@ -499,9 +673,14 @@ class _RegistrationManagerPageState extends State<RegistrationManagerPage> {
       controllers[entry.key] = TextEditingController(text: '${entry.value}');
     }
 
+    final screenSize = MediaQuery.sizeOf(context);
     showDialog<void>(
       context: context,
       builder: (dialogCtx) => AlertDialog(
+        insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+        titlePadding: const EdgeInsets.fromLTRB(24, 20, 24, 8),
+        contentPadding: const EdgeInsets.fromLTRB(24, 8, 24, 8),
+        actionsPadding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -565,26 +744,36 @@ class _RegistrationManagerPageState extends State<RegistrationManagerPage> {
           ],
         ),
         content: SizedBox(
-          width: 650,
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                for (final key in controllers.keys)
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: TextField(
-                      controller: controllers[key],
-                      maxLines: key.contains('آدرس') || key.contains('توضیحات') || key.contains('سابقه') ? 2 : 1,
-                      decoration: InputDecoration(
-                        labelText: key,
-                        border: const OutlineInputBorder(),
-                        isDense: true,
+          width: screenSize.width.clamp(700.0, 1100.0).toDouble(),
+          height: screenSize.height * 0.68,
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final columns = constraints.maxWidth >= 600 ? 2 : 1;
+              final itemWidth = (constraints.maxWidth - (columns - 1) * 14) / columns;
+              return SingleChildScrollView(
+                child: Wrap(
+                  spacing: 14,
+                  runSpacing: 12,
+                  children: [
+                    for (final key in controllers.keys)
+                      SizedBox(
+                        width: itemWidth,
+                        child: TextField(
+                          controller: controllers[key],
+                          maxLines: key.contains('آدرس') || key.contains('توضیحات') || key.contains('سابقه') ? 2 : 1,
+                          decoration: InputDecoration(
+                            labelText: key,
+                            border: const OutlineInputBorder(),
+                            isDense: true,
+                            filled: true,
+                            fillColor: const Color(0xFFF9FAFC),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-              ],
-            ),
+                  ],
+                ),
+              );
+            },
           ),
         ),
         actions: [
@@ -595,44 +784,31 @@ class _RegistrationManagerPageState extends State<RegistrationManagerPage> {
               final updatedData = <String, String>{
                 for (final e in controllers.entries) e.key: e.value.text,
               };
-              final changedFields = <String>[];
-              for (final entry in updatedData.entries) {
-                final before = '${data[entry.key] ?? ''}';
-                if (before != entry.value) {
-                  changedFields.add('${entry.key}: $before ← ${entry.value}');
-                }
-              }
+              final before = <String, String>{for (final e in data.entries) e.key: '${e.value ?? ''}'};
               Navigator.pop(dialogCtx);
               try {
-                await Backend.client.from('registration_records').update({
-                  'data': updatedData,
-                  'updated_at': DateTime.now().toUtc().toIso8601String(),
-                }).eq('parent_id', record['parent_id']);
-
-                if (changedFields.isNotEmpty) {
-                  await AuditLogService.log(
-                    actor: Session.userName,
-                    role: Session.role.label,
-                    action: 'ویرایش پرونده نوآموز',
-                    details: 'نوآموز: $studentName • ${changedFields.join(' • ')}',
-                  );
-                }
-
-                messenger.showSnackBar(
-                  const SnackBar(content: Text('اطلاعات پرونده با موفقیت ذخیره شد.')),
+                await RegistrationDraftService.staffSave(
+                  id: '${record['id']}',
+                  oldName: _nameOf(record),
+                  before: before,
+                  after: updatedData,
                 );
+                messenger.showSnackBar(const SnackBar(content: Text('اطلاعات پرونده ذخیره شد.')));
                 _load();
               } catch (e) {
-                messenger.showSnackBar(
-                  SnackBar(content: Text('خطا در ذخیره پرونده: $e')),
-                );
+                messenger.showSnackBar(SnackBar(content: Text('خطا در ذخیره پرونده: $e')));
               }
             },
-            child: const Text('ذخیره تغییرات'),
+            
+child: const Text('ذخیره تغییرات'),
           ),
         ],
       ),
-    );
+    ).whenComplete(() {
+      for (final controller in controllers.values) {
+        controller.dispose();
+      }
+    });
   }
 
   void _openHealthCardDialog(Map<String, dynamic> record) {
@@ -650,21 +826,9 @@ class _RegistrationManagerPageState extends State<RegistrationManagerPage> {
     );
   }
 
-  void _printSingleRecord(Map<String, dynamic> record) {
-    final data = record['data'] is Map ? Map<String, dynamic>.from(record['data'] as Map) : <String, dynamic>{};
-    final studentName = '${data['نام نوآموز'] ?? data['نام'] ?? ''} ${data['نام خانوادگی'] ?? ''}'.trim();
-    final status = '${record['status'] ?? 'submitted'}';
+  void _printFilteredList() => _exportAll(format: 'pdf', printOnly: true);
 
-    ExportHelper.exportRegistrationFormPdf(
-      context: context,
-      studentName: studentName,
-      status: status,
-      data: data,
-      printOnly: true,
-    );
-  }
-
-  void _exportAll({required String format}) {
+  void _exportAll({required String format, bool printOnly = false}) {
     final filtered = _filteredRecords;
     final headers = ['ردیف', 'نام نوآموز', 'والد / اولیا', 'شماره تماس', 'وضعیت', 'تاریخ ثبت/به‌روزرسانی'];
     final rows = <List<dynamic>>[];
@@ -696,6 +860,14 @@ class _RegistrationManagerPageState extends State<RegistrationManagerPage> {
         rows: rows,
         fileName: 'لیست_ثبت‌نام_نوآموزان',
       );
+    } else if (printOnly) {
+      ExportHelper.printTable(
+        context: context,
+        title: 'گزارش لیست پرونده‌های ثبت‌نام نوآموزان',
+        headers: headers,
+        rows: rows,
+        fileName: 'لیست_ثبت‌نام_نوآموزان',
+      );
     } else {
       ExportHelper.exportToPdf(
         context: context,
@@ -706,8 +878,5 @@ class _RegistrationManagerPageState extends State<RegistrationManagerPage> {
       );
     }
   }
-}
 
-// ==========================================
-// کارت خانه بهداشت و پرونده سلامت کودک
-// ==========================================
+}

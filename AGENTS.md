@@ -1,19 +1,56 @@
-# اطلاعات پروژه «روزگار کودکی»
+# قواعد پروژهٔ «روزگار کودکی»
 
-## فناوری‌های مورد استفاده
-- **فریم‌ورک:** Flutter (Dart)
-- **بک‌اند:** Supabase (Database, Auth, Storage)
+## دربارهٔ کاربر
+- برنامه‌نویس حرفه‌ای نیست.
+- فقط فارسی جواب بده. جمله‌ها کوتاه باشند.
+- هر بار فقط یک قدم بگو.
+- گزارش کار نده، مگر کاربر بخواهد.
+- بعد از هر تغییر کوچک، آنالیز یا تست اجرا نکن. فقط وقتی کاربر بخواهد.
+- هیچ‌وقت نگو «انجام شد» مگر نتیجه را دیده باشی.
 
-## ساختار پوشه‌ها
-- `lib/core/`: تنظیمات کلی، ثوابت و ارتباط با سوپابیس
-- `lib/features/`: ماژول‌های برنامه (ثبت‌نام، داشبورد، حضور غیاب و...)
-- `lib/widgets/`: ویجت‌های عمومی UI
+## فناوری
+- Flutter و Dart
+- بک‌اند: Supabase
+- شاخهٔ اصلی: `main`
+- کلیدها با `--dart-define` داده می‌شوند، نه از فایل `.env`.
 
-## قوانین کدنویسی
-1. تمامی ارتباطات با سوپابیس باید در لایه سرویس (Service Layer) بمانند و مستقیم در UI فراخوانی نشوند.
-2. کلیدهای حساس (Supabase URL و Anon Key) باید از طریق فایل `.env` خوانده شوند و هرگز در کد Hardcode نشوند.
-3. تمامی مدل‌های داده (Data Models) باید متدهای `fromJson` و `toJson` داشته باشند.
-4. ## Supabase Database Workflow
-- Never alter the Supabase database manually via the web dashboard SQL Editor.
-- Always create database schema changes, tables, and policies as migration files inside `supabase/migrations/`.
-- Apply changes using the terminal command: `supabase db push`.
+## Git (سخت‌گیرانه)
+- مستقیم روی `main` کار نکن. شاخهٔ جدید بساز.
+- commit و push فقط روی شاخهٔ کاری و فقط وقتی کاربر بگوید.
+- Merge، Reset، Rebase و حذف فایل بدون اجازهٔ صریح ممنوع است.
+- فقط فایل‌های مربوط به کار را stage کن.
+- این‌ها را هرگز stage نکن:
+  - فایل‌های `.bak` و `.bak2`
+  - `fix_*`
+  - `build_log.txt`
+  - `android/build`
+  - `supabase/.temp`
+  - `nutrition_security_changes.patch`
+  - پوشهٔ `docs/`
+  - `widget_test.dart` در ریشه
+  - فایل‌های zip
+
+## Supabase و امنیت
+- SQL، migration و `supabase db push` را اجرا نکن. فقط فایل migration را بنویس. اجرا فقط با تأیید صریح کاربر.
+- کلید `service_role` و رمزها هرگز در کد یا گزارش نیایند.
+- کنترل دسترسی باید سمت سرور (RLS) هم باشد. مخفی کردن دکمه کافی نیست.
+- اطلاعات کودکان و خانواده‌ها را در خروجی نشان نده.
+- خطای سرور را با `catch` خالی نبلع. به کاربر نشان بده.
+- ورود آزمایشی (دمو) نباید در نسخهٔ Release فعال باشد.
+
+## کدنویسی
+- ارتباط با Supabase فقط در لایهٔ سرویس (`lib/services`) باشد، نه مستقیم در صفحه.
+- هر مدل داده `fromJson` و `toJson` داشته باشد.
+- تغییرها کوچک و قابل بازبینی باشند. پروژه را از ابتدا بازنویسی نکن.
+- بدون ضرورت وابستگی جدید اضافه نکن.
+- pub.dev گاهی ۴۰۳ می‌دهد. از `flutter analyze --no-pub` استفاده کن.
+- کاربر در PowerShell کار می‌کند. هر دستور را جدا بده، نه چندخطی.
+
+## کارهای باقی‌مانده
+1. `performLogout` یکپارچه: همهٔ صفحه‌ها `Backend.signOut` و `Session.reset` را صدا بزنند.
+2. هنگام خروج، پیام خصوصی و کارنامه و ثبت‌نام محلی پاک شود.
+3. مجوز اینترنت macOS: `com.apple.security.network.client` در DebugProfile و Release.
+4. اطمینان از بسته بودن حالت نمایشی در Release (`DemoAuthPolicy`).
+5. فهرست نوآموزان در حالت سرور فقط از جدول `students`.
+6. ایرادهای جزئی RLS: `role_permissions` برای همه خواندنی است. `students_read` نقش `deputy` ندارد.
+7. migrationهای `payment_receipts` و `decide_payment_receipt` نوشته شده‌اند ولی اجرا نشده‌اند.

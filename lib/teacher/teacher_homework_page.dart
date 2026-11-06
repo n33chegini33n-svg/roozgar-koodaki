@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import '../widgets/class_switcher.dart';
 import '../theme/app_colors.dart';
 import '../parent/parent_sections.dart' show SectionScaffold, softCard;
 import '../models/homework_model.dart';
@@ -87,19 +89,24 @@ class _TeacherHomeworkPageState extends State<TeacherHomeworkPage> {
       ),
     );
     if (ok != true) return;
-    await HomeworkService.add(
-      Homework(
-        id: 'HW-${DateTime.now().millisecondsSinceEpoch}',
-        title: titleCtrl.text.trim(),
-        description: descCtrl.text.trim(),
-        due: dueCtrl.text.trim().isEmpty ? 'بدون مهلت' : dueCtrl.text.trim(),
-        className: Session.className,
-        createdBy: Session.userName,
-        createdAt: DateTime.now().millisecondsSinceEpoch,
-      ),
-    );
-    await _load();
-    _snack('✅ تکلیف برای والدین نمایش داده می‌شود', Colors.green);
+    try {
+      await HomeworkService.add(
+        Homework(
+          id: 'HW-${DateTime.now().millisecondsSinceEpoch}',
+          title: titleCtrl.text.trim(),
+          description: descCtrl.text.trim(),
+          due: dueCtrl.text.trim().isEmpty ? 'بدون مهلت' : dueCtrl.text.trim(),
+          className: Session.className,
+          createdBy: Session.userName,
+          createdAt: DateTime.now().millisecondsSinceEpoch,
+        ),
+      );
+      await _load();
+      _snack('✅ تکلیف برای والدین نمایش داده می‌شود', Colors.green);
+    } catch (e) {
+      debugPrint('homework add failed: $e');
+      _snack('❌ ثبت تکلیف انجام نشد: ${'$e'.replaceFirst('Exception: ', '')}', Colors.red);
+    }
   }
 
   Future<void> _showDone(Homework h) async {
@@ -147,6 +154,7 @@ class _TeacherHomeworkPageState extends State<TeacherHomeworkPage> {
           ? const Padding(padding: EdgeInsets.all(30), child: Center(child: CircularProgressIndicator()))
           : Column(
               children: [
+                ClassSwitcher(onChanged: _load),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

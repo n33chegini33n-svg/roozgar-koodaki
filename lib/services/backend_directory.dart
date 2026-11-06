@@ -33,6 +33,7 @@ class ServerDirectory {
     final rows = await Backend.client
         .from('students')
         .select('id, full_name, class_id, classes(name)')
+        .eq('is_deleted', false)
         .order('full_name');
     _students.clear();
     for (final r in rows) {

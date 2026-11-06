@@ -2,9 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as sup;
 
 import '../models/permissions.dart';
-import '../models/private_message_model.dart';
-import '../models/report_card_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../models/school_classes.dart';
 import '../models/attendance_archive_model.dart';
 import '../models/user_directory.dart';
@@ -68,14 +65,10 @@ class Backend {
 
   /// null یعنی موفق؛ در غیر این صورت پیام خطا برای نمایش
   static Future<String?> signIn(String phone, String password) async {
-    Session.reset();
     try {
       await client.auth.signInWithPassword(email: emailFor(phone), password: password);
-      final error = await _loadSession();
-      if (error != null) await _clearAuthState();
-      return error;
+      return await _loadSession();
     } on sup.AuthException catch (e) {
-      await _clearAuthState();
       final m = e.message.toLowerCase();
       if (m.contains('invalid login')) {
         // در حالت توسعه، ایمیلی که برنامه امتحان کرده نشان داده می‌شود تا اشکال‌یابی ساده باشد
@@ -92,12 +85,16 @@ class Backend {
       }
       return 'خطای ورود: ${e.message}';
     } catch (e) {
-      await _clearAuthState();
-      debugPrint('Supabase sign-in failed: $e');
-      return kDebugMode
-          ? 'ارتباط با سرور برقرار نشد: $e'
-          : 'ارتباط با سرور برقرار نشد؛ لطفاً دوباره تلاش کنید';
+      return 'ارتباط با سرور برقرار نشد: $e';
     }
+  }
+
+  /// نام کلاس از روی شناسهٔ کلاس (بدون embed، تا خطای «چند رابطهٔ هم‌نام» پیش نیاید)
+  static Future<String?> _className(String? classId) async {
+    if (classId == null || classId.isEmpty) return null;
+    final c = await client.from('classes').select('name').eq('id', classId).maybeSingle();
+    if (c == null || c['name'] is! String) return null;
+    return c['name'] as String;
   }
 
   /// نقش، نام، کلاس و فرزند را از دیتابیس می‌خواند (نقش هرگز از سمت کاربر تعیین نمی‌شود)
@@ -107,7 +104,7 @@ class Backend {
 
     final p = await client
         .from('profiles')
-        .select('full_name, role, active, classes(name)')
+        .select('full_name, role, active, class_id')
         .eq('id', user.id)
         .maybeSingle();
     if (p == null) {
@@ -119,44 +116,50 @@ class Backend {
       return 'حساب شما غیرفعال است؛ با مدیریت تماس بگیرید';
     }
 
-    final roleName = p['role'];
-    final matchingRoles = AppRole.values.where((r) => r.name == roleName);
-    if (matchingRoles.isEmpty) {
-      return 'نقش حساب معتبر نیست؛ از مدیریت بخواهید نقش حساب را اصلاح کند';
-    }
-    final role = matchingRoles.first;
+    final role = AppRole.values.firstWhere(
+      (r) => r.name == p['role'],
+      orElse: () => AppRole.parent,
+    );
     Session.signIn(role);
     final name = p['full_name'];
     if (name is String && name.isNotEmpty) Session.userName = name;
-    if (role == AppRole.student && name is String && name.isNotEmpty) {
-      Session.childName = name;
-    }
-    final cls = p['classes'];
-    if (cls is Map && cls['name'] is String) {
-      Session.className = normalizeClassName(cls['name'] as String);
+    final cname = await _className(p['class_id'] as String?);
+    if (cname != null) Session.className = normalizeClassName(cname);
+    Session.classNames = [Session.className];
+    if (role == AppRole.teacher || role == AppRole.deputy) {
+      final tc = await client.from('teacher_classes').select('classes(name)').eq('profile_id', user.id);
+      final names = <String>[];
+      for (final row in tc) {
+        final c = row['classes'];
+        if (c is Map && c['name'] is String) {
+          names.add(normalizeClassName(c['name'] as String));
+        }
+      }
+      if (names.isNotEmpty) {
+        Session.classNames = names;
+        Session.className = names.first;
+      }
     }
 
     if (role == AppRole.parent) {
-      final rows = await client
+      final links = await client
           .from('parent_students')
-          .select('students(id, full_name, classes(name))')
+          .select('student_id')
           .eq('parent_id', user.id);
-      Session.childStudentIds = rows
-          .map((r) => r['students'])
-          .whereType<Map>()
-          .map((student) => '${student['id'] ?? ''}')
-          .where((id) => id.isNotEmpty)
-          .toSet()
-          .toList();
-      if (rows.isNotEmpty) {
-        final st = rows.first['students'];
-        if (st is Map) {
-          if (st['full_name'] is String) {
-            Session.childName = st['full_name'] as String;
-          }
-          final c = st['classes'];
-          if (c is Map && c['name'] is String) {
-            Session.className = normalizeClassName(c['name'] as String);
+      if (links.isNotEmpty) {
+        final sid = links.first['student_id'] as String?;
+        if (sid != null) {
+          final st = await client
+              .from('students')
+              .select('full_name, class_id')
+              .eq('id', sid)
+              .maybeSingle();
+          if (st != null) {
+            if (st['full_name'] is String) {
+              Session.childName = st['full_name'] as String;
+            }
+            final scn = await _className(st['class_id'] as String?);
+            if (scn != null) Session.className = normalizeClassName(scn);
           }
         }
       }
@@ -165,27 +168,13 @@ class Backend {
   }
 
   static Future<void> signOut() async {
-    await _clearAuthState();
-  }
-
-  static Future<void> _clearAuthState() async {
-    if (_ready) {
-      try {
-        await client.auth.signOut();
-      } catch (_) {}
-    }
-    // پاک‌سازی همیشه انجام می‌شود؛ حتی اگر سرور در دسترس نباشد.
-    Session.reset();
+    if (!_ready) return;
+    try {
+      await client.auth.signOut();
+    } catch (_) {}
+    // کش‌ها پاک می‌شوند تا داده‌های یک کاربر برای کاربر بعدی نماند
     ServerDirectory.reset();
     AttendanceArchiveService.clearCache();
     UserDirectory.clearCache();
-    PrivateMessageService.clearCache();
-    ReportCardService.clearCache();
-    if (_ready) {
-      final prefs = await SharedPreferences.getInstance();
-      for (final k in ['private_messages_v1', 'report_cards_v1', 'registration_draft_v1']) {
-        await prefs.remove(k);
-      }
-    }
   }
 }

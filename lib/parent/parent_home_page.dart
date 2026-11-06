@@ -8,16 +8,12 @@ import '../models/nutrition_model.dart';
 import '../utils/jalali.dart';
 import '../widgets/nutrition_views.dart';
 import '../widgets/safe_image.dart';
-import '../widgets/world3d_background.dart';
-import '../widgets/pop_out_card.dart';
 import '../pages/toolbox_page.dart';
 import '../widgets/live_clock_banner.dart';
 import '../widgets/plans_view.dart';
 import '../pages/private_message_page.dart';
 import '../pages/report_card_pages.dart';
 import '../pages/registration_page.dart';
-import '../pages/evaluation_feedback_page.dart';
-import '../pages/video_meetings_page.dart';
 
 class _Section {
   final String title;
@@ -94,19 +90,19 @@ class _ParentHomePageState extends State<ParentHomePage> {
       _Section('اطلاعیه‌ها', 'ill_announcement.png', const Color(0xFFFCE4EC), (c) => _push(c, const AnnouncementsPage())),
       _Section('پیام خصوصی به مربی', 'scene_messages.png', const Color(0xFFE3F2FD), (c) => _push(c, PrivateChatPage(studentName: Session.childName)), Perm.sendPrivateMessage),
       _Section('جعبه ابزار', 'ill_toolbox.png', const Color(0xFFEDE7F6), (c) => _push(c, const ToolboxPage())),
-      _Section('جلسهٔ تصویری', 'scene_messages.png', const Color(0xFFE3F2FD), (c) => _push(c, const VideoMeetingsPage(role: AppRole.parent))),
       _Section('پرداخت و اشتراک', 'scene_payment.png', const Color(0xFFFFF8E1), (c) => _push(c, const PaymentPage()), Perm.viewFinancial),
       _Section('پرونده ثبت‌نام نوآموز', 'ill_students.png', const Color(0xFFE1F5FE), (c) => _push(c, const RegistrationPage())),
-      _Section('نظرسنجی و ارزیابی کیفیت', 'ill_audit_log.png', const Color(0xFFFFF3E0), (c) => _push(c, const EvaluationFeedbackPage())),
     ];
     final perms = PermissionService.instance;
     final sections = allSections.where((x) => x.perm == null || perms.can(AppRole.parent, x.perm!)).toList();
 
-    return WorldBackground(
+    return Container(
+      color: kPageBg,
       child: LayoutBuilder(
         builder: (context, box) {
           final w = box.maxWidth;
           final wide = w >= 800;
+          final cols = w >= 1000 ? 4 : (w >= 700 ? 3 : 2);
 
           return RefreshIndicator(
             onRefresh: _load,
@@ -120,7 +116,7 @@ class _ParentHomePageState extends State<ParentHomePage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const LiveClockBanner(),
-                      // برخلاف صفحهٔ معلم: اول کارت فرزند، بعد آمار
+                      // برخلاف صفحهٔ معلم: اول کارت ولی، بعد آمار
                       if (wide)
                         IntrinsicHeight(
                           child: Row(
@@ -141,16 +137,14 @@ class _ParentHomePageState extends State<ParentHomePage> {
                       const Text('بخش‌ها',
                           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.navy)),
                       const SizedBox(height: 10),
-                      PopOutGrid(
-                        children: [
-                          for (final s in sections)
-                            PopOutCard(
-                              title: s.title,
-                              image: s.image,
-                              tint: Color.lerp(s.tint, AppColors.navy, 0.35)!,
-                              onTap: () => s.onTap(context),
-                            ),
-                        ],
+                      GridView.count(
+                        crossAxisCount: cols,
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        mainAxisSpacing: 14,
+                        crossAxisSpacing: 14,
+                        childAspectRatio: 0.92,
+                        children: [for (final s in sections) _sectionCard(context, s)],
                       ),
                     ],
                   ),
@@ -164,48 +158,19 @@ class _ParentHomePageState extends State<ParentHomePage> {
   }
 
   Widget _stats(bool stretch) {
-    final today = JalaliDate.now();
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.88),
-        borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: Colors.white, width: 2),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'خلاصهٔ امروز',
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: AppColors.navy),
-              ),
-              Text(
-                '${today.weekdayName} ${faDigits(today.day)} ${today.monthName}',
-                style: const TextStyle(fontSize: 11, color: AppColors.textGrey),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          IntrinsicHeight(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                _miniStat(Icons.check_circle_rounded, 'امروز', _today, const Color(0xFF2E9E6B)),
-                const SizedBox(width: 8),
-                _miniStat(Icons.restaurant_rounded, 'منوی امروز', _menu, const Color(0xFFF59E0B)),
-                const SizedBox(width: 8),
-                _miniStat(Icons.campaign_rounded, 'اطلاعیه', _announcements, const Color(0xFF1473C9)),
-              ],
-            ),
-          ),
-        ],
-      ),
+    return Row(
+      crossAxisAlignment: stretch ? CrossAxisAlignment.stretch : CrossAxisAlignment.center,
+      children: [
+        _miniStat(Icons.check_circle_rounded, 'امروز', _today, const Color(0xFF2E9E6B)),
+        const SizedBox(width: 8),
+        _miniStat(Icons.restaurant_rounded, 'منوی امروز', _menu, const Color(0xFFF59E0B)),
+        const SizedBox(width: 8),
+        _miniStat(Icons.campaign_rounded, 'اطلاعیه', _announcements, const Color(0xFF1473C9)),
+      ],
     );
   }
 
+  /// کارت خوش‌آمد: نام خود ولی بزرگ، و زیر آن نام فرزند با شکل کوچک
   Widget _childCard() {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -230,9 +195,10 @@ class _ParentHomePageState extends State<ParentHomePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(Session.childName, style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
+                Text(Session.userName, style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 4),
-                Text(Session.className, style: const TextStyle(color: Color(0xFFD8E9F9))),
+                Text('ولی ${Session.childName} • ${Session.className}',
+                    style: const TextStyle(color: Color(0xFFD8E9F9), fontSize: 12)),
               ],
             ),
           ),
@@ -254,18 +220,53 @@ class _ParentHomePageState extends State<ParentHomePage> {
   Widget _miniStat(IconData icon, String label, String value, Color c) {
     return Expanded(
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 6),
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
         decoration: BoxDecoration(
-          color: c.withValues(alpha: 0.08),
-          borderRadius: BorderRadius.circular(16),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(18),
+          boxShadow: const [BoxShadow(color: Color(0x14000000), blurRadius: 8, offset: Offset(0, 2))],
         ),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, color: c, size: 21),
+            Icon(icon, color: c),
             const SizedBox(height: 4),
-            Text(value, textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold, color: c, fontSize: 12)),
+            Text(value, textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold, color: c, fontSize: 13)),
             Text(label, textAlign: TextAlign.center, style: const TextStyle(fontSize: 12, color: AppColors.textGrey)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _sectionCard(BuildContext context, _Section s) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(22),
+      onTap: () => s.onTap(context),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(22),
+          boxShadow: const [BoxShadow(color: Color(0x1A000000), blurRadius: 10, offset: Offset(0, 4))],
+        ),
+        child: Column(
+          children: [
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                margin: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(color: s.tint, borderRadius: BorderRadius.circular(16)),
+                child: SafeAssetImage(s.image, fit: BoxFit.contain),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(8, 0, 8, 12),
+              child: Text(
+                s.title,
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.navy, fontSize: 14),
+              ),
+            ),
           ],
         ),
       ),
